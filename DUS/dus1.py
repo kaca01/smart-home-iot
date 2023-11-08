@@ -1,4 +1,4 @@
-# door sensor
+# ultrasonic door sensor
 # import RPi.GPIO as GPIO
 import time
 import random
@@ -15,8 +15,7 @@ ECHO_PIN = 24
 
 def distance_simulation():
     while True:
-        sim_distance = 0
-        sim_distance += random.uniform(0.1, 1.5)
+        sim_distance = random.uniform(0.1, 1.5)
         if sim_distance > 1.5:
             sim_distance = 1.5
         print("Distance: ", round(sim_distance, 2))
@@ -61,12 +60,17 @@ def is_locked(distance):
 
 if __name__ == '__main__':
     # simulation
-    for d in distance_simulation():
-        if is_locked(d):
-            print("The door is locked!")
-        else:
-            print("The door is unlocked!")
-        sleep(1)
+    try:
+        for d in distance_simulation():
+            if is_locked(d):
+                print("The door is locked!")
+            else:
+                print("The door is unlocked!")
+            sleep(1)
+    except KeyboardInterrupt:
+        print('Simulation stopped by user')
+    except Exception as e:
+        print(f'Error: {str(e)}')
 
     # real-time
     # try:
