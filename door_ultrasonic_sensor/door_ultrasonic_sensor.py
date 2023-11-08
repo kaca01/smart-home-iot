@@ -17,7 +17,7 @@ def distance_simulation():
         sim_distance = random.uniform(0.1, 1.5)
         if sim_distance > 1.5:
             sim_distance = 1.5
-        print("Distance: ", round(sim_distance, 2))
+        # print("Distance: ", round(sim_distance, 2))
         yield round(sim_distance, 2)
 
 
