@@ -13,10 +13,12 @@ def button_pressed_simulation(state):
         print("Wrong input!")
 
 
-def button_pressed(event):
-    # TODO how to check if button is released
-    # and then lock the door
-    print("BUTTON PRESS DETECTED")
+# TODO: this code should be checked on pi
+# def button_pressed(event):
+#     if GPIO.input(PORT_BUTTON):
+#         print("The door is locked!")
+#     else:
+#         print("BUTTON PRESS DETECTED")
 
 
 if __name__ == '__main__':
@@ -31,10 +33,10 @@ if __name__ == '__main__':
     except Exception as e:
         print(f'Error: {str(e)}')
 
-    # TODO does this work for long press
     # real-time
     # PORT_BUTTON = 17
     # GPIO.setmode(GPIO.BCM)
     # GPIO.setup(PORT_BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    # GPIO.add_event_detect(PORT_BUTTON, GPIO.RISING, callback=button_pressed, bouncetime = 100)
+    # TODO: this also
+    # GPIO.add_event_detect(PORT_BUTTON, GPIO.BOTH, callback=button_pressed, bouncetime = 100)
     # input("Press any key to exit...")
