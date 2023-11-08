@@ -1,4 +1,3 @@
-# ultrasonic door sensor
 # import RPi.GPIO as GPIO
 import time
 import random
