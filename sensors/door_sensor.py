@@ -14,6 +14,8 @@ def button_pressed_simulation(state):
 
 
 def button_pressed(event):
+    # TODO how to check if button is released
+    # and then lock the door
     print("BUTTON PRESS DETECTED")
 
 
@@ -23,7 +25,7 @@ if __name__ == '__main__':
     try:
         while True:
             inp = str(input())
-            button_pressed_simulation(inp)
+            button_pressed_simulation(inp.strip().lower())
     except KeyboardInterrupt:
         print('Simulation stopped by user')
     except Exception as e:
