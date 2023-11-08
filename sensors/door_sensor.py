@@ -18,25 +18,30 @@ def button_pressed_simulation(state):
 #     if GPIO.input(PORT_BUTTON):
 #         print("The door is locked!")
 #     else:
-#         print("BUTTON PRESS DETECTED")
+#         print("The door is unlocked!")
 
 
 if __name__ == '__main__':
-    # simulation
-    print("Press x to unlock the door\nPress y to lock the door\n")
+
     try:
+        # simulation
+        print("Press x to unlock the door\nPress y to lock the door\n")
         while True:
             inp = str(input())
             button_pressed_simulation(inp.strip().lower())
+
+        # real-time
+        # PORT_BUTTON = 17
+        # GPIO.setmode(GPIO.BCM)
+        # GPIO.setup(PORT_BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        # TODO: this also
+        # GPIO.add_event_detect(PORT_BUTTON, GPIO.BOTH, callback=button_pressed, bouncetime = 100)
+        # input("Press any key to exit...")
     except KeyboardInterrupt:
         print('Simulation stopped by user')
+        # GPIO.cleanup()
     except Exception as e:
         print(f'Error: {str(e)}')
+        # GPIO.cleanup()
 
-    # real-time
-    # PORT_BUTTON = 17
-    # GPIO.setmode(GPIO.BCM)
-    # GPIO.setup(PORT_BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    # TODO: this also
-    # GPIO.add_event_detect(PORT_BUTTON, GPIO.BOTH, callback=button_pressed, bouncetime = 100)
-    # input("Press any key to exit...")
+
