@@ -1,4 +1,4 @@
-from room_dht.simulator import run_dht_simulator
+from dhts.simulator import run_dht_simulator
 import threading
 import time
 
@@ -20,7 +20,7 @@ def run_dht1(settings, threads, stop_event):
             threads.append(dht1_thread)
             print("Dht1 sumilator started")
         else:
-            from sensors import run_dht_loop, DHT
+            from dhts.sensors import run_dht_loop, DHT
             print("Starting dht1 loop")
             dht = DHT(settings['pin'])
             dht1_thread = threading.Thread(target=run_dht_loop, args=(dht, 2, dht_callback, stop_event))

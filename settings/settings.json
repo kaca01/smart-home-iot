@@ -7,5 +7,15 @@
     "DHT2": {
         "simulated": true,
         "pin": 17
+    },
+    
+    "PIR1": {
+        "simulated": true,
+        "pin": 21
+    },
+
+    "PIR2": {
+        "simulated": true,
+        "pin": 20
     } 
 }
