@@ -5,13 +5,14 @@ import time
 def dht_callback(humidity, temperature, code):
     t = time.localtime()
     print("="*20)
+    print("DHT1")
     print(f"Timestamp: {time.strftime('%H:%M:%S', t)}")
     print(f"Code: {code}")
     print(f"Humidity: {humidity}%")
     print(f"Temperature: {temperature}°C")
 
 
-def run_dht(settings, threads, stop_event):
+def run_dht1(settings, threads, stop_event):
         if settings['simulated']:
             print("Starting dht1 sumilator")
             dht1_thread = threading.Thread(target = run_dht_simulator, args=(2, dht_callback, stop_event))

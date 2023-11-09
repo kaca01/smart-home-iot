@@ -1,7 +1,7 @@
 {
     "DHT1": {
         "simulated": true,
-        "pin": 17
+        "pin": 16
     },
 
     "DHT2": {
