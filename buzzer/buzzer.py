@@ -1,29 +1,12 @@
-# import RPi.GPIO as GPIO
-import time
+from buzzer.simulator import run_simulation
 
-# GPIO.setmode(GPIO.BCM)
-buzzer_pin = 17
-# GPIO.setup(buzzer_pin, GPIO.OUT)
 
-def buzz(pitch, duration):
-    period = 1.0 / pitch
-    delay = period / 2
-    cycles = int(duration * pitch)
-    for i in range(cycles):
-        # GPIO.output(buzzer_pin, True)
-        # time.sleep(delay)
-        # GPIO.output(buzzer_pin, False)
-        time.sleep(delay)
-try:
-    while True:
-        button = input().lower()
-        if button == "x":
-            pitch = 440
-            duration = 0.1
-            buzz(pitch, duration)
-            print("Cuje see!!")
-            time.sleep(1)
-except KeyboardInterrupt:
-    pass
-    # GPIO.cleanup()
-
+def run_buzzer(settings):
+        if settings['simulated']:
+            print("Buzzer sumilator")
+            run_simulation()
+        else:
+            from buzzer.actuator import run_actuator
+            print("Buzzer running")
+            run_actuator(settings['pin'])
+            

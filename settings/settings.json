@@ -17,5 +17,10 @@
     "PIR2": {
         "simulated": true,
         "pin": 20
+    },
+    
+    "DB": {
+        "simulated": true,
+        "pin": 23
     } 
 }
