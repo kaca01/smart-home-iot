@@ -10,6 +10,7 @@ def run_simulation():
     buzzer_sound = pygame.mixer.Sound(buzzer_sound_path)
 
     try:
+        print("Hold the 'B' button to buzz")
         while True:
             if keyboard.is_pressed('B'):
                 buzzer_sound.play()
