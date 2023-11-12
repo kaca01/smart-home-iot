@@ -5,6 +5,10 @@ from dhts.dht2 import run_dht2
 from pirs.rpir2 import run_pir2
 from buzzer.buzzer import run_buzzer
 from door_membrane_switch.door_membrane_switch import run_dms
+from sensors.door_sensor import run_ds1
+from lights.door_light import run_dl
+from ultrasonic_sensors.door_ultrasonic_sensor import run_dus1
+from pirs.door_motion_sensor import run_dpir1
 import time
 
 try:
@@ -25,6 +29,22 @@ if __name__ == "__main__":
     stop_event_pir2 = threading.Event()
     
     try:
+        # door sensor
+        # ds1_settings = settings["DS1"]
+        # run_ds1(ds1_settings)
+
+        # door light
+        # dl_settings = settings["DL"]
+        # run_dl(dl_settings)
+
+        # door ultrasonic sensor
+        # dus1_settings = settings["DUS1"]
+        # run_dus1(dus1_settings)
+
+        # door motion sensor
+        dpir1_settings = settings["DPIR1"]
+        run_dpir1(dpir1_settings)
+
         # For DHT uncomment this
         # dht1_settings = settings['DHT1']
         # run_dht1(dht1_settings, threads, stop_event_dht1)
@@ -39,7 +59,7 @@ if __name__ == "__main__":
         # run_pir2(pir2_settings, threads, stop_event_pir2)
 
         # For buzzer uncomment this
-        run_buzzer(settings['DB'])
+        # run_buzzer(settings['DB'])
 
         # For DMS uncomment this
         # run_dms(settings['DMS'])
