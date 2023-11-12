@@ -40,9 +40,9 @@ def is_locked(distance):
     return True
 
 
-def run_dus1(settings):
+def run_dus1(settings, event):
     if settings["simulated"]:
-        run_simulation()
+        run_simulation(event)
     else:
         # real-time
         import RPi.GPIO as GPIO

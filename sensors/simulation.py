@@ -1,3 +1,7 @@
+import os
+import keyboard
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+
 
 def button_pressed_simulation(state):
     if state == 'x':
@@ -9,11 +13,20 @@ def button_pressed_simulation(state):
 
 
 def run_simulation():
+    door_locked = True
     try:
-        print("Press x to unlock the door\nPress y to lock the door\n")
+        print("Hold the 'D' button to unlock the door\n To exit press 'x'")
         while True:
-            inp = str(input())
-            button_pressed_simulation(inp.strip().lower())
+            if keyboard.is_pressed('D'):
+                if door_locked:
+                    button_pressed_simulation('x')
+                    door_locked = False
+            elif keyboard.is_pressed('x'):
+                return
+            else:
+                if not door_locked:
+                    button_pressed_simulation('y')
+                    door_locked = True
 
     except KeyboardInterrupt:
         print('Simulation stopped by user')

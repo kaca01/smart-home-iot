@@ -3,6 +3,7 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame.mixer
 import keyboard
 
+
 def run_simulation():
     pygame.mixer.init()
 

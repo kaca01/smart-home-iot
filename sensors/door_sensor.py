@@ -1,5 +1,7 @@
 # if pressed the door is opened
 # else closed
+import threading
+
 from sensors.simulation import run_simulation
 
 

@@ -10,9 +10,9 @@ def switch_light(switch):
         print("Wrong input!")
 
 
-def run_dl(settings):
+def run_dl(settings, inp):
     if settings["simulated"]:
-        run_simulation()
+        run_simulation(inp)
     else:
         import RPi.GPIO as GPIO
         GPIO.setmode(GPIO.BCM)
@@ -20,7 +20,6 @@ def run_dl(settings):
 
         try:
             while True:
-                inp = str(input("To turn door light on - press x\nTo turn door light off - press y\n"))
 
                 switch_light(inp)
         except KeyboardInterrupt:

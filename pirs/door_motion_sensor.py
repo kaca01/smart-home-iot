@@ -22,29 +22,31 @@ def no_motion(channel):
     print("You stopped moving")
 
 
-def run_dpir1(settings):
+def run_dpir1(settings, stop_event):
     # simulation
     if settings["simulated"]:
-        event = threading.Event()
-        stop_event = threading.Event()
-        thread = threading.Thread(target=motion_detection_simulation, args=(stop_event,))
-        thread.start()
+        # event = threading.Event()
+        # # stop_event = threading.Event()
+        # thread = threading.Thread(target=motion_detection_simulation, args=(event, stop_event))
+        # thread.start()
 
         try:
-            while True:
-                event.wait()  # if something is happening after event is triggered (waiting for event)
-                print("You moved")
-                event.clear()
+            motion_detection_simulation(stop_event)
+            # while True:
+            #     event.wait()  # if something is happening after event is triggered (waiting for event)
+            #     # print("You moved")
+            #     event.clear()
         except KeyboardInterrupt:
             print("Simulation stopped by user")
             stop_event.set()
-            thread.join()
+            # thread.join()
         except Exception as e:
             print(f'Error: {str(e)}')
             stop_event.set()
-            thread.join()
+            # thread.join()
 
     else:
+        # TODO: thread should be here also
         import RPi.GPIO as GPIO
         PIR_PIN = settings["pin"]
         GPIO.setmode(GPIO.BCM)

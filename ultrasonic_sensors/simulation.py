@@ -12,18 +12,25 @@ def distance_simulation():
 
 
 def is_locked(distance):
-    if distance > 1:
+    if distance > 1.2:
         return False
     return True
 
 
-def run_simulation():
+def run_simulation(event):
     try:
+        locked = True
+        print("The door is locked!")
         for d in distance_simulation():
-            if is_locked(d):
+            if event.is_set():
+                print("Event is set!!!")
+                return
+            if is_locked(d) and not locked:
                 print("The door is locked!")
-            else:
+                locked = True
+            elif not is_locked(d) and locked:
                 print("The door is unlocked!")
+                locked = False
             sleep(1)
     except KeyboardInterrupt:
         print('Simulation stopped by user')

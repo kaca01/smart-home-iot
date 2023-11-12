@@ -1,18 +1,16 @@
 
 def switch_light_simulation(switch):
-    if switch == 'x':
+    if switch == '1':
         print("Light ON")
-    elif switch == 'y':
+    elif switch == '2':
         print("Light OFF")
     else:
         print("Wrong input!")
 
 
-def run_simulation():
+def run_simulation(inp):
     try:
-        while True:
-            inp = str(input("To turn door light on - press x\nTo turn door light off - press y\n"))
-            switch_light_simulation(inp.lower().strip())
+        switch_light_simulation(inp.lower().strip())
 
     except KeyboardInterrupt:
         print('Simulation stopped by user')
