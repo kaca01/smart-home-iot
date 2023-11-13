@@ -70,24 +70,24 @@ def handle_room_sensors_menu():
         if inp == "0":
             break
         elif inp == "1":
-            thread = threading.Thread(target=run_pir1, args=(settings["PIR1"], threads, stop_event_pir1,))
+            thread = threading.Thread(target=run_pir1, args=(settings["PIR1"], stop_event_pir1,))
             thread.start()
         elif inp == "2":
             stop_event_pir1.set()
         elif inp == "3":
-            thread = threading.Thread(target=run_pir2, args=(settings["PIR2"], threads, stop_event_pir2,))
+            thread = threading.Thread(target=run_pir2, args=(settings["PIR2"], stop_event_pir2,))
             thread.start()
         elif inp == "4":
             stop_event_pir2.set()
         elif inp == "5":
             stop_event_dht1.clear()
-            thread = threading.Thread(target=run_dht1, args=(settings["DHT1"], threads, stop_event_dht1))
+            thread = threading.Thread(target=run_dht1, args=(settings["DHT1"], stop_event_dht1))
             thread.start()
         elif inp == "6":
             stop_event_dht1.set()
         elif inp == "7":
             stop_event_dht2.clear()
-            thread = threading.Thread(target=run_dht2, args=(settings["DHT2"], threads, stop_event_dht2))
+            thread = threading.Thread(target=run_dht2, args=(settings["DHT2"], stop_event_dht2))
             thread.start()
         elif inp == "8":
             stop_event_dht2.set()

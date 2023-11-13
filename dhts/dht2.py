@@ -13,7 +13,7 @@ def dht_callback(humidity, temperature, code):
     print(f"Temperature: {temperature}°C")
 
 
-def run_dht2(settings, threads, stop_event):
+def run_dht2(settings, stop_event):
     if settings['simulated']:
         run_dht_simulator(2, dht_callback, stop_event)
 
@@ -21,7 +21,5 @@ def run_dht2(settings, threads, stop_event):
         from dhts.sensors import run_dht_loop, DHT
         print("Starting dht2 loop")
         dht = DHT(settings['pin'])
-        dht2_thread = threading.Thread(target=run_dht_loop, args=(dht, 2, dht_callback, stop_event))
-        dht2_thread.start()
-        threads.append(dht2_thread)
+        run_dht_loop(dht, 2, dht_callback, stop_event)
         print("Dht2 loop started")
