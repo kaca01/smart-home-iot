@@ -21,5 +21,4 @@ def run_dht_simulator(delay, callback, stop_event):
             break
         time.sleep(delay)  # Delay between readings (adjust as needed)
         callback(h, t, 0)
-
               

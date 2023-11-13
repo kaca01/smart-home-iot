@@ -16,7 +16,7 @@ import time
 try:
     import RPi.GPIO as GPIO
     GPIO.setmode(GPIO.BCM)
-except:
+except ModuleNotFoundError:
     pass
 
 
@@ -116,6 +116,8 @@ def main():
             run_buzzer(settings['DB'])
         elif inp == "5":
             handle_room_sensors_menu()
+        elif inp == "6":
+            run_dms(settings["DMS"])
         else:
             print("Invalid input!")
 
