@@ -41,3 +41,4 @@ def run_dpir1(settings, stop_event):
         GPIO.setup(PIR_PIN, GPIO.IN)
         GPIO.add_event_detect(PIR_PIN, GPIO.RISING, callback=motion_detected)
         GPIO.add_event_detect(PIR_PIN, GPIO.FALLING, callback=no_motion)
+        input("Press any key to exit...")
