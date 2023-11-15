@@ -26,7 +26,7 @@ def run_dpir1(settings, stop_event):
     # simulation
     if settings["simulated"]:
         try:
-            motion_detection_simulation(stop_event, "DPIR1")
+            motion_detection_simulation(stop_event, "Door motion sensor")
         except KeyboardInterrupt:
             print("Simulation stopped by user")
             stop_event.set()
@@ -41,4 +41,3 @@ def run_dpir1(settings, stop_event):
         GPIO.setup(PIR_PIN, GPIO.IN)
         GPIO.add_event_detect(PIR_PIN, GPIO.RISING, callback=motion_detected)
         GPIO.add_event_detect(PIR_PIN, GPIO.FALLING, callback=no_motion)
-        input("Press any key to exit...")

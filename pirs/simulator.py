@@ -7,5 +7,4 @@ def motion_detection_simulation(stop, device):
         rand = round(random.uniform(0, 1), 2)
         if rand > 0.8:
             print(f"{device} says: you moved!")
-            # e.set()
         time.sleep(1)

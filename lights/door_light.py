@@ -20,7 +20,6 @@ def run_dl(settings, inp):
 
         try:
             while True:
-
                 switch_light(inp)
         except KeyboardInterrupt:
             print('Simulation stopped by user')

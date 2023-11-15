@@ -55,7 +55,7 @@ def run_dus1(settings, event):
         GPIO.setup(ECHO_PIN, GPIO.IN)
 
         try:
-            while True:
+            while not event.is_set():
                 distance = get_distance()
                 if is_locked(distance):
                     print('The door is locked!')
@@ -63,7 +63,7 @@ def run_dus1(settings, event):
                     print('The door is unlocked!')
                 time.sleep(1)
         except KeyboardInterrupt:
-            # GPIO.cleanup()
+            GPIO.cleanup()
             print('Measurement stopped by user')
         except Exception as e:
             print(f'Error: {str(e)}')
