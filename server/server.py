@@ -9,10 +9,10 @@ app = Flask(__name__)
 
 
 # InfluxDB Configuration
-token = "PhUvw6NZCvjs0x410XQ6yhNgBOz1Ts-dqbbRwdPHAC2FRbvQLORVaaZ7nMGppyqd5qxnilKrxMhC-v_fOsRu_Q=="
+token = "BXfkQXB7oaiiOEjT5-xIzodqT2XPpWkYtuJnQ0euQ3rgde-Xqq6S294CEM91Ir77ULXKNTuYmdJnc0xBMFdzKg=="
 org = "FTN"
 url = "http://localhost:8086"
-bucket = "new_bucket"
+bucket = "smart_home_bucket"
 influxdb_client = InfluxDBClient(url=url, token=token, org=org)
 
 
@@ -22,8 +22,12 @@ mqtt_client.connect("localhost", 1883, 60)
 mqtt_client.loop_start()
 
 def on_connect(client, userdata, flags, rc):
-    client.subscribe("Temperature")
-    client.subscribe("Humidity")
+    client.subscribe("Temperature1")
+    client.subscribe("Humidity1")
+    client.subscribe("Temperature2")
+    client.subscribe("Humidity2")
+    client.subscribe("Motion1")
+    client.subscribe("Motion2")
 
 mqtt_client.on_connect = on_connect
 mqtt_client.on_message = lambda client, userdata, msg: save_to_db(json.loads(msg.payload.decode('utf-8')))
@@ -42,14 +46,14 @@ def save_to_db(data):
 
 
 # Route to store dummy data
-@app.route('/store_data', methods=['POST'])
-def store_data():
-    try:
-        data = request.get_json()
-        store_data(data)
-        return jsonify({"status": "success"})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)})
+# @app.route('/store_data', methods=['POST'])
+# def store_data():
+#     try:
+#         data = request.get_json()
+#         store_data(data)
+#         return jsonify({"status": "success"})
+#     except Exception as e:
+#         return jsonify({"status": "error", "message": str(e)})
 
 
 def handle_influx_query(query):

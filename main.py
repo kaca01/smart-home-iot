@@ -148,6 +148,16 @@ if __name__ == "__main__":
         # stop_event_dht1.clear()
         thread = threading.Thread(target=run_dht1, args=(settings["DHT1"], stop_event_dht1))
         thread.start()
+
+        thread = threading.Thread(target=run_dht2, args=(settings["DHT2"], stop_event_dht2))
+        thread.start()
+
+        thread = threading.Thread(target=run_pir1, args=(settings["PIR1"], stop_event_pir1,))
+        thread.start()
+
+        thread = threading.Thread(target=run_pir1, args=(settings["PIR2"], stop_event_pir1,))
+        thread.start()
+
         while True:
             time.sleep(1)
     except KeyboardInterrupt:

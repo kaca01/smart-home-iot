@@ -21,7 +21,7 @@ def publisher_task(event, dht_batch):
             publish_data_counter = 0
             dht_batch.clear()
         publish.multiple(local_dht_batch, hostname=HOSTNAME, port=PORT)
-        print(f'published {publish_data_limit} dht values')
+        print(f'published {publish_data_limit} dht1 values')
         event.clear()
 
 
@@ -44,7 +44,7 @@ def dht_callback(humidity, temperature, publish_event, dht_settings, code="DHTLI
         print(f"Temperature: {temperature}°C")
 
     temp_payload = {
-        "measurement": "Temperature",
+        "measurement": "Temperature1",
         "simulated": dht_settings['simulated'],
         "runs_on": dht_settings["runs_on"],
         "name": dht_settings["name"],
@@ -52,7 +52,7 @@ def dht_callback(humidity, temperature, publish_event, dht_settings, code="DHTLI
     }
 
     humidity_payload = {
-        "measurement": "Humidity",
+        "measurement": "Humidity1",
         "simulated": dht_settings['simulated'],
         "runs_on": dht_settings["runs_on"],
         "name": dht_settings["name"],
@@ -60,8 +60,8 @@ def dht_callback(humidity, temperature, publish_event, dht_settings, code="DHTLI
     }
 
     with counter_lock:
-        dht_batch.append(('Temperature', json.dumps(temp_payload), 0, True))
-        dht_batch.append(('Humidity', json.dumps(humidity_payload), 0, True))
+        dht_batch.append(('Temperature1', json.dumps(temp_payload), 0, True))
+        dht_batch.append(('Humidity1', json.dumps(humidity_payload), 0, True))
         publish_data_counter += 1
 
     if publish_data_counter >= publish_data_limit:
