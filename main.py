@@ -141,14 +141,19 @@ if __name__ == "__main__":
 
     events = []
     events += [stop_event_dht1, stop_event_dht2, stop_event_pir1, stop_event_pir2, stop_event_ds1, stop_event_dl,
-               stop_event_dus1, stop_event_dpir1]
+                stop_event_dus1, stop_event_dpir1]
 
     try:
-        main()
+        # main()
+        # stop_event_dht1.clear()
+        thread = threading.Thread(target=run_dht1, args=(settings["DHT1"], stop_event_dht1))
+        thread.start()
+        while True:
+            time.sleep(1)
     except KeyboardInterrupt:
         print("App stopped by user")
         for stop_event in [stop_event_dht1, stop_event_dht2, stop_event_pir1, stop_event_pir2, stop_event_ds1,
-                           stop_event_dl, stop_event_dus1, stop_event_dpir1]:
+                        stop_event_dl, stop_event_dus1, stop_event_dpir1]:
             stop_event.set()
 
         for t in threads:
