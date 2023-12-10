@@ -138,34 +138,41 @@ if __name__ == "__main__":
     stop_event_dl = threading.Event()
     stop_event_dus1 = threading.Event()
     stop_event_dpir1 = threading.Event()
+    stop_event_db = threading.Event()
+    stop_event_audio = threading.Event()
 
     events = []
     events += [stop_event_dht1, stop_event_dht2, stop_event_pir1, stop_event_pir2, stop_event_ds1, stop_event_dl,
-                stop_event_dus1, stop_event_dpir1]
+                stop_event_dus1, stop_event_dpir1, stop_event_db, stop_event_audio]
 
     try:
         # main()
         # stop_event_dht1.clear()
-        thread = threading.Thread(target=run_dht1, args=(settings["DHT1"], stop_event_dht1))
-        thread.start()
+        # thread = threading.Thread(target=run_dht1, args=(settings["DHT1"], stop_event_dht1))
+        # thread.start()
 
-        thread = threading.Thread(target=run_dht2, args=(settings["DHT2"], stop_event_dht2))
-        thread.start()
+        # thread = threading.Thread(target=run_dht2, args=(settings["DHT2"], stop_event_dht2))
+        # thread.start()
 
-        thread = threading.Thread(target=run_pir1, args=(settings["PIR1"], stop_event_pir1,))
-        thread.start()
+        # thread = threading.Thread(target=run_pir1, args=(settings["PIR1"], stop_event_pir1,))
+        # thread.start()
 
-        thread = threading.Thread(target=run_pir1, args=(settings["PIR2"], stop_event_pir1,))
+        # thread = threading.Thread(target=run_pir1, args=(settings["PIR2"], stop_event_pir1,))
+        # thread.start()
+
+        thread = threading.Thread(target=run_buzzer, args=(settings["DB"], stop_event_db,))
         thread.start()
 
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        print("App stopped by user")
+        
         for stop_event in [stop_event_dht1, stop_event_dht2, stop_event_pir1, stop_event_pir2, stop_event_ds1,
-                        stop_event_dl, stop_event_dus1, stop_event_dpir1]:
+                        stop_event_dl, stop_event_dus1, stop_event_dpir1, stop_event_db, stop_event_audio]:
             stop_event.set()
 
         for t in threads:
             t.join()
+
+        print("App stopped by user")
         print_exit()
