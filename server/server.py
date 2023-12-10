@@ -22,13 +22,11 @@ mqtt_client.connect("localhost", 1883, 60)
 mqtt_client.loop_start()
 
 def on_connect(client, userdata, flags, rc):
-    client.subscribe("Temperature1")
-    client.subscribe("Humidity1")
-    client.subscribe("Temperature2")
-    client.subscribe("Humidity2")
-    client.subscribe("Motion1")
-    client.subscribe("Motion2")
-    client.subscribe("DMS")
+    topics = ["TEMP1", "HMD1", "TEMP2", "HMD2","MOTION1", "MOTION2", "DMS"]
+
+    for topic in topics:
+        client.subscribe(topic)
+
 
 mqtt_client.on_connect = on_connect
 mqtt_client.on_message = lambda client, userdata, msg: save_to_db(json.loads(msg.payload.decode('utf-8')))

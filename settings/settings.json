@@ -3,28 +3,32 @@
         "simulated": true,
         "pin": 16,
         "runs_on": "PI1",
-        "name": "DHT1"
+        "name": "DHT1",
+        "topic": ["TEMP1", "HMD1"]
     },
 
     "DHT2": {
         "simulated": true,
         "pin": 17,
         "runs_on": "PI1",
-        "name": "DHT2"
+        "name": "DHT2",
+        "topic": ["TEMP2", "HMD2"] 
     },
     
     "PIR1": {
         "simulated": true,
         "pin": 21,
         "runs_on": "PI1",
-        "name": "PIR1"
+        "name": "PIR1",
+        "topic": "MOTION1"
     },
 
     "PIR2": {
         "simulated": true,
         "pin": 20,
         "runs_on": "PI1",
-        "name": "PIR2"
+        "name": "PIR2",
+        "topic": "MOTION2"
     },
     
     "DB": {
@@ -38,7 +42,8 @@
         "simulated": true,
         "pin": [25, 8, 7, 1, 12, 16, 5, 6],
         "runs_on": "PI1",
-        "name": "DMS"
+        "name": "DMS",
+        "topic": "DMS"
     },
 
     "DL": {

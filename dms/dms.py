@@ -49,7 +49,6 @@ def dms_callback(temperature, publish_event, dms_settings, verbose=False):
         dms_batch.append(('DMS', json.dumps(temp_payload), 0, True))
 
     if older_value != temperature:
-        print("uslooo")
         publish_event.set()
 
     older_value = temperature

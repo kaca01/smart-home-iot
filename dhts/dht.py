@@ -21,7 +21,7 @@ def publisher_task(event, dht_batch):
             publish_data_counter = 0
             dht_batch.clear()
         publish.multiple(local_dht_batch, hostname=HOSTNAME, port=PORT)
-        print(f'published {publish_data_limit} dht1 values')
+        # print(f'published {publish_data_limit} {settings["name"]} values')
         event.clear()
 
 
@@ -43,8 +43,10 @@ def dht_callback(humidity, temperature, publish_event, dht_settings, code="DHTLI
         print(f"Humidity: {humidity}%")
         print(f"Temperature: {temperature}°C")
 
+    print(dht_settings['topic'][0])
+
     temp_payload = {
-        "measurement": "Temperature1",
+        "measurement": dht_settings['topic'][0],
         "simulated": dht_settings['simulated'],
         "runs_on": dht_settings["runs_on"],
         "name": dht_settings["name"],
@@ -52,7 +54,7 @@ def dht_callback(humidity, temperature, publish_event, dht_settings, code="DHTLI
     }
 
     humidity_payload = {
-        "measurement": "Humidity1",
+        "measurement": dht_settings['topic'][1],
         "simulated": dht_settings['simulated'],
         "runs_on": dht_settings["runs_on"],
         "name": dht_settings["name"],
@@ -60,21 +62,19 @@ def dht_callback(humidity, temperature, publish_event, dht_settings, code="DHTLI
     }
 
     with counter_lock:
-        dht_batch.append(('Temperature1', json.dumps(temp_payload), 0, True))
-        dht_batch.append(('Humidity1', json.dumps(humidity_payload), 0, True))
+        dht_batch.append((dht_settings['topic'][0], json.dumps(temp_payload), 0, True))
+        dht_batch.append((dht_settings['topic'][1], json.dumps(humidity_payload), 0, True))
         publish_data_counter += 1
 
     if publish_data_counter >= publish_data_limit:
         publish_event.set()
 
 
-def run_dht1(settings, stop_event):
+def run_dht(settings, stop_event):
     if settings['simulated']:
         run_dht_simulator(2, dht_callback, stop_event, publish_event, settings)
 
     else:
         from dhts.sensors import run_dht_loop, DHT
-        print("Starting dht1 loop")
         dht = DHT(settings['pin'])
-        run_dht_loop(dht, 2, dht_callback, stop_event)
-        print("Dht1 loop started")
+        run_dht_loop(dht, 2, dht_callback, stop_event, publish_event, settings)
