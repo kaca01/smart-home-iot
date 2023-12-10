@@ -20,11 +20,9 @@ def no_motion(channel):
     print("You stopped moving")
 
 
-# input("Press any key to exit...")
-
-def run_pir_loop(pir, delay, stop_event):
+def run_pir_loop(pir, delay, callback, stop_event, publish_event, settings):
     while True:
-        GPIO.add_event_detect(pir.pin, GPIO.RISING, callback=motion_detected)
+        GPIO.add_event_detect(pir.pin, GPIO.RISING, callback=lambda _: callback(True, publish_event, settings)) # todo proveri da li radi
         GPIO.add_event_detect(pir.pin, GPIO.FALLING, callback=no_motion)
         if stop_event.is_set():
             break

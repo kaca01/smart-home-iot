@@ -43,8 +43,6 @@ def dht_callback(humidity, temperature, publish_event, dht_settings, code="DHTLI
         print(f"Humidity: {humidity}%")
         print(f"Temperature: {temperature}°C")
 
-    print(dht_settings['topic'][0])
-
     temp_payload = {
         "measurement": dht_settings['topic'][0],
         "simulated": dht_settings['simulated'],
