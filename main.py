@@ -5,7 +5,7 @@ from dhts.dht2 import run_dht2
 from pirs.rpir1 import run_pir1
 from pirs.rpir2 import run_pir2
 from buzzer.buzzer import run_buzzer
-from door_membrane_switch.door_membrane_switch import run_dms
+from dms.dms import run_dms
 from sensors.door_sensor import run_ds1
 from lights.door_light import run_dl
 from ultrasonic_sensors.door_ultrasonic_sensor import run_dus1
@@ -139,36 +139,40 @@ if __name__ == "__main__":
     stop_event_dus1 = threading.Event()
     stop_event_dpir1 = threading.Event()
     stop_event_db = threading.Event()
+    stop_event_dms = threading.Event()
 
     events = []
     events += [stop_event_dht1, stop_event_dht2, stop_event_pir1, stop_event_pir2, stop_event_ds1, stop_event_dl,
-                stop_event_dus1, stop_event_dpir1, stop_event_db]
+                stop_event_dus1, stop_event_dpir1, stop_event_db, stop_event_dms]
 
     try:
         # main()
         # stop_event_dht1.clear()
-        thread = threading.Thread(target=run_dht1, args=(settings["DHT1"], stop_event_dht1))
-        thread.start()
+        # thread = threading.Thread(target=run_dht1, args=(settings["DHT1"], stop_event_dht1))
+        # thread.start()
 
-        thread = threading.Thread(target=run_dht2, args=(settings["DHT2"], stop_event_dht2))
-        thread.start()
+        # thread = threading.Thread(target=run_dht2, args=(settings["DHT2"], stop_event_dht2))
+        # thread.start()
 
-        thread = threading.Thread(target=run_pir1, args=(settings["PIR1"], stop_event_pir1,))
-        thread.start()
+        # thread = threading.Thread(target=run_pir1, args=(settings["PIR1"], stop_event_pir1,))
+        # thread.start()
 
-        thread = threading.Thread(target=run_pir1, args=(settings["PIR2"], stop_event_pir1,))
-        thread.start()
+        # thread = threading.Thread(target=run_pir1, args=(settings["PIR2"], stop_event_pir1,))
+        # thread.start()
 
-        thread = threading.Thread(target=run_buzzer, args=(settings["DB"], stop_event_db,))
+        # thread = threading.Thread(target=run_buzzer, args=(settings["DB"], stop_event_db,))
+        # thread.start()
+        # threads.append(thread)
+
+        thread = threading.Thread(target=run_dms, args=(settings["DMS"], stop_event_dms,))
         thread.start()
-        threads.append(thread)
 
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
         
         for stop_event in [stop_event_dht1, stop_event_dht2, stop_event_pir1, stop_event_pir2, stop_event_ds1,
-                        stop_event_dl, stop_event_dus1, stop_event_dpir1, stop_event_db]:
+                        stop_event_dl, stop_event_dus1, stop_event_dpir1, stop_event_db, stop_event_dms]:
             stop_event.set()
 
         for t in threads:

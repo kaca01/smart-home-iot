@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 
 # InfluxDB Configuration
-token = "LdZSUHxydfW-E-SJjcXw2T2RSgdObqiU0Esrt8H0-ZAUs93abtHikXq6lhQuqcZklaY9Hemv1OYK7bPR-bNMfw=="
+token = "rEYcr9iJt1LUziUpZHE7XojC_5rFJhVAK8IqIGvocTOqyHbIqKdfE-Kqo1e1e3fcIyof-bCZRJqx-3Dm2n_6Pw=="
 org = "FTN"
 url = "http://localhost:8086"
 bucket = "smart_home_bucket"
@@ -28,6 +28,7 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("Humidity2")
     client.subscribe("Motion1")
     client.subscribe("Motion2")
+    client.subscribe("DMS")
 
 mqtt_client.on_connect = on_connect
 mqtt_client.on_message = lambda client, userdata, msg: save_to_db(json.loads(msg.payload.decode('utf-8')))
