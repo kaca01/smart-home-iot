@@ -17,7 +17,6 @@ def publisher_task(event, dms_batch):
             local_dms_batch = dms_batch.copy()
             dms_batch.clear()
         publish.multiple(local_dms_batch, hostname=HOSTNAME, port=PORT)
-        print(f'published dms values')
         event.clear()
 
 
@@ -63,4 +62,4 @@ def run_dms(settings, stop_event):
     else:
         from dms.sensor import run_sensor
         print("DMS running")
-        run_sensor(settings['pin'])     
+        run_sensor(settings['pin'], EXPECTED_PIN, 2, dms_callback, stop_event, publish_event, settings)     

@@ -27,8 +27,6 @@ publisher_thread.start()
 
 
 def pir_callback(result, publish_event, pir_settings, verbose=False):
-    print(f"{pir_settings['name']} says: you moved!")
-
     if verbose:
         print(f"{pir_settings['name']} says: you moved!")
 

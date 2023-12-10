@@ -1,11 +1,7 @@
 import threading
 from settings.settings import load_settings
 from dhts.dht import run_dht
-# from dhts.dht1 import run_dht1
-# from dhts.dht2 import run_dht2
 from pirs.pir import run_pir
-# from pirs.rpir1 import run_pir1
-# from pirs.rpir2 import run_pir2
 from buzzer.buzzer import run_buzzer
 from dms.dms import run_dms
 from sensors.door_sensor import run_ds1
@@ -162,12 +158,12 @@ if __name__ == "__main__":
         thread = threading.Thread(target=run_pir, args=(settings["PIR2"], stop_event_pir1,))
         thread.start()
 
-        # thread = threading.Thread(target=run_buzzer, args=(settings["DB"], stop_event_db,))
-        # thread.start()
-        # threads.append(thread)
+        thread = threading.Thread(target=run_buzzer, args=(settings["DB"], stop_event_db,))
+        thread.start()
+        threads.append(thread)
 
-        # thread = threading.Thread(target=run_dms, args=(settings["DMS"], stop_event_dms,))
-        # thread.start()
+        thread = threading.Thread(target=run_dms, args=(settings["DMS"], stop_event_dms,))
+        thread.start()
 
         while True:
             time.sleep(1)

@@ -8,7 +8,6 @@ def check_pin(expected_pin):
 
     picked_values = random.choices(values, k=4)
     pin = ''.join(picked_values)
-    print(f"PIN: {pin}")
     if pin == expected_pin:
         return "open"
     else:

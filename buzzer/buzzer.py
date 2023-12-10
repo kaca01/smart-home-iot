@@ -21,7 +21,7 @@ def sound_play(stop_event_audio):
 
 def button_pressed(stop_event_audio):
     with sound_lock:
-        print('radiii')
+        print('yees')
         stop_event_audio.clear()
         audio_thread = threading.Thread(target=sound_play, args=(stop_event_audio,))
         audio_thread.start()
@@ -29,7 +29,7 @@ def button_pressed(stop_event_audio):
 
 def button_released(stop_event_audio):
     with sound_lock:
-        print('ne cuje se vise')
+        print('no')
         stop_event_audio.set()
 
 
