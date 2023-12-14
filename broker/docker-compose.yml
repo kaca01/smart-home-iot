@@ -13,7 +13,7 @@ services:
       - ./data:/mosquitto/data:rw
       - ./log:/mosquitto/log:rw
     networks:
-      - smart-home-network
+      - smart-home
 
   # InfluxDB
   influxdb:
@@ -28,7 +28,7 @@ services:
     volumes:
       - ./influxdb/data:/var/lib/influxdb:rw
     networks:
-      - smart-home-network
+      - smart-home
 
   
   grafana:
@@ -40,10 +40,10 @@ services:
     depends_on:
       - influxdb
     environment:
-      - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin_password
     networks:
-      - smart-home-network
+      - smart-home
 
 # volumes for mapping data,config and log
 volumes:
@@ -54,5 +54,5 @@ volumes:
   grafana:
 
 networks:
-  smart-home-network:
-    name: smart-home-network
+  smart-home:
+    name: smart-home

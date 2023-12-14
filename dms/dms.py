@@ -56,10 +56,13 @@ def dms_callback(temperature, publish_event, dms_settings, verbose=False):
 EXPECTED_PIN = "1212"
 
 def run_dms(settings, stop_event):
-    if settings['simulated']:
-        print("DMS sumilator")
-        run_simulation(EXPECTED_PIN, 2, dms_callback, stop_event, publish_event, settings)
-    else:
-        from dms.sensor import run_sensor
-        print("DMS running")
-        run_sensor(settings['pin'], EXPECTED_PIN, 2, dms_callback, stop_event, publish_event, settings)     
+    try: 
+        if settings['simulated']:
+            print("DMS sumilator")
+            run_simulation(EXPECTED_PIN, 2, dms_callback, stop_event, publish_event, settings)
+        else:
+            from dms.sensor import run_sensor
+            print("DMS running")
+            run_sensor(settings['pin'], EXPECTED_PIN, 2, dms_callback, stop_event, publish_event, settings)   
+    except KeyboardInterrupt:
+        print("DMS thread stopped by user")  

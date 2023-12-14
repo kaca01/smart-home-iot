@@ -69,10 +69,13 @@ def dht_callback(humidity, temperature, publish_event, dht_settings, code="DHTLI
 
 
 def run_dht(settings, stop_event):
-    if settings['simulated']:
-        run_dht_simulator(2, dht_callback, stop_event, publish_event, settings)
+    try:
+        if settings['simulated']:
+            run_dht_simulator(2, dht_callback, stop_event, publish_event, settings)
 
-    else:
-        from dhts.sensors import run_dht_loop, DHT
-        dht = DHT(settings['pin'])
-        run_dht_loop(dht, 2, dht_callback, stop_event, publish_event, settings)
+        else:
+            from dhts.sensors import run_dht_loop, DHT
+            dht = DHT(settings['pin'])
+            run_dht_loop(dht, 2, dht_callback, stop_event, publish_event, settings)
+    except KeyboardInterrupt:
+        print("DHT thread stopped by user")

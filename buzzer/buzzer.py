@@ -34,11 +34,14 @@ def button_released(stop_event_audio):
 
 
 def run_buzzer(settings, stop_event):
-    stop_event_audio = threading.Event()
-    if settings['simulated']:
-        print("Buzzer sumilator")
-        run_simulation(2, button_pressed, button_released, stop_event, stop_event_audio)
-    else:
-        from buzzer.actuator import run_actuator
-        print("Buzzer running")
-        run_actuator(settings['pin'])
+    try:
+        stop_event_audio = threading.Event()
+        if settings['simulated']:
+            print("Buzzer sumilator")
+            run_simulation(2, button_pressed, button_released, stop_event, stop_event_audio)
+        else:
+            from buzzer.actuator import run_actuator
+            print("Buzzer running")
+            run_actuator(settings['pin'])
+    except KeyboardInterrupt:
+        print("BUZZER thread stopped by user")

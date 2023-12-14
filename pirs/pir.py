@@ -45,9 +45,12 @@ def pir_callback(result, publish_event, pir_settings, verbose=False):
 
 
 def run_pir(settings, stop_event):
-    if settings['simulated']:
-        motion_detection_simulation(pir_callback, stop_event, publish_event, settings)
-    else:
-        from pirs.sensors import run_pir_loop, PIR
-        pir = PIR(settings['pin'])
-        run_pir_loop(pir, 2, pir_callback, stop_event, publish_event, settings)
+    try:
+        if settings['simulated']:
+            motion_detection_simulation(pir_callback, stop_event, publish_event, settings)
+        else:
+            from pirs.sensors import run_pir_loop, PIR
+            pir = PIR(settings['pin'])
+            run_pir_loop(pir, 2, pir_callback, stop_event, publish_event, settings)
+    except KeyboardInterrupt:
+        print("PIR thread stopped by user")
