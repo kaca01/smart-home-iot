@@ -5,7 +5,7 @@ from settings.broker_settings import HOSTNAME, PORT
 import paho.mqtt.publish as publish
 import json
 import time
-from sensor import button_pressed
+from sensors.sensor import button_pressed
 
 from sensors.simulation import run_simulation
 
