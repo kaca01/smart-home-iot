@@ -6,14 +6,14 @@ services:
     image: eclipse-mosquitto
     container_name: mqtt5
     ports:
-      - "1883:1883" # default mqtt port
-      - "9001:9001" # default mqtt port for websockets
+      - "1883:1883" #default mqtt port
+      - "9001:9001" #default mqtt port for websockets
     volumes:
       - ./config:/mosquitto/config:rw
       - ./data:/mosquitto/data:rw
       - ./log:/mosquitto/log:rw
     networks:
-      - smart-home
+      - iot-network
 
   # InfluxDB
   influxdb:
@@ -28,7 +28,7 @@ services:
     volumes:
       - ./influxdb/data:/var/lib/influxdb:rw
     networks:
-      - smart-home
+      - iot-network
 
   
   grafana:
@@ -43,7 +43,7 @@ services:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin_password
     networks:
-      - smart-home
+      - iot-network
 
 # volumes for mapping data,config and log
 volumes:
@@ -54,5 +54,5 @@ volumes:
   grafana:
 
 networks:
-  smart-home:
-    name: smart-home
+  iot-network:
+    name: iot-network
