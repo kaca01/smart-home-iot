@@ -60,7 +60,7 @@
         "pin": 17,
         "runs_on": "PI1",
         "name": "DS1",
-        "topic": "DS1"
+        "topic": "DOOR_SENSOR1"
     },
 
     "DUS1": {
