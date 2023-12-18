@@ -23,7 +23,7 @@ def run_simulation(event):
         print("The door is locked!")
         for d in distance_simulation():
             if event.is_set():
-                print("Event is set!!!")
+                # print("Event is set!!!")
                 return
             if is_locked(d) and not locked:
                 print("The door is locked!")

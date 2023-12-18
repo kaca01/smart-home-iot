@@ -1,47 +1,76 @@
 {
     "DHT1": {
         "simulated": true,
-        "pin": 16
+        "pin": 16,
+        "runs_on": "PI1",
+        "name": "DHT1",
+        "topic": ["TEMP1", "HMD1"]
     },
 
     "DHT2": {
         "simulated": true,
-        "pin": 17
+        "pin": 17,
+        "runs_on": "PI1",
+        "name": "DHT2",
+        "topic": ["TEMP2", "HMD2"] 
     },
     
     "PIR1": {
         "simulated": true,
-        "pin": 21
+        "pin": 21,
+        "runs_on": "PI1",
+        "name": "PIR1",
+        "topic": "MOTION1"
     },
 
     "PIR2": {
         "simulated": true,
-        "pin": 20
+        "pin": 20,
+        "runs_on": "PI1",
+        "name": "PIR2",
+        "topic": "MOTION2"
     },
     
     "DB": {
         "simulated": true,
-        "pin": 23
+        "pin": 23,
+        "runs_on": "PI1",
+        "name": "DB"
     },
     
     "DMS": {
         "simulated": true,
-        "pin": [25, 8, 7, 1, 12, 16, 5, 6]
+        "pin": [25, 8, 7, 1, 12, 16, 5, 6],
+        "runs_on": "PI1",
+        "name": "DMS",
+        "topic": "DMS"
     },
+
     "DL": {
         "simulated": true,
-        "pin": 18
+        "pin": 18,
+        "runs_on": "PI1",
+        "name": "DL"
     },
+
     "DS1": {
         "simulated": true,
-        "pin": 17
+        "pin": 17,
+        "runs_on": "PI1",
+        "name": "DS1"
     },
+
     "DUS1": {
         "simulated": true,
-        "pin": [23, 24]
+        "pin": [23, 24],
+        "runs_on": "PI1",
+        "name": "DUS1"
     },
+
     "DPIR1": {
         "simulated": true,
-        "pin": 4
+        "pin": 4,
+        "runs_on": "PI1",
+        "name": "DPIR1"
     }
 }

@@ -46,21 +46,21 @@ def init_dms(gpio_pins):
     return rows, columns
 
 
-def readLine(line, characters, columns):
+def read_line(line, characters, columns):
     character = ''
     GPIO.output(line, GPIO.HIGH)
     if(GPIO.input(columns[0]) == 1):
         character = characters[0]
-        print(characters[0])
+        # print(characters[0])
     if(GPIO.input(columns[1]) == 1):
         character = characters[0]
-        print(characters[1])
+        # print(characters[1])
     if(GPIO.input(columns[2]) == 1):
         character = characters[0]
-        print(characters[2])
+        # print(characters[2])
     if(GPIO.input(columns[3]) == 1):
         character = characters[0]
-        print(characters[3])
+        # print(characters[3])
     GPIO.output(line, GPIO.LOW)
     return character
 
@@ -69,25 +69,27 @@ def input_pin(rows, columns):
     pin = ""
 
     for i in range(4):
-        character = readLine(rows[0], ["1","2","3","A"], columns)
-        character = readLine(rows[1], ["4","5","6","B"], columns)
-        character = readLine(rows[2], ["7","8","9","C"], columns)
-        character = readLine(rows[3], ["*","0","#","D"], columns)
+        character = read_line(rows[0], ["1","2","3","A"], columns)
+        character = read_line(rows[1], ["4","5","6","B"], columns)
+        character = read_line(rows[2], ["7","8","9","C"], columns)
+        character = read_line(rows[3], ["*","0","#","D"], columns)
         pin += character
         time.sleep(0.2)  # wainting for another input
 
     return pin
 
 
-def run_sensor(gpio_pins, expected_pin):
+def run_sensor(gpio_pins, expected_pin, delay, callback, stop_event, publish_event, settings):
     rows, columns = init_dms(gpio_pins)
-    try:
-        for i in range(2, -1, -1):
-            pin = input_pin(rows, columns)
-            if pin == expected_pin:
-                print("Correct PIN!")
-                break
-            else:
-                print(f"Incorrect PIN. {i} attempts remaining")
-    except KeyboardInterrupt:
-        print("\nApplication stopped!")
+    while True:
+        pin = input_pin(rows, columns)
+        if pin == expected_pin:
+            callback("open", publish_event, settings)
+            # print("Correct PIN!")
+        else:
+            callback("closed", publish_event, settings)
+
+        if stop_event.is_set():
+            break
+        
+        time.sleep(delay)
