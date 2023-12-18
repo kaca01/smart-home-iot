@@ -168,6 +168,9 @@ if __name__ == "__main__":
         thread = threading.Thread(target=run_dus1, args=(settings["DUS1"], stop_event_dus1,))
         thread.start()
 
+        thread = threading.Thread(target=run_dpir1, args=(settings["DPIR1"], stop_event_dpir1))
+        thread.start()
+
         while True:
             time.sleep(1)
     except KeyboardInterrupt:

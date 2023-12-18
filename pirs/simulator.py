@@ -9,4 +9,5 @@ def motion_detection_simulation(callback, stop, publish_event, pir_settings):
         if rand > 0.8:
             callback(True, publish_event, pir_settings)
             # print(f"{device} says: you moved!")
+        callback(False, publish_event, pir_settings)
         time.sleep(1)
