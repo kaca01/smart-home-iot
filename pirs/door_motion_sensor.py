@@ -1,32 +1,50 @@
-import random
 import threading
-import time
-import pirs.simulator
 from pirs.simulator import motion_detection_simulation
+from settings.broker_settings import HOSTNAME, PORT
+import paho.mqtt.publish as publish
+import json
+
+pir_batch = []
+counter_lock = threading.Lock()
 
 
-# def motion_detection_simulation(e, stop):
-#     while not stop.is_set():
-#         rand = round(random.uniform(0, 1), 2)
-#         if rand > 0.8:
-#             # print you moved can also be here
-#             e.set()
-#         time.sleep(1)
+def publisher_task(event, pir_batch):
+    while True:
+        event.wait()
+        with counter_lock:
+            local_pir_batch = pir_batch.copy()
+            pir_batch.clear()
+        publish.multiple(local_pir_batch, hostname=HOSTNAME, port=PORT)
+        event.clear()
 
 
-def motion_detected(channel):
-    print("You moved")
+publish_event = threading.Event()
+publisher_thread = threading.Thread(target=publisher_task, args=(publish_event, pir_batch,))
+publisher_thread.daemon = True
+publisher_thread.start()
 
+def pir_callback(result, publish_event, pir_settings, verbose=False):
+    if verbose:
+        print(f"{pir_settings['name']} says: you moved!")
 
-def no_motion(channel):
-    print("You stopped moving")
+    temp_payload = {
+        "measurement": pir_settings['topic'],
+        "simulated": pir_settings['simulated'],
+        "runs_on": pir_settings["runs_on"],
+        "name": pir_settings["name"],
+        "value": result
+    }
 
+    with counter_lock:
+        pir_batch.append((pir_settings['topic'], json.dumps(temp_payload), 0, True))
+
+    publish_event.set()
 
 def run_dpir1(settings, stop_event):
     # simulation
     if settings["simulated"]:
         try:
-            motion_detection_simulation(stop_event, "Door motion sensor")
+            motion_detection_simulation(pir_callback, stop_event, publish_event, settings)
         except KeyboardInterrupt:
             print("Simulation stopped by user")
             stop_event.set()
@@ -35,10 +53,7 @@ def run_dpir1(settings, stop_event):
             stop_event.set()
 
     else:
-        import RPi.GPIO as GPIO
-        PIR_PIN = settings["pin"]
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(PIR_PIN, GPIO.IN)
-        GPIO.add_event_detect(PIR_PIN, GPIO.RISING, callback=motion_detected)
-        GPIO.add_event_detect(PIR_PIN, GPIO.FALLING, callback=no_motion)
+        from pirs.sensors import run_pir_loop, PIR
+        pir = PIR(settings['pin'])
+        run_pir_loop(pir, 2, pir_callback, stop_event, publish_event, settings)
         input("Press any key to exit...")

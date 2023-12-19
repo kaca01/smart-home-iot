@@ -35,7 +35,8 @@
         "simulated": true,
         "pin": 23,
         "runs_on": "PI1",
-        "name": "DB"
+        "name": "DB",
+        "topic": "DB"
     },
     
     "DMS": {
@@ -50,27 +51,31 @@
         "simulated": true,
         "pin": 18,
         "runs_on": "PI1",
-        "name": "DL"
+        "name": "DL",
+        "topic": "DL"
     },
 
     "DS1": {
         "simulated": true,
         "pin": 17,
         "runs_on": "PI1",
-        "name": "DS1"
+        "name": "DS1",
+        "topic": "DOOR_SENSOR1"
     },
 
     "DUS1": {
         "simulated": true,
         "pin": [23, 24],
         "runs_on": "PI1",
-        "name": "DUS1"
+        "name": "DUS1",
+        "topic": "DUS1"
     },
 
     "DPIR1": {
         "simulated": true,
         "pin": 4,
         "runs_on": "PI1",
-        "name": "DPIR1"
+        "name": "DPIR1",
+        "topic": "DPIR1"
     }
 }
