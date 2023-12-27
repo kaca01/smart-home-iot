@@ -43,7 +43,7 @@ def is_locked(self, distance):
 
 
 # TODO add callback function
-def run_dus_loop(dus, settings, stop_event):
+def run_dus_loop(d, settings, callback, publish_event, event):
     import RPi.GPIO as GPIO
     GPIO.setmode(GPIO.BCM)
 
@@ -55,6 +55,7 @@ def run_dus_loop(dus, settings, stop_event):
 
     try:
         while not event.is_set():
+            callback(distance, publish_event, settings)
             distance = get_distance()
             if is_locked(distance):
                 print(settings["name"] + ' says the door is locked!')

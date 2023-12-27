@@ -72,8 +72,8 @@ def run_ds1(settings):
                 PORT_BUTTON = settings["pin"]
                 GPIO.setmode(GPIO.BCM)
                 GPIO.setup(PORT_BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-                # TODO: this also
                 GPIO.add_event_detect(PORT_BUTTON, GPIO.BOTH, callback=button_pressed, bouncetime=100)
+                # TODO: 
                 input("Press any key to exit...")
             except KeyboardInterrupt:
                 print('Simulation stopped by user')

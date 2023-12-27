@@ -65,6 +65,6 @@ def run_dus1(settings, event):
             # real-time
             from ultrasonic_sensors.sensor import run_dus_loop, DUS
             dus = DUS(settings['pin'])
-            run_dus_loop(dus, settings, event)
+            run_dus_loop(dus, settings, dus_callback, publish_event, event)
     except KeyboardInterrupt:
         print("DUS thread stopped by user")
