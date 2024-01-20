@@ -8,6 +8,7 @@ from sensors.door_sensor import run_ds1
 from lights.door_light import run_dl
 from ultrasonic_sensors.door_ultrasonic_sensor import run_dus1
 from pirs.door_motion_sensor import run_dpir1
+from lights.rgb.rgb_led import run_rgb
 from menu_prints import print_lights_menu, print_main_menu, print_door_sensors_menu, print_exit, print_room_sensors_menu
 import time
 
@@ -138,10 +139,11 @@ if __name__ == "__main__":
     stop_event_dpir1 = threading.Event()
     stop_event_db = threading.Event()
     stop_event_dms = threading.Event()
+    stop_event_rgb = threading.Event()
 
     events = []
     events += [stop_event_dht1, stop_event_dht2, stop_event_pir1, stop_event_pir2, stop_event_ds1, stop_event_dl,
-                stop_event_dus1, stop_event_dpir1, stop_event_db, stop_event_dms]
+                stop_event_dus1, stop_event_dpir1, stop_event_db, stop_event_dms, stop_event_rgb]
 
     try:
         # main()
@@ -158,9 +160,9 @@ if __name__ == "__main__":
         thread = threading.Thread(target=run_pir, args=(settings["PIR2"], stop_event_pir1,))
         thread.start()
 
-        thread = threading.Thread(target=run_buzzer, args=(settings["DB"], stop_event_db,))
-        thread.start()
-        threads.append(thread)
+        #thread = threading.Thread(target=run_buzzer, args=(settings["DB"], stop_event_db,))
+        #thread.start()
+        #threads.append(thread)
 
         thread = threading.Thread(target=run_dms, args=(settings["DMS"], stop_event_dms,))
         thread.start()
@@ -171,7 +173,10 @@ if __name__ == "__main__":
         thread = threading.Thread(target=run_dpir1, args=(settings["DPIR1"], stop_event_dpir1))
         thread.start()
 
-        thread = threading.Thread(target=run_ds1, args=(settings["DS1"],))
+        # thread = threading.Thread(target=run_ds1, args=(settings["DS1"],))
+        # thread.start()
+
+        thread = threading.Thread(target=run_rgb, args=(settings["RGB"], stop_event_rgb))
         thread.start()
 
         while True:
