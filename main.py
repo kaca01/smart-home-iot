@@ -9,6 +9,7 @@ from lights.door_light import run_dl
 from sensors.ultrasonic_sensors.door_ultrasonic_sensor import run_dus1
 from pirs.door_motion_sensor import run_dpir1
 from lights.rgb.rgb_led import run_rgb
+from lcd.lcd import run_lcd
 from menu_prints import print_lights_menu, print_main_menu, print_door_sensors_menu, print_exit, print_room_sensors_menu
 import time
 
@@ -140,10 +141,11 @@ if __name__ == "__main__":
     stop_event_db = threading.Event()
     stop_event_dms = threading.Event()
     stop_event_rgb = threading.Event()
+    stop_event_lcd = threading.Event()
 
     events = []
     events += [stop_event_dht1, stop_event_dht2, stop_event_pir1, stop_event_pir2, stop_event_ds1, stop_event_dl,
-                stop_event_dus1, stop_event_dpir1, stop_event_db, stop_event_dms, stop_event_rgb]
+                stop_event_dus1, stop_event_dpir1, stop_event_db, stop_event_dms, stop_event_rgb, stop_event_lcd]
 
     try:
         # main()
@@ -179,12 +181,14 @@ if __name__ == "__main__":
         thread = threading.Thread(target=run_rgb, args=(settings["RGB"], stop_event_rgb))
         thread.start()
 
+        thread = threading.Thread(target=run_lcd, args=(settings["LCD"], stop_event_lcd))
+        thread.start()
+
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
         
-        for stop_event in [stop_event_dht1, stop_event_dht2, stop_event_pir1, stop_event_pir2, stop_event_ds1,
-                        stop_event_dl, stop_event_dus1, stop_event_dpir1, stop_event_db, stop_event_dms]:
+        for stop_event in events:
             stop_event.set()
 
         for t in threads:

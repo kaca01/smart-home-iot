@@ -84,5 +84,12 @@
         "runs_on": "PI3",
         "name": "RGB1",
         "topic": "RGB1"
+    },
+    "LCD": {
+        "simulated": true,
+        "pin": [4, 5, 6, 7],
+        "runs_on": "PI2",
+        "name": "GLCD",
+        "topic": "GLCD"
     }
 }
