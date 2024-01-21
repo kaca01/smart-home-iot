@@ -33,7 +33,7 @@ def run_simulation(callback, stop_event, publish_event, settings, inp):
     try:
         switch_rgb_simulation(callback, stop_event, publish_event, settings, inp.lower().strip())
 
-    except KeyboardInterrupt:
+    except KeyboardInterrupt or EOFError:
         print('Simulation stopped by user')
     except Exception as e:
         print(f'Error: {str(e)}')

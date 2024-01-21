@@ -71,6 +71,14 @@
         "topic": "DUS1"
     },
 
+    "DUS2": {
+        "simulated": true,
+        "pin": [23, 24],
+        "runs_on": "PI2",
+        "name": "DUS2",
+        "topic": "DUS2"
+    },
+
     "DPIR1": {
         "simulated": true,
         "pin": 4,
@@ -78,6 +86,7 @@
         "name": "DPIR1",
         "topic": "DPIR1"
     },
+
     "RGB": {
         "simulated": true,
         "pin": [12, 13, 19],
@@ -85,6 +94,7 @@
         "name": "RGB1",
         "topic": "RGB1"
     },
+
     "LCD": {
         "simulated": true,
         "pin": [4, 5, 6, 7],

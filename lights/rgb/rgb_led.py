@@ -49,10 +49,15 @@ def rgb_callback(result, publish_event, pir_settings, verbose=False):
 
 
 def run_rgb(settings, stop_event):
-    if settings["simulated"]:
-        color = str(input("Choose a color (type 0-6)"))
-        run_simulation(rgb_callback, stop_event, publish_event, settings, color)
-    else:
-        color = str(input("Choose a color (type 0-6)"))
-        run_rgb(settings, color, rgb_callback, publish_event)
+    try:
+        if settings["simulated"]:
+            color = str(input("Choose a color (type 0-6)"))
+            run_simulation(rgb_callback, stop_event, publish_event, settings, color)
+        else:
+            color = str(input("Choose a color (type 0-6)"))
+            run_rgb(settings, color, rgb_callback, publish_event)
+    except KeyboardInterrupt or EOFError:
+        print("RGB stopped by user")
+    except Exception as e:
+        print(f'Error in RGB: {str(e)}')
                 
