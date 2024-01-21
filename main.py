@@ -135,6 +135,7 @@ if __name__ == "__main__":
     stop_event_pir1 = threading.Event()
     stop_event_pir2 = threading.Event()
     stop_event_ds1 = threading.Event()
+    stop_event_ds2 = threading.Event()
     stop_event_dl = threading.Event()
     stop_event_dus1 = threading.Event()
     stop_event_dpir1 = threading.Event()
@@ -147,7 +148,7 @@ if __name__ == "__main__":
     events = []
     events += [stop_event_dht1, stop_event_dht2, stop_event_pir1, stop_event_pir2, stop_event_ds1, stop_event_dl,
                 stop_event_dus1, stop_event_dpir1, stop_event_db, stop_event_dms, stop_event_rgb, stop_event_lcd, 
-                stop_event_dus2]
+                stop_event_dus2, stop_event_ds2]
 
     try:
         # main()
@@ -178,6 +179,9 @@ if __name__ == "__main__":
         thread.start()
 
         thread = threading.Thread(target=run_ds1, args=(settings["DS1"],))
+        thread.start()
+
+        thread = threading.Thread(target=run_ds1, args=(settings["DS2"],))
         thread.start()
 
         thread = threading.Thread(target=run_rgb, args=(settings["RGB"], stop_event_rgb))

@@ -63,6 +63,14 @@
         "topic": "DOOR_SENSOR1"
     },
 
+    "DS2": {
+        "simulated": true,
+        "pin": 17,
+        "runs_on": "PI2",
+        "name": "DS2",
+        "topic": "DOOR_SENSOR2"
+    },
+
     "DUS1": {
         "simulated": true,
         "pin": [23, 24],
