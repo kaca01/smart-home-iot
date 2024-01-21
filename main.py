@@ -4,9 +4,9 @@ from dhts.dht import run_dht
 from pirs.pir import run_pir
 from buzzer.buzzer import run_buzzer
 from dms.dms import run_dms
-from sensors.door_sensor import run_ds1
+from sensors.door_sensor.door_sensor import run_ds1
 from lights.door_light import run_dl
-from ultrasonic_sensors.door_ultrasonic_sensor import run_dus1
+from sensors.ultrasonic_sensors.door_ultrasonic_sensor import run_dus1
 from pirs.door_motion_sensor import run_dpir1
 from lights.rgb.rgb_led import run_rgb
 from menu_prints import print_lights_menu, print_main_menu, print_door_sensors_menu, print_exit, print_room_sensors_menu
@@ -173,8 +173,8 @@ if __name__ == "__main__":
         thread = threading.Thread(target=run_dpir1, args=(settings["DPIR1"], stop_event_dpir1))
         thread.start()
 
-        # thread = threading.Thread(target=run_ds1, args=(settings["DS1"],))
-        # thread.start()
+        thread = threading.Thread(target=run_ds1, args=(settings["DS1"],))
+        thread.start()
 
         thread = threading.Thread(target=run_rgb, args=(settings["RGB"], stop_event_rgb))
         thread.start()

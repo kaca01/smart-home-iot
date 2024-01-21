@@ -1,7 +1,7 @@
 import time
 import random
 from time import sleep
-from ultrasonic_sensors.simulation import run_simulation
+from sensors.ultrasonic_sensors.simulation import run_simulation
 from settings.broker_settings import HOSTNAME, PORT
 import threading
 import json

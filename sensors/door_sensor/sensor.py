@@ -1,5 +1,9 @@
 
 # TODO: this code should be checked on pi
+try:
+    import RPi.GPIO as GPIO
+except ModuleNotFoundError:
+    pass
 
 def button_pressed(event):
     print("Da li je dobro??? ", event)
