@@ -19,7 +19,7 @@ def get_distance(self, TRIG_PIN, ECHO_PIN):
     pulse_start_time = time.time()
     pulse_end_time = time.time()
 
-    max_iter = 100
+    max_iter = 1000
 
     iter = 0
     while GPIO.input(ECHO_PIN) == 0:
@@ -40,7 +40,7 @@ def get_distance(self, TRIG_PIN, ECHO_PIN):
     return distance
 
 
-def is_locked(self, distance):
+def is_locked(distance):
     if distance > 1:
         return False
     return True

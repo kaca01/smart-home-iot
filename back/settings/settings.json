@@ -63,28 +63,12 @@
         "topic": "DOOR_SENSOR1"
     },
 
-    "DS2": {
-        "simulated": true,
-        "pin": 17,
-        "runs_on": "PI2",
-        "name": "DS2",
-        "topic": "DOOR_SENSOR2"
-    },
-
     "DUS1": {
         "simulated": true,
         "pin": [23, 24],
         "runs_on": "PI1",
         "name": "DUS1",
         "topic": "DUS1"
-    },
-
-    "DUS2": {
-        "simulated": true,
-        "pin": [23, 24],
-        "runs_on": "PI2",
-        "name": "DUS2",
-        "topic": "DUS2"
     },
 
     "DPIR1": {
@@ -95,12 +79,32 @@
         "topic": "DPIR1"
     },
 
-    "RGB": {
+
+
+
+
+    "DS2": {
         "simulated": true,
-        "pin": [12, 13, 19],
-        "runs_on": "PI3",
-        "name": "RGB1",
-        "topic": "RGB1"
+        "pin": 17,
+        "runs_on": "PI2",
+        "name": "DS2",
+        "topic": "DOOR_SENSOR2"
+    },
+
+    "DUS2": {
+        "simulated": true,
+        "pin": [23, 24],
+        "runs_on": "PI2",
+        "name": "DUS2",
+        "topic": "DUS2"
+    },
+
+    "GDHT": {
+        "simulated": true,
+        "pin": 16,
+        "runs_on": "PI2",
+        "name": "GDHT",
+        "topic": ["GTEMP", "GHMD"]
     },
 
     "LCD": {
@@ -109,5 +113,80 @@
         "runs_on": "PI2",
         "name": "GLCD",
         "topic": "GLCD"
+    },
+
+    "GSG": {
+        "simulated": true,
+        "pin": [2, 3],
+        "runs_on": "PI2",
+        "name": "GSG",
+        "topic": "GSG"
+    },
+
+    "PIR3": {
+        "simulated": true,
+        "pin": 21,
+        "runs_on": "PI2",
+        "name": "PIR3",
+        "topic": "MOTION3"
+    },
+
+    "DHT3": {
+        "simulated": true,
+        "pin": 16,
+        "runs_on": "PI2",
+        "name": "DHT3",
+        "topic": ["TEMP3", "HMD3"]
+    },
+
+    
+
+
+    "PIR4": {
+        "simulated": true,
+        "pin": 20,
+        "runs_on": "PI3",
+        "name": "PIR4",
+        "topic": "MOTION4"
+    },
+
+    "DHT4": {
+        "simulated": true,
+        "pin": 17,
+        "runs_on": "PI3",
+        "name": "DHT4",
+        "topic": ["TEMP4", "HMD4"] 
+    },
+
+    "BB": {
+        "simulated": true,
+        "pin": 23,
+        "runs_on": "PI3",
+        "name": "BB",
+        "topic": "BB"
+    },
+
+    "B4SD": {
+        "simulated": true,
+        "pin": [11,4,23,8,7,10,18,25, 22,27,17,24],
+        "runs_on": "PI3",
+        "name": "B4SD",
+        "topic": "B4SD"
+    },
+
+    "BIR": {
+        "simulated": true,
+        "pin": 17,
+        "runs_on": "PI3",
+        "name": "BIR",
+        "topic": "BIR"
+    },
+
+    "RGB": {
+        "simulated": true,
+        "pin": [12, 13, 19],
+        "runs_on": "PI3",
+        "name": "RGB1",
+        "topic": "RGB1"
     }
 }
