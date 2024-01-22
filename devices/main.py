@@ -13,7 +13,7 @@ from lcd.lcd import run_lcd
 from segment_display.segment_display import run_4d7sd
 from infrared.infrared import run_infrared
 from gyroscope.gyroscope import run_gyroscope
-from menu_prints import print_lights_menu, print_main_menu, print_door_sensors_menu, print_exit, print_room_sensors_menu
+from devices.menu_prints import print_lights_menu, print_main_menu, print_door_sensors_menu, print_exit, print_room_sensors_menu
 import time
 
 try:
