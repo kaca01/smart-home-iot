@@ -78,11 +78,7 @@
         "name": "DPIR1",
         "topic": "DPIR1"
     },
-
-
-
-
-
+    
     "DS2": {
         "simulated": true,
         "pin": 17,
