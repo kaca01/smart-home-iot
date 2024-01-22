@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 
 # InfluxDB Configuration
-token = "BcC13NNc1JFOlLBqujVBrz0Ik37PZMHozF4g2VF_Ol_HSOd7u9T6b8bd-pa0T1rlLNcsA3PetR68HZh0xHltqg=="
+token = "TEQ_grTOHd3G8ObiGsNtZBZKrqmZxdGIpcnOf90ttgNT4SR9qmJdBjb1EcBcb6KXbFpT9RkvfhzWbcZ8zY2Iog=="
 org = "FTN"
 url = "http://localhost:8086"
 bucket = "smart_home_bucket"
