@@ -1,10 +1,12 @@
 import { Component } from "react";
 import './Devices.css';
 import Iframe from 'react-iframe';
+import { Navigation } from "../Navigation/Navigation";
 
 
 export class Devices extends Component {
-    grafanaGraphUrl = 'http://localhost:3000/d/dced5fb4-e93d-40d2-96bb-85bc7270a2d5/odbrana-3?orgId=1&from=1705923737720&to=1705927337720&viewPanel=1';
+    grafanaGraphUrl = 'http://localhost:3000/goto/oRkeFXcIR?orgId=1';
+    grafanaSnapshotUrl = '<iframe src="http://localhost:3000/dashboard/snapshot/AFBGQisZEIFeSJ2zoKiEokiYgZE7Wnm8"></iframe>';
     constructor(props) {
         super(props);
     }
@@ -12,8 +14,11 @@ export class Devices extends Component {
     render() {
         return (
             <div>
-                <p>Welcome to Devices page!</p>
-                <Iframe url={this.grafanaGraphUrl} width="100%" height="600px"/>
+                <Navigation></Navigation>
+                <div id="panel">
+                    <Iframe url={this.grafanaGraphUrl} width="100%" height="600px"/>
+                    <p>Welcome to Devices page!</p>
+                </div>
             </div>
         )
     }
