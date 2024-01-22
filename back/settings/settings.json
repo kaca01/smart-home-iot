@@ -63,6 +63,14 @@
         "topic": "DOOR_SENSOR1"
     },
 
+    "DS2": {
+        "simulated": true,
+        "pin": 17,
+        "runs_on": "PI2",
+        "name": "DS2",
+        "topic": "DOOR_SENSOR2"
+    },
+
     "DUS1": {
         "simulated": true,
         "pin": [23, 24],
@@ -71,11 +79,35 @@
         "topic": "DUS1"
     },
 
+    "DUS2": {
+        "simulated": true,
+        "pin": [23, 24],
+        "runs_on": "PI2",
+        "name": "DUS2",
+        "topic": "DUS2"
+    },
+
     "DPIR1": {
         "simulated": true,
         "pin": 4,
         "runs_on": "PI1",
         "name": "DPIR1",
         "topic": "DPIR1"
+    },
+
+    "RGB": {
+        "simulated": true,
+        "pin": [12, 13, 19],
+        "runs_on": "PI3",
+        "name": "RGB1",
+        "topic": "RGB1"
+    },
+
+    "LCD": {
+        "simulated": true,
+        "pin": [4, 5, 6, 7],
+        "runs_on": "PI2",
+        "name": "GLCD",
+        "topic": "GLCD"
     }
 }

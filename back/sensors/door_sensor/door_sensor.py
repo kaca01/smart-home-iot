@@ -5,9 +5,12 @@ from settings.broker_settings import HOSTNAME, PORT
 import paho.mqtt.publish as publish
 import json
 import time
-from sensors.sensor import button_pressed
-
-from sensors.simulation import run_simulation
+from sensors.door_sensor.sensor import button_pressed
+from sensors.door_sensor.simulation import run_simulation
+try:
+    import RPi.GPIO as GPIO
+except ModuleNotFoundError:
+    pass
 
 ds_batch = []
 publish_data_counter = 0
@@ -66,7 +69,6 @@ def run_ds1(settings):
             run_simulation(ds_callback, publish_event, settings)
         else:
             try:
-                import RPi.GPIO as GPIO
                 print("Press x to unlock the door\nPress y to lock the door\n")
 
                 PORT_BUTTON = settings["pin"]
