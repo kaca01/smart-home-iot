@@ -9,12 +9,11 @@ app = Flask(__name__)
 
 
 # InfluxDB Configuration
-token = "bGmBbxw7gvqNsAa9pZh3KUWIiGPGMx3PUVdPG5bw9reKXi81Bi4X3-efP7BeYTf_LdXL1N4dbG0QxZWItoWpag=="
+token = "Zc15gCCKY2d79TNIl0nMm4rijdvLeMw3AP19IFroaosC6rW41zWhz_4LDU4sdV59K38aB4xwu3Zu7V8RU2vVhQ=="
 org = "FTN"
 url = "http://localhost:8086"
 bucket = "smart_home_bucket"
 influxdb_client = InfluxDBClient(url=url, token=token, org=org)
-
 
 # MQTT Configuration
 mqtt_client = mqtt.Client()
@@ -68,36 +67,36 @@ def save_to_db(data):
 #         return jsonify({"status": "error", "message": str(e)})
 
 
-def handle_influx_query(query):
-    try:
-        query_api = influxdb_client.query_api()
-        tables = query_api.query(query, org=org)
+# def handle_influx_query(query):
+#     try:
+#         query_api = influxdb_client.query_api()
+#         tables = query_api.query(query, org=org)
 
-        container = []
-        for table in tables:
-            for record in table.records:
-                container.append(record.values)
+#         container = []
+#         for table in tables:
+#             for record in table.records:
+#                 container.append(record.values)
 
-        return jsonify({"status": "success", "data": container})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)})
-
-
-@app.route('/simple_query', methods=['GET'])
-def retrieve_simple_data():
-    query = f"""from(bucket: "{bucket}")
-    |> range(start: -10m)
-    |> filter(fn: (r) => r._measurement == "Humidity")"""
-    return handle_influx_query(query)
+#         return jsonify({"status": "success", "data": container})
+#     except Exception as e:
+#         return jsonify({"status": "error", "message": str(e)})
 
 
-@app.route('/aggregate_query', methods=['GET'])
-def retrieve_aggregate_data():
-    query = f"""from(bucket: "{bucket}")
-    |> range(start: -10m)
-    |> filter(fn: (r) => r._measurement == "Humidity")
-    |> mean()"""
-    return handle_influx_query(query)
+# @app.route('/simple_query', methods=['GET'])
+# def retrieve_simple_data():
+#     query = f"""from(bucket: "{bucket}")
+#     |> range(start: -10m)
+#     |> filter(fn: (r) => r._measurement == "Humidity")"""
+#     return handle_influx_query(query)
+
+
+# @app.route('/aggregate_query', methods=['GET'])
+# def retrieve_aggregate_data():
+#     query = f"""from(bucket: "{bucket}")
+#     |> range(start: -10m)
+#     |> filter(fn: (r) => r._measurement == "Humidity")
+#     |> mean()"""
+#     return handle_influx_query(query)
 
 
 if __name__ == '__main__':

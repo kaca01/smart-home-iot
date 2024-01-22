@@ -46,43 +46,43 @@ if __name__ == "__main__":
         events += [stop_event_dus1, stop_event_db, stop_event_dpir1, stop_event_dms, stop_event_pir1, stop_event_pir2, stop_event_dht1, stop_event_dht2]
 
         try:
-            # PI1
-            thread = threading.Thread(target=run_ds1, args=(settings["DS1"],))
-            thread.start()
+                # PI1
+                thread = threading.Thread(target=run_ds1, args=(settings["DS1"],))
+                thread.start()
 
-            thread = threading.Thread(target=run_dus1, args=(settings["DUS1"], stop_event_dus1,))
-            thread.start()
+                thread = threading.Thread(target=run_dus1, args=(settings["DUS1"], stop_event_dus1,))
+                thread.start()
 
-            thread = threading.Thread(target=run_buzzer, args=(settings["DB"], stop_event_db,))
-            thread.start()
-            threads.append(thread)
+                thread = threading.Thread(target=run_buzzer, args=(settings["DB"], stop_event_db,))
+                thread.start()
+                threads.append(thread)
 
-            thread = threading.Thread(target=run_dpir1, args=(settings["DPIR1"], stop_event_dpir1))
-            thread.start()
+                thread = threading.Thread(target=run_dpir1, args=(settings["DPIR1"], stop_event_dpir1))
+                thread.start()
 
-            thread = threading.Thread(target=run_dms, args=(settings["DMS"], stop_event_dms,))
-            thread.start()
+                thread = threading.Thread(target=run_dms, args=(settings["DMS"], stop_event_dms,))
+                thread.start()
 
-            thread = threading.Thread(target=run_pir, args=(settings["PIR1"], stop_event_pir1,))
-            thread.start()
+                thread = threading.Thread(target=run_pir, args=(settings["PIR1"], stop_event_pir1,))
+                thread.start()
 
-            thread = threading.Thread(target=run_pir, args=(settings["PIR2"], stop_event_pir2,))
-            thread.start()
+                thread = threading.Thread(target=run_pir, args=(settings["PIR2"], stop_event_pir2,))
+                thread.start()
 
-            thread = threading.Thread(target=run_dht, args=(settings["DHT1"], stop_event_dht1))
-            thread.start()
+                thread = threading.Thread(target=run_dht, args=(settings["DHT1"], stop_event_dht1))
+                thread.start()
 
-            thread = threading.Thread(target=run_dht, args=(settings["DHT2"], stop_event_dht2))
-            thread.start() 
+                thread = threading.Thread(target=run_dht, args=(settings["DHT2"], stop_event_dht2))
+                thread.start() 
 
-            while True:
-                time.sleep(1)
+                while True:
+                        time.sleep(1)
         except KeyboardInterrupt:
-            for stop_event in events:
-                    stop_event.set()
+                for stop_event in events:
+                        stop_event.set()
 
-            for t in threads:
-                    t.join()
+                for t in threads:
+                        t.join()
 
-            print("App stopped by user")
-            print_exit()
+                print("App stopped by user")
+                print_exit()
