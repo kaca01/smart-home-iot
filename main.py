@@ -132,6 +132,7 @@ if __name__ == "__main__":
     stop_event_dht2 = threading.Event()
     stop_event_dht3 = threading.Event()
     stop_event_dht4 = threading.Event()
+    stop_event_gdht = threading.Event()
     stop_event_pir1 = threading.Event()
     stop_event_pir2 = threading.Event()
     stop_event_pir3 = threading.Event()
@@ -145,7 +146,7 @@ if __name__ == "__main__":
     stop_event_bb = threading.Event()
 
     events = []
-    events += [stop_event_dht1, stop_event_dht2, stop_event_dht3, stop_event_dht4, stop_event_pir1, stop_event_pir2, stop_event_pir3, stop_event_pir4, stop_event_ds1, stop_event_dl,
+    events += [stop_event_dht1, stop_event_dht2, stop_event_dht3, stop_event_dht4, stop_event_gdht, stop_event_pir1, stop_event_pir2, stop_event_pir3, stop_event_pir4, stop_event_ds1, stop_event_dl,
                 stop_event_dus1, stop_event_dpir1, stop_event_db, stop_event_dms, stop_event_bb]
 
     try:
@@ -179,6 +180,9 @@ if __name__ == "__main__":
         thread.start()
 
         # PIR2 
+        thread = threading.Thread(target=run_dht, args=(settings["GDHT"], stop_event_gdht))
+        thread.start()
+
         thread = threading.Thread(target=run_pir, args=(settings["PIR3"], stop_event_pir3))
         thread.start()
 
@@ -200,7 +204,7 @@ if __name__ == "__main__":
             time.sleep(1)
     except KeyboardInterrupt:
         
-        for stop_event in [stop_event_dht1, stop_event_dht2, stop_event_dht3, stop_event_dht4, stop_event_pir1, stop_event_pir2, stop_event_pir3, stop_event_pir4, stop_event_ds1,
+        for stop_event in [stop_event_dht1, stop_event_dht2, stop_event_dht3, stop_event_dht4, stop_event_gdht, stop_event_pir1, stop_event_pir2, stop_event_pir3, stop_event_pir4, stop_event_ds1,
                         stop_event_dl, stop_event_dus1, stop_event_dpir1, stop_event_db, stop_event_dms, stop_event_bb]:
             stop_event.set()
 

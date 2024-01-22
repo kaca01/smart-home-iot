@@ -23,7 +23,7 @@ mqtt_client.loop_start()
 
 def on_connect(client, userdata, flags, rc):
     topics = ["TEMP1", "HMD1", "TEMP2", "HMD2","MOTION1", "MOTION2", "DMS", "DUS1", "DPIR1", "DOOR_SENSOR1"
-                ,"MOTION3", "TEMP3", "HMD3"
+                ,"GTEMP", "GHMD", "MOTION3", "TEMP3", "HMD3"
                 ,"MOTION4", "TEMP4", "HMD4"]
 
     for topic in topics:

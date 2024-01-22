@@ -80,6 +80,14 @@
         "topic": "DPIR1"
     },
 
+    "GDHT": {
+        "simulated": true,
+        "pin": 16,
+        "runs_on": "PI2",
+        "name": "GDHT",
+        "topic": ["GTEMP", "GHMD"]
+    },
+
     "PIR3": {
         "simulated": true,
         "pin": 21,
