@@ -1,4 +1,5 @@
 {
+
     "DHT1": {
         "simulated": true,
         "pin": 16,
@@ -77,5 +78,48 @@
         "runs_on": "PI1",
         "name": "DPIR1",
         "topic": "DPIR1"
+    },
+
+    "PIR3": {
+        "simulated": true,
+        "pin": 21,
+        "runs_on": "PI2",
+        "name": "PIR3",
+        "topic": "MOTION3"
+    },
+
+    "DHT3": {
+        "simulated": true,
+        "pin": 16,
+        "runs_on": "PI2",
+        "name": "DHT3",
+        "topic": ["TEMP3", "HMD3"]
+    },
+
+    
+
+
+    "PIR4": {
+        "simulated": true,
+        "pin": 20,
+        "runs_on": "PI3",
+        "name": "PIR4",
+        "topic": "MOTION4"
+    },
+
+    "DHT4": {
+        "simulated": true,
+        "pin": 17,
+        "runs_on": "PI3",
+        "name": "DHT4",
+        "topic": ["TEMP4", "HMD4"] 
+    },
+
+    "BB": {
+        "simulated": true,
+        "pin": 23,
+        "runs_on": "PI3",
+        "name": "BB",
+        "topic": "BB"
     }
 }
