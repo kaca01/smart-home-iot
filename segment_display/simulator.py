@@ -11,4 +11,4 @@ def run_simulation(delay, stop_event):
             print("Time: ", datetime.now())
             time.sleep(delay)
     except KeyboardInterrupt:
-        print("LCD simulation stopped by user.")
+        print("B4SD simulation stopped by user.")

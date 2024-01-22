@@ -9,6 +9,7 @@ from lights.door_light import run_dl
 from ultrasonic_sensors.door_ultrasonic_sensor import run_dus1
 from pirs.door_motion_sensor import run_dpir1
 from segment_display.segment_display import run_4d7sd
+from infrared.infrared import run_infrared
 from menu_prints import print_lights_menu, print_main_menu, print_door_sensors_menu, print_exit, print_room_sensors_menu
 import time
 
@@ -146,10 +147,11 @@ if __name__ == "__main__":
     stop_event_dms = threading.Event()
     stop_event_bb = threading.Event()
     stop_event_b4sd = threading.Event()
+    stop_event_bir = threading.Event()
 
     events = []
     events += [stop_event_dht1, stop_event_dht2, stop_event_dht3, stop_event_dht4, stop_event_gdht, stop_event_pir1, stop_event_pir2, stop_event_pir3, stop_event_pir4, stop_event_ds1, stop_event_dl,
-                stop_event_dus1, stop_event_dpir1, stop_event_db, stop_event_dms, stop_event_bb, stop_event_b4sd]
+                stop_event_dus1, stop_event_dpir1, stop_event_db, stop_event_dms, stop_event_bb, stop_event_b4sd, stop_event_bir]
 
     try:
         # PIR1
@@ -206,12 +208,15 @@ if __name__ == "__main__":
         thread.start()
         threads.append(thread)
 
+        thread = threading.Thread(target=run_infrared, args=(settings["BIR"], stop_event_bir,))
+        thread.start()
+
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
         
         for stop_event in [stop_event_dht1, stop_event_dht2, stop_event_dht3, stop_event_dht4, stop_event_gdht, stop_event_pir1, stop_event_pir2, stop_event_pir3, stop_event_pir4, stop_event_ds1,
-                        stop_event_dl, stop_event_dus1, stop_event_dpir1, stop_event_db, stop_event_dms, stop_event_bb, stop_event_b4sd]:
+                        stop_event_dl, stop_event_dus1, stop_event_dpir1, stop_event_db, stop_event_dms, stop_event_bb, stop_event_b4sd, stop_event_bir]:
             stop_event.set()
 
         for t in threads:
