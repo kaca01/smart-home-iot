@@ -10,6 +10,7 @@ from ultrasonic_sensors.door_ultrasonic_sensor import run_dus1
 from pirs.door_motion_sensor import run_dpir1
 from segment_display.segment_display import run_4d7sd
 from infrared.infrared import run_infrared
+from gyroscope.gyroscope import run_gyroscope
 from menu_prints import print_lights_menu, print_main_menu, print_door_sensors_menu, print_exit, print_room_sensors_menu
 import time
 
@@ -148,10 +149,11 @@ if __name__ == "__main__":
     stop_event_bb = threading.Event()
     stop_event_b4sd = threading.Event()
     stop_event_bir = threading.Event()
+    stop_event_gsg = threading.Event()
 
     events = []
     events += [stop_event_dht1, stop_event_dht2, stop_event_dht3, stop_event_dht4, stop_event_gdht, stop_event_pir1, stop_event_pir2, stop_event_pir3, stop_event_pir4, stop_event_ds1, stop_event_dl,
-                stop_event_dus1, stop_event_dpir1, stop_event_db, stop_event_dms, stop_event_bb, stop_event_b4sd, stop_event_bir]
+                stop_event_dus1, stop_event_dpir1, stop_event_db, stop_event_dms, stop_event_bb, stop_event_b4sd, stop_event_bir, stop_event_gsg]
 
     try:
         # PIR1
@@ -187,6 +189,9 @@ if __name__ == "__main__":
         thread = threading.Thread(target=run_dht, args=(settings["GDHT"], stop_event_gdht))
         thread.start()
 
+        thread = threading.Thread(target=run_gyroscope, args=(settings["GSG"], stop_event_gsg))
+        thread.start()
+
         thread = threading.Thread(target=run_pir, args=(settings["PIR3"], stop_event_pir3))
         thread.start()
 
@@ -216,7 +221,7 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         
         for stop_event in [stop_event_dht1, stop_event_dht2, stop_event_dht3, stop_event_dht4, stop_event_gdht, stop_event_pir1, stop_event_pir2, stop_event_pir3, stop_event_pir4, stop_event_ds1,
-                        stop_event_dl, stop_event_dus1, stop_event_dpir1, stop_event_db, stop_event_dms, stop_event_bb, stop_event_b4sd, stop_event_bir]:
+                        stop_event_dl, stop_event_dus1, stop_event_dpir1, stop_event_db, stop_event_dms, stop_event_bb, stop_event_b4sd, stop_event_bir, stop_event_gsg]:
             stop_event.set()
 
         for t in threads:

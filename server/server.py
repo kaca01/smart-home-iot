@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 
 # InfluxDB Configuration
-token = "0fYqwG8Ah0Ooeb6HiAo-K2ENajzCZsOgw-odofPIWOfPAPc7gYpyznMpqnplZW8MkmlY8p_vHrAunzmgwwR2Lw=="
+token = "BcC13NNc1JFOlLBqujVBrz0Ik37PZMHozF4g2VF_Ol_HSOd7u9T6b8bd-pa0T1rlLNcsA3PetR68HZh0xHltqg=="
 org = "FTN"
 url = "http://localhost:8086"
 bucket = "smart_home_bucket"
@@ -23,7 +23,7 @@ mqtt_client.loop_start()
 
 def on_connect(client, userdata, flags, rc):
     topics = ["TEMP1", "HMD1", "TEMP2", "HMD2","MOTION1", "MOTION2", "DMS", "DUS1", "DPIR1", "DOOR_SENSOR1"
-                ,"GTEMP", "GHMD", "MOTION3", "TEMP3", "HMD3"
+                ,"GTEMP", "GHMD", "GSG", "MOTION3", "TEMP3", "HMD3"
                 ,"MOTION4", "TEMP4", "HMD4", "BIR"]
 
     for topic in topics:
@@ -36,14 +36,25 @@ mqtt_client.on_message = lambda client, userdata, msg: save_to_db(json.loads(msg
 
 def save_to_db(data):
     write_api = influxdb_client.write_api(write_options=SYNCHRONOUS)
-    point = (
-        Point(data["measurement"])
-        .tag("simulated", data["simulated"])
-        .tag("runs_on", data["runs_on"])
-        .tag("name", data["name"])
-        .field("measurement", data["value"])
-    )
-    write_api.write(bucket=bucket, org=org, record=point)
+    try:
+        point = (
+            Point(data["measurement"])
+            .tag("simulated", data["simulated"])
+            .tag("runs_on", data["runs_on"])
+            .tag("name", data["name"])
+            .field("measurement", data["value"])
+        )
+        write_api.write(bucket=bucket, org=org, record=point)
+    except:
+        for key, value in data["value"].items():
+            point = (
+                Point(data["measurement"])
+                .tag("simulated", data["simulated"])
+                .tag("runs_on", data["runs_on"])
+                .tag("name", data["name"])
+                .field(key, value)
+            )
+            write_api.write(bucket=bucket, org=org, record=point)
 
 
 # Route to store dummy data
