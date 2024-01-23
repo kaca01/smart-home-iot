@@ -13,34 +13,7 @@ export class Devices extends Component {
         super(props);
         this.state = {
             selectedPi: 'PI1',
-            data: [{
-                "Name": "PIR1",
-                "Value": "No motion detected",
-            }, 
-            {
-                "Name": "PIR2",
-                "Value": "Motion detected",
-            },
-            {
-                "Name": "Door buzzer",
-                "Value": "Buzzing!!!",
-            },
-            {
-                "Name": "Door membrane switch",
-            },
-            {
-                "Name": "Door light",
-                "Value": "ON",
-            },
-            {
-                "Name": "Door sensor 1",
-                "Value": "The door is locked.",
-            },
-            {
-                "Name": "Door ultrasonic sensor",
-                "Value": "Someone entering",
-            },
-            ],
+            data: [],
         };
         this.id = 1;
     }
@@ -49,7 +22,7 @@ export class Devices extends Component {
         try {
             const data = await DeviceServices.getDevices(this.state.selectedPi);
             console.log(data)
-            // this.setState({ data: data || [] });
+            this.setState({ data: data || [] });
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -66,7 +39,6 @@ export class Devices extends Component {
                 });
             });
 
-            // Osluškivanje poruka
             mqttClient.on('message', function (topic, message) {
                 console.log(`Dobijena poruka na topic-u ${topic}: ${message.toString()}`);
             });
@@ -78,7 +50,7 @@ export class Devices extends Component {
         try {
             const data = await DeviceServices.getDevices(newPi);
             console.log(data)
-            // this.setState({ data: data || [] });
+            this.setState({ data: data || [] });
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -117,8 +89,9 @@ const DevicesList = ({ devices }) => {
                     {row.map((device, index) => (
                         <div key={index} className='device-card'>
                             <div className='device-info'>
-                                <p className='device-title'>{device.Name}</p>
-                                <p className='device-text'>{device.Value}</p>
+                                <p className='device-title'>{device}</p>
+                                {/* <p className='device-title'>{device.Name}</p>
+                                <p className='device-text'>{device.Value}</p> */}
                             </div>
                         </div>
                     ))}
