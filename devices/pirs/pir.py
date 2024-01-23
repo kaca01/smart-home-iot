@@ -27,7 +27,7 @@ publisher_thread.daemon = True
 publisher_thread.start()
 
 
-def pir_callback(result, publish_event, pir_settings, settings, verbose=False):
+def pir_callback(result, publish_event, pir_settings, settings, rgb_thread, verbose=False):
     if verbose:
         print(f"{pir_settings['name']} says: you moved!")
 
@@ -44,16 +44,26 @@ def pir_callback(result, publish_event, pir_settings, settings, verbose=False):
 
     publish_event.set()
 
-    if (pir_settings["name"] == "PIR1") and result:
-        rgb_event = threading.Event()
-        rgb_thread = threading.Thread(target=run_dl, args = (settings["DL"], rgb_event))
-        rgb_thread.start()
-
+    if (pir_settings["name"] == "PIR1") and result and (not rgb_thread.is_alive()):
+        try:
+            rgb_thread.start()
+        except RuntimeError:
+            print("error catched")
+            rgb_thread.join()
+            # rgb_event.clear()  # Clear the event
+            # # Now create and start a new thread
+            rgb_event = threading.Event()
+            rgb_thread = threading.Thread(target=run_dl, args=(settings["DL"], rgb_event))
+            rgb_thread.start()
+            return rgb_thread
+            
 
 def run_pir(pir_settings, stop_event, settings):
+    rgb_event = threading.Event()
+    rgb_thread = threading.Thread(target=run_dl, args = (settings["DL"], rgb_event))
     try:
         if pir_settings['simulated']:
-            motion_detection_simulation(pir_callback, stop_event, publish_event, pir_settings, settings)
+            motion_detection_simulation(pir_callback, stop_event, publish_event, pir_settings, settings, rgb_thread)
         else:
             # TODO: add return value for lamp
             from pirs.sensors import run_pir_loop
@@ -61,3 +71,4 @@ def run_pir(pir_settings, stop_event, settings):
     except KeyboardInterrupt:
         print("PIR thread stopped by user")
         stop_event.set()
+        rgb_event.set()
