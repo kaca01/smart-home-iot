@@ -81,11 +81,11 @@ def handle_influx_query(query):
         return jsonify({"status": "error", "message": str(e)})
 
 
-@app.route('/dus1/<start>', methods=['GET'])
-def retrieve_simple_data(start):
+@app.route('/<dus>/<start>', methods=['GET'])
+def retrieve_simple_data(dus, start):
     query = f"""from(bucket: "{bucket}")
     |> range(start: -{start}s)
-    |> filter(fn: (r) => r._measurement == "DUS1")"""
+    |> filter(fn: (r) => r._measurement == "{dus}")"""
     return handle_influx_query(query)
 
 @app.route('/increase-counter', methods=['PUT'])

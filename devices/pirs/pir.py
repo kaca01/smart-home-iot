@@ -6,8 +6,9 @@ import threading
 from lights.door_light import run_dl
 import requests
 
-def is_enter():
-    url = "http://127.0.0.1:5000/dus1/3"
+def is_enter(dus):
+    url = f"http://127.0.0.1:5000/{dus}/5"
+    print("URL ", url)
     response = requests.get(url)
 
     if response.status_code == 200:
@@ -23,6 +24,16 @@ def is_enter():
             return None
     else:
         return None
+
+
+def change_counter(check_is_enter):
+    print("Is enter ", check_is_enter)
+    if check_is_enter is True:
+        url = "http://127.0.0.1:5000/increase-counter"
+        requests.put(url)
+    elif check_is_enter is False:
+        url = "http://127.0.0.1:5000/decrease-counter"
+        requests.put(url)
 
 
 pir_batch = []
@@ -62,22 +73,16 @@ def pir_callback(result, publish_event, pir_settings, settings, rgb_thread, verb
         pir_batch.append((pir_settings['topic'], json.dumps(temp_payload), 0, True))
 
     publish_event.set()
-
-    if (pir_settings["name"] == "PIR1") and result and (not rgb_thread.is_alive()):
-        check_is_enter = is_enter()
-        if check_is_enter is True:
-            url = "http://127.0.0.1:5000/increase-counter"
-            requests.put(url)
-        elif check_is_enter is not False:
-            url = "http://127.0.0.1:5000/decrease-counter"
-            requests.put(url)
+    if (pir_settings["name"] == "DPIR2") and result:
+        check_is_enter = is_enter("DUS2")
+        change_counter(check_is_enter)
+    elif (pir_settings["name"] == "DPIR1") and result and (not rgb_thread.is_alive()):
+        check_is_enter = is_enter("DUS1")
+        change_counter(check_is_enter)
         try:
             rgb_thread.start()
         except RuntimeError:
-            print("error catched")
             rgb_thread.join()
-            # rgb_event.clear()  # Clear the event
-            # # Now create and start a new thread
             rgb_event = threading.Event()
             rgb_thread = threading.Thread(target=run_dl, args=(settings["DL"], rgb_event))
             rgb_thread.start()
