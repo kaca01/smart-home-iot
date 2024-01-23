@@ -50,3 +50,8 @@
     margin-bottom: 13px;
     font-size: 1em;
 }
+
+.device-value {
+    font-weight: bold;
+    margin-left: 5px; 
+}

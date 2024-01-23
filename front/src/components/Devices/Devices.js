@@ -21,7 +21,7 @@ export class Devices extends Component {
     async componentDidMount() {
         try {
             const data = await DeviceServices.getDevices(this.state.selectedPi);
-            const initialData = data.map(device => ({ Name: device, Value: [] }));
+            const initialData = data.map(device => ({ Name: device, Value: [{name: '', value: ''}] }));
             this.setState({ data: initialData });
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -30,7 +30,7 @@ export class Devices extends Component {
         // MQTT
         const mqttClient = mqtt.connect('ws://localhost:9001');
 
-        const topicsToSubscribe = ['TEMP1', 'HMD1', 'MOTION1'];
+        const topicsToSubscribe = ['TEMP1', 'HMD1'];
             topicsToSubscribe.forEach(topic => {
                 mqttClient.subscribe(topic, function (err) {
                     if (!err) {
@@ -49,41 +49,43 @@ export class Devices extends Component {
     
         const updatedData = [...this.state.data];
     
-        const deviceIndex = updatedData.findIndex(device => device.Name === parsedMessage.name);
+        const deviceIndex = updatedData.findIndex(device => device.Name === parsedMessage.measurement);
         console.log(deviceIndex)
         console.log(updatedData)
     
         if (deviceIndex === -1) {
             updatedData.push({
-                Name: parsedMessage.name,
-                Values: [parsedMessage.value],
+                Name: parsedMessage.measurement,
+                Value: [{name: parsedMessage.name, value: parsedMessage.value}],
             });
-        } else {
-            let value = parsedMessage.value;
-            if (!value) value = true
-            updatedData[deviceIndex].Value.push(value.toString());
-            // // Ako je uređaj pronađen, proverite da li postoji svojstvo Values
-            // if (!updatedData[deviceIndex].hasOwnProperty('Value')) {
-            //     // Ako ne postoji, dodajte novo svojstvo Values sa vrednošću
-            //     console.log("ne postoji")
-            //     updatedData[deviceIndex].Value = [parsedMessage.value];
-            // } else {
-            //     // Ako postoji, ažurirajte njegovu listu vrednosti
-            //     console.log("vec postoji")
-                
-                
-            // }
+        } 
+        // else {
+        //     let value = parsedMessage.value;
+        //     if (!value) value = true
+        //     updatedData[deviceIndex].Value.push({ name: parsedMessage.name, value: value.toString() });
+        // }
+        else {
+            // Ako uređaj već postoji, pronađite vrednost unutar njega prema imenu
+            const valueIndex = updatedData[deviceIndex].Value.findIndex(v => v.name === parsedMessage.name);
+    
+            if (valueIndex === -1) {
+                // Ako vrednost za dato ime ne postoji, dodajte je
+                updatedData[deviceIndex].Value.push({ name: parsedMessage.name, value: parsedMessage.value.toString() });
+            } else {
+                // Ako vrednost već postoji, ažurirajte je
+                updatedData[deviceIndex].Value[valueIndex].value = parsedMessage.value.toString();
+            }
         }
     
         this.setState({ data: updatedData });
     }
 
     updateSelectedPi = async (newPi) => {
-        const updatedData = this.state.data.map(device => ({ Name: device.Name, Value: [] }));
+        const updatedData = this.state.data.map(device => ({ Name: device.Name, Value: [{name: '', value: ''}] }));
         this.setState({ selectedPi: newPi, data: updatedData });
         try {
             const data = await DeviceServices.getDevices(newPi);
-            const initialData = data.map(device => ({ Name: device, Value: [] }));
+            const initialData = data.map(device => ({ Name: device, Value: [{name: '', value: ''}] }));
             this.setState({ data: initialData });
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -125,9 +127,11 @@ const DevicesList = ({ devices }) => {
                             <div className='device-info'>
                                 <p className='device-title'>{device.Name}</p>
                                 {device.Value.map((value, valueIndex) => (
-                                    <p key={valueIndex} className='device-text'>{value}</p>
+                                    <div key={valueIndex}>
+                                        <span className='device-text'>{value.name}</span>
+                                        <span className='device-value'>{value.value}</span>
+                                    </div>
                                 ))}
-                                {/* <p className='device-text'>{device.Value}</p> */}
                             </div>
                         </div>
                     ))}
