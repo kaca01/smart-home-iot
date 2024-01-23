@@ -5,8 +5,10 @@ from settings.broker_settings import HOSTNAME, PORT
 import paho.mqtt.publish as publish
 import json
 import time
+from datetime import datetime, timedelta
 from door_sensor.sensor import button_pressed
 from door_sensor.simulation import run_simulation
+from buzzer.buzzer import run_buzzer
 try:
     import RPi.GPIO as GPIO
 except ModuleNotFoundError:
@@ -16,6 +18,30 @@ ds_batch = []
 publish_data_counter = 0
 publish_data_limit = 5
 counter_lock = threading.Lock()
+start_time = None
+
+def alarm_activation(event):
+    start_time = 0
+    while True:
+        event.wait()
+        print("ALARM")
+        start_time = datetime.now()
+        event.clear()
+        while not event.is_set():
+            if (datetime.now() - start_time).total_seconds() > 5:
+                print("ALARM JE POCEO")
+                # run_buzzer(True)
+                break
+                # event.set()
+        event.clear()
+        event.wait()
+        print("ALARM JE ZAVRSIO")
+        event.clear()
+
+alarm_event = threading.Event()
+alarm_thread = threading.Thread(target=alarm_activation, args=(alarm_event, ))
+alarm_thread.daemon = True
+
 
 
 def publisher_task(event, ds_batch):
@@ -38,21 +64,22 @@ publisher_thread.start()
 
 
 def ds_callback(is_lock, publish_event, ds_settings, verbose=False):
-    global publish_data_counter, publish_data_limit
-
+    global publish_data_counter, publish_data_limit, start_time, alarm_event
+    is_open = not is_lock
+    alarm_event.set()
     if verbose:
         t = time.localtime()
         print("="*20)
         print("DHT1")
         print(f"Timestamp: {time.strftime('%H:%M:%S', t)}")
-        print(f"isOpen: {is_lock}%")
+        print(f"isOpen: {is_open}")
 
     payload = {
         "measurement": ds_settings['topic'],
         "simulated": ds_settings['simulated'],
         "runs_on": ds_settings["runs_on"],
         "name": ds_settings["name"],
-        "value": is_lock
+        "value": is_open
     }
 
     with counter_lock:
@@ -62,8 +89,19 @@ def ds_callback(is_lock, publish_event, ds_settings, verbose=False):
     if publish_data_counter >= publish_data_limit:
         publish_event.set()
 
+    if is_open and (start_time is None):
+        start_time = datetime.now()
+    elif not is_open and (start_time is not None):
+        end_time = datetime.now()
+        difference = (end_time - start_time).total_seconds()
+        start_time = None
+        print("DIFFERENCE: ", difference)
+        alarm_event.set()
+
 
 def run_ds(settings):
+    global alarm_thread
+    alarm_thread.start()
     try :
         if settings["simulated"]:
             run_simulation(ds_callback, publish_event, settings)
@@ -85,5 +123,3 @@ def run_ds(settings):
                 # GPIO.cleanup()
     except KeyboardInterrupt:
         print("DS stopped")
-
-

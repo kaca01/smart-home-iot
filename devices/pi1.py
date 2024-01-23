@@ -46,15 +46,15 @@ if __name__ == "__main__":
 
         try:
                 # PI1
-                thread = threading.Thread(target=run_ds, args=(settings["DS1"],))
+                thread = threading.Thread(target=run_ds, args=(settings["DS1"], ))
                 thread.start()
 
                 thread = threading.Thread(target=run_dus, args=(settings["DUS1"], stop_event_dus1,))
                 thread.start()
 
-                thread = threading.Thread(target=run_buzzer, args=(settings["DB"], stop_event_db,))
-                thread.start()
-                threads.append(thread)
+                # thread = threading.Thread(target=run_buzzer, args=(settings["DB"], stop_event_db,))
+                # thread.start()
+                # threads.append(thread)
 
                 thread = threading.Thread(target=run_pir, args=(settings["DPIR1"], stop_event_dpir1, settings))
                 thread.start()

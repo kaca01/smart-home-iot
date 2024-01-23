@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
         try:
                 # PI3
-                thread = threading.Thread(target=run_pir, args=(settings["PIR4"], stop_event_pir4))
+                thread = threading.Thread(target=run_pir, args=(settings["PIR4"], stop_event_pir4, settings))
                 thread.start()
 
                 thread = threading.Thread(target=run_dht, args=(settings["DHT4"], stop_event_dht4))
