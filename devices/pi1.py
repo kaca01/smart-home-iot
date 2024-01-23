@@ -4,8 +4,8 @@ from dhts.dht import run_dht
 from pirs.pir import run_pir
 from buzzer.buzzer import run_buzzer
 from dms.dms import run_dms
-from sensors.door_sensor.door_sensor import run_ds1
-from sensors.ultrasonic_sensors.door_ultrasonic_sensor import run_dus1
+from door_sensor.door_sensor import run_ds
+from ultrasonic_sensors.door_ultrasonic_sensor import run_dus
 import time
 
 try:
@@ -46,10 +46,10 @@ if __name__ == "__main__":
 
         try:
                 # PI1
-                thread = threading.Thread(target=run_ds1, args=(settings["DS1"],))
+                thread = threading.Thread(target=run_ds, args=(settings["DS1"],))
                 thread.start()
 
-                thread = threading.Thread(target=run_dus1, args=(settings["DUS1"], stop_event_dus1,))
+                thread = threading.Thread(target=run_dus, args=(settings["DUS1"], stop_event_dus1,))
                 thread.start()
 
                 thread = threading.Thread(target=run_buzzer, args=(settings["DB"], stop_event_db,))

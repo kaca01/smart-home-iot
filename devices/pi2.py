@@ -2,8 +2,8 @@ import threading
 from settings.settings import load_settings
 from dhts.dht import run_dht
 from pirs.pir import run_pir
-from sensors.door_sensor.door_sensor import run_ds1
-from sensors.ultrasonic_sensors.door_ultrasonic_sensor import run_dus1
+from door_sensor.door_sensor import run_ds
+from ultrasonic_sensors.door_ultrasonic_sensor import run_dus
 from lcd.lcd import run_lcd
 from gyroscope.gyroscope import run_gyroscope
 import time
@@ -45,10 +45,10 @@ if __name__ == "__main__":
 
         try:
                 # PI2
-                thread = threading.Thread(target=run_ds1, args=(settings["DS2"],))
+                thread = threading.Thread(target=run_ds, args=(settings["DS2"],))
                 thread.start()
 
-                thread = threading.Thread(target=run_dus1, args=(settings["DUS2"], stop_event_dus2, ))
+                thread = threading.Thread(target=run_dus, args=(settings["DUS2"], stop_event_dus2, ))
                 thread.start()
 
                 thread = threading.Thread(target=run_pir, args=(settings["DPIR2"], stop_event_dpir2))

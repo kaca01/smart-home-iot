@@ -1,7 +1,7 @@
 import time
 import random
 from time import sleep
-from sensors.ultrasonic_sensors.simulation import run_simulation
+from ultrasonic_sensors.simulation import run_simulation
 from settings.broker_settings import HOSTNAME, PORT
 import threading
 import json
@@ -57,7 +57,7 @@ def dus_callback(distance, publish_event, dus_settings, verbose=False):
         publish_event.set()
 
 
-def run_dus1(settings, event):
+def run_dus(settings, event):
     try:
         if settings["simulated"]:
             run_simulation(event, dus_callback, publish_event, settings)
