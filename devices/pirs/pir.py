@@ -4,6 +4,7 @@ import paho.mqtt.publish as publish
 import json
 import threading
 from lights.door_light import run_dl
+from buzzer.buzzer import button_pressed, button_released
 import requests
 
 def is_enter(dus):
@@ -36,6 +37,17 @@ def change_counter(check_is_enter):
         requests.put(url)
 
 
+def get_count():
+    url = f"http://127.0.0.1:5000/counter"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        json_data = response.json()
+        # print(json_data["data"])
+        data = json_data["data"]
+        return data
+
+
 pir_batch = []
 counter_lock = threading.Lock()
 
@@ -55,9 +67,10 @@ publish_event = threading.Event()
 publisher_thread = threading.Thread(target=publisher_task, args=(publish_event, pir_batch,))
 publisher_thread.daemon = True
 publisher_thread.start()
-
+buzzer_event = threading.Event()
 
 def pir_callback(result, publish_event, pir_settings, settings, rgb_thread, verbose=False):
+    global buzzer_event
     if verbose:
         print(f"{pir_settings['name']} says: you moved!")
 
@@ -87,6 +100,9 @@ def pir_callback(result, publish_event, pir_settings, settings, rgb_thread, verb
             rgb_thread = threading.Thread(target=run_dl, args=(settings["DL"], rgb_event))
             rgb_thread.start()
             return rgb_thread
+    elif (pir_settings["name"] in ["PIR1", "PIR2", "PIR3", "PIR4"]) and result:
+        if (get_count() == 0):
+            button_pressed(buzzer_event)
             
 
 def run_pir(pir_settings, stop_event, settings):
