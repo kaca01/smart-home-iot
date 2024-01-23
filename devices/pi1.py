@@ -6,7 +6,6 @@ from buzzer.buzzer import run_buzzer
 from dms.dms import run_dms
 from sensors.door_sensor.door_sensor import run_ds1
 from sensors.ultrasonic_sensors.door_ultrasonic_sensor import run_dus1
-from pirs.door_motion_sensor import run_dpir1
 import time
 
 try:
