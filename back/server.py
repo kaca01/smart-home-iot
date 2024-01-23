@@ -11,7 +11,7 @@ app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
 # InfluxDB Configuration
-token = "E4rShFELAqiF3QdVUCfPn2Yn8xwWg3PvjggEpM5LTwdg8v0nzLqBDzLv9EcWi3a5cnfT1S6qH5xqJM-4ho_Low=="
+token = "B4JXAYcG1_O6xWdIzxA3kM_dDB_jJ1MKP_XKUXumggec0ayjidB65_ePQKvbGSs3IIG_eN4HP-tKzucLp2Ijew=="
 org = "FTN"
 url = "http://localhost:8086"
 bucket = "smart_home_bucket"
@@ -36,6 +36,7 @@ mqtt_client.on_message = lambda client, userdata, msg: save_to_db(json.loads(msg
 
 
 def save_to_db(data):
+    print(data)
     write_api = influxdb_client.write_api(write_options=SYNCHRONOUS)
     try:
         point = (

@@ -21,8 +21,8 @@ export class Devices extends Component {
     async componentDidMount() {
         try {
             const data = await DeviceServices.getDevices(this.state.selectedPi);
-            console.log(data)
-            this.setState({ data: data || [] });
+            const initialData = data.map(device => ({ Name: device, Value: [] }));
+            this.setState({ data: initialData });
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -30,7 +30,7 @@ export class Devices extends Component {
         // MQTT
         const mqttClient = mqtt.connect('ws://localhost:9001');
 
-        const topicsToSubscribe = ['TEMP1', 'HMD1'];
+        const topicsToSubscribe = ['TEMP1', 'HMD1', 'MOTION1'];
             topicsToSubscribe.forEach(topic => {
                 mqttClient.subscribe(topic, function (err) {
                     if (!err) {
@@ -38,19 +38,53 @@ export class Devices extends Component {
                     }
                 });
             });
+            
+            mqttClient.on('message', this.handleMqttMessage);
+    }
 
-            mqttClient.on('message', function (topic, message) {
-                console.log(`Dobijena poruka na topic-u ${topic}: ${message.toString()}`);
+    handleMqttMessage = (topic, message) => {
+        console.log(message.toString());
+
+        const parsedMessage = JSON.parse(message.toString());
+    
+        const updatedData = [...this.state.data];
+    
+        const deviceIndex = updatedData.findIndex(device => device.Name === parsedMessage.name);
+        console.log(deviceIndex)
+        console.log(updatedData)
+    
+        if (deviceIndex === -1) {
+            updatedData.push({
+                Name: parsedMessage.name,
+                Values: [parsedMessage.value],
             });
+        } else {
+            let value = parsedMessage.value;
+            if (!value) value = true
+            updatedData[deviceIndex].Value.push(value.toString());
+            // // Ako je uređaj pronađen, proverite da li postoji svojstvo Values
+            // if (!updatedData[deviceIndex].hasOwnProperty('Value')) {
+            //     // Ako ne postoji, dodajte novo svojstvo Values sa vrednošću
+            //     console.log("ne postoji")
+            //     updatedData[deviceIndex].Value = [parsedMessage.value];
+            // } else {
+            //     // Ako postoji, ažurirajte njegovu listu vrednosti
+            //     console.log("vec postoji")
+                
+                
+            // }
+        }
+    
+        this.setState({ data: updatedData });
     }
 
     updateSelectedPi = async (newPi) => {
-        this.setState({ selectedPi: newPi });
-        console.log(newPi);
+        const updatedData = this.state.data.map(device => ({ Name: device.Name, Value: [] }));
+        this.setState({ selectedPi: newPi, data: updatedData });
         try {
             const data = await DeviceServices.getDevices(newPi);
-            console.log(data)
-            this.setState({ data: data || [] });
+            const initialData = data.map(device => ({ Name: device, Value: [] }));
+            this.setState({ data: initialData });
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -89,9 +123,11 @@ const DevicesList = ({ devices }) => {
                     {row.map((device, index) => (
                         <div key={index} className='device-card'>
                             <div className='device-info'>
-                                <p className='device-title'>{device}</p>
-                                {/* <p className='device-title'>{device.Name}</p>
-                                <p className='device-text'>{device.Value}</p> */}
+                                <p className='device-title'>{device.Name}</p>
+                                {device.Value.map((value, valueIndex) => (
+                                    <p key={valueIndex} className='device-text'>{value}</p>
+                                ))}
+                                {/* <p className='device-text'>{device.Value}</p> */}
                             </div>
                         </div>
                     ))}
