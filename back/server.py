@@ -19,6 +19,7 @@ influxdb_client = InfluxDBClient(url=url, token=token, org=org)
 mqtt_client = mqtt.Client()
 mqtt_client.connect("localhost", 1883, 60)
 mqtt_client.loop_start()
+counter = 0
 
 def on_connect(client, userdata, flags, rc):
     topics = ["TEMP1", "HMD1", "TEMP2", "HMD2","MOTION1", "MOTION2", "DMS", "DUS1", "DPIR1", "DOOR_SENSOR1"
@@ -67,28 +68,43 @@ def save_to_db(data):
 #         return jsonify({"status": "error", "message": str(e)})
 
 
-# def handle_influx_query(query):
-#     try:
-#         query_api = influxdb_client.query_api()
-#         tables = query_api.query(query, org=org)
+def handle_influx_query(query):
+    try:
+        query_api = influxdb_client.query_api()
+        tables = query_api.query(query, org=org)
 
-#         container = []
-#         for table in tables:
-#             for record in table.records:
-#                 container.append(record.values)
+        container = []
+        for table in tables:
+            for record in table.records:
+                container.append(record.values)
 
-#         return jsonify({"status": "success", "data": container})
-#     except Exception as e:
-#         return jsonify({"status": "error", "message": str(e)})
+        return jsonify({"status": "success", "data": container})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
 
 
-# @app.route('/simple_query', methods=['GET'])
-# def retrieve_simple_data():
-#     query = f"""from(bucket: "{bucket}")
-#     |> range(start: -10m)
-#     |> filter(fn: (r) => r._measurement == "Humidity")"""
-#     return handle_influx_query(query)
+@app.route('/dus1/<start>', methods=['GET'])
+def retrieve_simple_data(start):
+    query = f"""from(bucket: "{bucket}")
+    |> range(start: -{start}s)
+    |> filter(fn: (r) => r._measurement == "DUS1")"""
+    return handle_influx_query(query)
 
+@app.route('/increase-counter', methods=['PUT'])
+def increase_counter():
+    global counter
+    counter += 1
+    return jsonify({"status": "success", "data": counter})
+
+@app.route('/decrease-counter', methods=['PUT'])
+def decrease_counter():
+    global counter
+    counter -= 1
+    return jsonify({"status": "success", "data": counter})
+
+@app.route('/counter', methods=['GET'])
+def get_counter():
+    return jsonify({"status": "success", "data": counter})
 
 # @app.route('/aggregate_query', methods=['GET'])
 # def retrieve_aggregate_data():
@@ -100,4 +116,5 @@ def save_to_db(data):
 
 
 if __name__ == '__main__':
+    counter = 0
     app.run(debug=True)
