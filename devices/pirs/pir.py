@@ -4,6 +4,25 @@ import paho.mqtt.publish as publish
 import json
 import threading
 from lights.door_light import run_dl
+import requests
+
+def is_enter():
+    url = "http://127.0.0.1:5000/dus1/3"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        json_data = response.json()
+        # print(json_data["data"])
+        data = json_data["data"]
+        if data != []:
+            if data[0]["_value"] > data[-1]["_value"]:
+                return True
+            else:
+                return False
+        else:
+            return None
+    else:
+        return None
 
 
 pir_batch = []
@@ -45,6 +64,13 @@ def pir_callback(result, publish_event, pir_settings, settings, rgb_thread, verb
     publish_event.set()
 
     if (pir_settings["name"] == "PIR1") and result and (not rgb_thread.is_alive()):
+        check_is_enter = is_enter()
+        if check_is_enter is True:
+            url = "http://127.0.0.1:5000/increase-counter"
+            requests.put(url)
+        elif check_is_enter is not False:
+            url = "http://127.0.0.1:5000/decrease-counter"
+            requests.put(url)
         try:
             rgb_thread.start()
         except RuntimeError:
@@ -59,6 +85,8 @@ def pir_callback(result, publish_event, pir_settings, settings, rgb_thread, verb
             
 
 def run_pir(pir_settings, stop_event, settings):
+    print("Starting pir")
+
     rgb_event = threading.Event()
     rgb_thread = threading.Thread(target=run_dl, args = (settings["DL"], rgb_event))
     try:

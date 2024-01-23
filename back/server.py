@@ -4,9 +4,7 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 import paho.mqtt.client as mqtt
 import json
 
-
 app = Flask(__name__)
-
 
 # InfluxDB Configuration
 token = "BVbEPfH_LihrdVBMkpZqdpq4hztiAKEFrN1kFfWmQYpl6j_JmoIAN_IHDu1DLmUvjAxXyrbG86bonXUF2OYYCw=="
@@ -99,7 +97,8 @@ def increase_counter():
 @app.route('/decrease-counter', methods=['PUT'])
 def decrease_counter():
     global counter
-    counter -= 1
+    if counter > 0:
+        counter -= 1
     return jsonify({"status": "success", "data": counter})
 
 @app.route('/counter', methods=['GET'])
