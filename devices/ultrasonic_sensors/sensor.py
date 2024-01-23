@@ -1,16 +1,9 @@
 import time
 import random
 from time import sleep
-try:
-    import RPi.GPIO as GPIO
-except ModuleNotFoundError:
-    pass
+import RPi.GPIO as GPIO
 
-class DUS(object):
-    def __init__(self, pin):
-        self.pin = pin
-
-def get_distance(self, TRIG_PIN, ECHO_PIN):
+def get_distance(TRIG_PIN, ECHO_PIN):
     GPIO.output(TRIG_PIN, False)
     time.sleep(0.2)
     GPIO.output(TRIG_PIN, True)
@@ -46,7 +39,7 @@ def is_locked(distance):
     return True
 
 
-def run_dus_loop(d, settings, callback, publish_event, event):
+def run_dus_loop(settings, callback, publish_event, event):
     GPIO.setmode(GPIO.BCM)
 
     TRIG_PIN = settings["pin"][0]
@@ -57,8 +50,9 @@ def run_dus_loop(d, settings, callback, publish_event, event):
 
     try:
         while not event.is_set():
-            callback(distance, publish_event, settings)
             distance = get_distance(TRIG_PIN, ECHO_PIN)
+            callback(distance, publish_event, settings)
+            
             if is_locked(distance):
                 print(settings["name"] + ' says the door is locked!')
             else:

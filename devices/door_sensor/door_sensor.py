@@ -5,8 +5,8 @@ from settings.broker_settings import HOSTNAME, PORT
 import paho.mqtt.publish as publish
 import json
 import time
-from sensors.door_sensor.sensor import button_pressed
-from sensors.door_sensor.simulation import run_simulation
+from door_sensor.sensor import button_pressed
+from door_sensor.simulation import run_simulation
 try:
     import RPi.GPIO as GPIO
 except ModuleNotFoundError:
@@ -37,7 +37,7 @@ publisher_thread.daemon = True
 publisher_thread.start()
 
 
-def ds_callback(isLocked, publish_event, ds_settings, verbose=False):
+def ds_callback(is_lock, publish_event, ds_settings, verbose=False):
     global publish_data_counter, publish_data_limit
 
     if verbose:
@@ -45,14 +45,14 @@ def ds_callback(isLocked, publish_event, ds_settings, verbose=False):
         print("="*20)
         print("DHT1")
         print(f"Timestamp: {time.strftime('%H:%M:%S', t)}")
-        print(f"isOpen: {isLocked}%")
+        print(f"isOpen: {is_lock}%")
 
     payload = {
         "measurement": ds_settings['topic'],
         "simulated": ds_settings['simulated'],
         "runs_on": ds_settings["runs_on"],
         "name": ds_settings["name"],
-        "value": isLocked
+        "value": is_lock
     }
 
     with counter_lock:
@@ -63,7 +63,7 @@ def ds_callback(isLocked, publish_event, ds_settings, verbose=False):
         publish_event.set()
 
 
-def run_ds1(settings):
+def run_ds(settings):
     try :
         if settings["simulated"]:
             run_simulation(ds_callback, publish_event, settings)
