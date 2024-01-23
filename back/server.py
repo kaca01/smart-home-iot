@@ -11,7 +11,7 @@ app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
 # InfluxDB Configuration
-token = "t8ymyGJUOnmQ3cMEgDZR6o6vVXhIGrIWu1S3QbaqcLItU6mhqg-OpSesqxhoGe_hLHV-6g2XrXMpMN4N0GIDVg=="
+token = "7w1LlPQehPSMOybo-ftUCCs_b3LVCKRMvwFJP3omzFtPBjz1E_LhssmidplbXt0-_6mNk4ImXmKiOOV3f75ixA=="
 org = "FTN"
 url = "http://localhost:8086"
 bucket = "smart_home_bucket"
@@ -23,9 +23,9 @@ mqtt_client.connect("localhost", 1883, 60)
 mqtt_client.loop_start()
 
 def on_connect(client, userdata, flags, rc):
-    topics = ["TEMP1", "HMD1", "TEMP2", "HMD2","MOTION1", "MOTION2", "DMS", "DUS1", "DPIR1", "DOOR_SENSOR1"
-                ,"DPIR2", "GTEMP", "GHMD", "GSG", "MOTION3", "TEMP3", "HMD3"
-                ,"MOTION4", "TEMP4", "HMD4", "BIR", "RGB1", "DUS2", "DOOR_SENSOR2"]
+    topics = ["TEMP1", "HMD1", "TEMP2", "HMD2","MOTION1", "MOTION2", "DMS", "DUS1", "DPIR1", "DS1"
+                ,"DPIR2", "GTEMP", "GHMD", "GSG", "MOTION3", "TEMP3", "HMD3", "DUS2", "DS2"
+                ,"MOTION4", "TEMP4", "HMD4", "BIR", "RGB"]
 
     for topic in topics:
         client.subscribe(topic)

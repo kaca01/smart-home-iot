@@ -22,12 +22,12 @@ export class Devices extends Component {
     async componentDidMount() {
         try {
             const data = await DeviceServices.getDevices(this.state.selectedPi);
-            const initialData = data.map(device => ({ Name: device, Value: [{name: '', value: ''}] }));
+            const initialData = data.map(device => ({ Name: device, Value: [] }));
             this.setState({ data: initialData });
 
             const topics = await DeviceServices.getTopics(this.state.selectedPi);
             this.setState({ topics: topics });
-            console.log(topics)
+            //console.log(topics)
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -47,28 +47,16 @@ export class Devices extends Component {
     }
 
     handleMqttMessage = (topic, message) => {
-        console.log(message.toString());
+        // console.log(message.toString());
 
         const parsedMessage = JSON.parse(message.toString());
-    
+
+        console.log(this.state.data)
         const updatedData = [...this.state.data];
-    
+
         const deviceIndex = updatedData.findIndex(device => device.Name === parsedMessage.measurement);
-        console.log(deviceIndex)
-        console.log(updatedData)
     
-        if (deviceIndex === -1) {
-            updatedData.push({
-                Name: parsedMessage.measurement,
-                Value: [{name: parsedMessage.name, value: parsedMessage.value}],
-            });
-        } 
-        // else {
-        //     let value = parsedMessage.value;
-        //     if (!value) value = true
-        //     updatedData[deviceIndex].Value.push({ name: parsedMessage.name, value: value.toString() });
-        // }
-        else {
+        try {
             // Ako uređaj već postoji, pronađite vrednost unutar njega prema imenu
             const valueIndex = updatedData[deviceIndex].Value.findIndex(v => v.name === parsedMessage.name);
     
@@ -79,18 +67,43 @@ export class Devices extends Component {
                 // Ako vrednost već postoji, ažurirajte je
                 updatedData[deviceIndex].Value[valueIndex].value = parsedMessage.value.toString();
             }
-        }
-    
-        this.setState({ data: updatedData });
+
+            this.setState({ data: updatedData });
+        } catch(err) {}    
     }
 
     updateSelectedPi = async (newPi) => {
-        const updatedData = this.state.data.map(device => ({ Name: device.Name, Value: [{name: '', value: ''}] }));
+        const updatedData = this.state.data.map(device => ({ Name: device.Name, Value: [] }));
         this.setState({ selectedPi: newPi, data: updatedData });
+
+        // logout from old topics
+        const mqttClient = mqtt.connect('ws://localhost:9001');
+        this.state.topics.forEach(topic => {
+            mqttClient.unsubscribe(topic, function (err) {
+                if (!err) {
+                    // console.log(`Odjavljeni ste sa topica: ${topic}`);
+                }
+            });
+        });
+
         try {
             const data = await DeviceServices.getDevices(newPi);
             const initialData = data.map(device => ({ Name: device, Value: [{name: '', value: ''}] }));
             this.setState({ data: initialData });
+
+            const topics = await DeviceServices.getTopics(newPi);
+            this.setState({ topics: topics });
+
+            // subscribe on new topics
+            topics.forEach(topic => {
+                mqttClient.subscribe(topic, function (err) {
+                    if (!err) {
+                        // console.log(`Pretplaceni ste na topic: ${topic}`);
+                    }
+                });
+            });
+            
+            mqttClient.on('message', this.handleMqttMessage);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -102,7 +115,7 @@ export class Devices extends Component {
                 <Navigation updateSelectedPi={this.updateSelectedPi}></Navigation>
                 <div id="panel">
                     {/* <Iframe url={this.grafanaGraphUrl} width="100%" height="600px"/> */}
-                    <span className='estate-title'>PI {this.id}</span>
+                    <span className='estate-title'>{this.state.selectedPi}</span>
                     <Divider style={{ width: "87%", marginLeft: 'auto', marginRight: 'auto', marginBottom: '20px' }} />
                     <DevicesList devices={this.state.data}/>
                 </div>

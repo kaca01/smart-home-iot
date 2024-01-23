@@ -41,10 +41,6 @@ def ds_callback(is_lock, publish_event, ds_settings, verbose=False):
     global publish_data_counter, publish_data_limit
 
     if verbose:
-        t = time.localtime()
-        print("="*20)
-        print("DHT1")
-        print(f"Timestamp: {time.strftime('%H:%M:%S', t)}")
         print(f"isOpen: {is_lock}%")
 
     payload = {
