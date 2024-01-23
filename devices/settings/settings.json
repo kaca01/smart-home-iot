@@ -1,7 +1,7 @@
 {
     "DHT1": {
         "simulated": true,
-        "pin": 16,
+        "pin": 22,
         "runs_on": "PI1",
         "name": "DHT1",
         "topic": ["TEMP1", "HMD1"]
@@ -57,7 +57,7 @@
 
     "DS1": {
         "simulated": true,
-        "pin": 17,
+        "pin": 27,
         "runs_on": "PI1",
         "name": "DS1",
         "topic": "DOOR_SENSOR1"
@@ -65,7 +65,7 @@
 
     "DUS1": {
         "simulated": true,
-        "pin": [23, 24],
+        "pin": [13, 24],
         "runs_on": "PI1",
         "name": "DUS1",
         "topic": "DUS1"
@@ -117,7 +117,7 @@
 
     "LCD": {
         "simulated": true,
-        "pin": [4, 5, 6, 7],
+        "pin": [25, 8, 7, 1],
         "runs_on": "PI2",
         "name": "GLCD",
         "topic": "GLCD"
@@ -125,7 +125,7 @@
 
     "GSG": {
         "simulated": true,
-        "pin": [2, 3],
+        "pin": [14, 15],
         "runs_on": "PI2",
         "name": "GSG",
         "topic": "GSG"
@@ -184,7 +184,7 @@
 
     "BIR": {
         "simulated": true,
-        "pin": 17,
+        "pin": 16,
         "runs_on": "PI3",
         "name": "BIR",
         "topic": "BIR"
