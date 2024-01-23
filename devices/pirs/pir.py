@@ -3,6 +3,7 @@ from settings.broker_settings import HOSTNAME, PORT
 import paho.mqtt.publish as publish
 import json
 import threading
+from lights.door_light import run_dl
 
 
 pir_batch = []
@@ -26,7 +27,7 @@ publisher_thread.daemon = True
 publisher_thread.start()
 
 
-def pir_callback(result, publish_event, pir_settings, verbose=False):
+def pir_callback(result, publish_event, pir_settings, settings, verbose=False):
     if verbose:
         print(f"{pir_settings['name']} says: you moved!")
 
@@ -43,13 +44,20 @@ def pir_callback(result, publish_event, pir_settings, verbose=False):
 
     publish_event.set()
 
+    if (pir_settings["name"] == "PIR1") and result:
+        rgb_event = threading.Event()
+        rgb_thread = threading.Thread(target=run_dl, args = (settings["DL"], rgb_event))
+        rgb_thread.start()
 
-def run_pir(settings, stop_event):
+
+def run_pir(pir_settings, stop_event, settings):
     try:
-        if settings['simulated']:
-            motion_detection_simulation(pir_callback, stop_event, publish_event, settings)
+        if pir_settings['simulated']:
+            motion_detection_simulation(pir_callback, stop_event, publish_event, pir_settings, settings)
         else:
+            # TODO: add return value for lamp
             from pirs.sensors import run_pir_loop
-            run_pir_loop(2, pir_callback, stop_event, publish_event, settings)
+            run_pir_loop(2, pir_callback, stop_event, publish_event, pir_settings)
     except KeyboardInterrupt:
         print("PIR thread stopped by user")
+        stop_event.set()

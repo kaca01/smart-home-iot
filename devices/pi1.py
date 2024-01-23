@@ -56,16 +56,16 @@ if __name__ == "__main__":
                 thread.start()
                 threads.append(thread)
 
-                thread = threading.Thread(target=run_pir, args=(settings["DPIR1"], stop_event_dpir1))
+                thread = threading.Thread(target=run_pir, args=(settings["DPIR1"], stop_event_dpir1, settings))
                 thread.start()
 
                 thread = threading.Thread(target=run_dms, args=(settings["DMS"], stop_event_dms,))
                 thread.start()
 
-                thread = threading.Thread(target=run_pir, args=(settings["PIR1"], stop_event_pir1,))
+                thread = threading.Thread(target=run_pir, args=(settings["PIR1"], stop_event_pir1, settings))
                 thread.start()
 
-                thread = threading.Thread(target=run_pir, args=(settings["PIR2"], stop_event_pir2,))
+                thread = threading.Thread(target=run_pir, args=(settings["PIR2"], stop_event_pir2, settings))
                 thread.start()
 
                 thread = threading.Thread(target=run_dht, args=(settings["DHT1"], stop_event_dht1))
