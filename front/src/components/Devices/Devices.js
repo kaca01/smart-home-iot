@@ -72,10 +72,22 @@ export class Devices extends Component {
             });
     }
 
+    updateSelectedPi = async (newPi) => {
+        this.setState({ selectedPi: newPi });
+        console.log(newPi);
+        try {
+            const data = await DeviceServices.getDevices(newPi);
+            console.log(data)
+            // this.setState({ data: data || [] });
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
     render() {
         return (
             <div>
-                <Navigation></Navigation>
+                <Navigation updateSelectedPi={this.updateSelectedPi}></Navigation>
                 <div id="panel">
                     {/* <Iframe url={this.grafanaGraphUrl} width="100%" height="600px"/> */}
                     <span className='estate-title'>PI {this.id}</span>
