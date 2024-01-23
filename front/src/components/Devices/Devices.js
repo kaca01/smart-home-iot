@@ -1,6 +1,5 @@
 import { Component } from "react";
 import './Devices.css';
-import Iframe from 'react-iframe';
 import { Navigation } from "../Navigation/Navigation";
 import { Divider } from '@mui/material';
 
