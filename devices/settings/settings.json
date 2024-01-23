@@ -36,7 +36,7 @@
         "pin": 23,
         "runs_on": "PI1",
         "name": "DB",
-        "topic": "DB"
+        "topic": ""
     },
     
     "DMS": {
@@ -52,7 +52,7 @@
         "pin": 18,
         "runs_on": "PI1",
         "name": "DL",
-        "topic": "DL"
+        "topic": ""
     },
 
     "DS1": {
@@ -78,6 +78,11 @@
         "name": "DPIR1",
         "topic": "DPIR1"
     },
+
+
+
+
+
     
     "DS2": {
         "simulated": true,

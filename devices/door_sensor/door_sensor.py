@@ -48,10 +48,10 @@ def ds_callback(is_lock, publish_event, ds_settings, verbose=False):
         print(f"isOpen: {is_lock}%")
 
     payload = {
-        "measurement": ds_settings['topic'],
+        "measurement": ds_settings['name'],
         "simulated": ds_settings['simulated'],
         "runs_on": ds_settings["runs_on"],
-        "name": ds_settings["name"],
+        "name": "pressed",
         "value": is_lock
     }
 

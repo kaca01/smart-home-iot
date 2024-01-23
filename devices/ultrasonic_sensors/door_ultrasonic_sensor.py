@@ -42,10 +42,10 @@ def dus_callback(distance, publish_event, dus_settings, verbose=False):
         print(f"Distance: {distance}cm")
 
     payload = {
-        "measurement": dus_settings['topic'],
+        "measurement": dus_settings['name'],
         "simulated": dus_settings['simulated'],
         "runs_on": dus_settings["runs_on"],
-        "name": dus_settings["name"],
+        "name": "distance",
         "value": distance
     }
 

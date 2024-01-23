@@ -11,7 +11,7 @@ app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
 # InfluxDB Configuration
-token = "B4JXAYcG1_O6xWdIzxA3kM_dDB_jJ1MKP_XKUXumggec0ayjidB65_ePQKvbGSs3IIG_eN4HP-tKzucLp2Ijew=="
+token = "t8ymyGJUOnmQ3cMEgDZR6o6vVXhIGrIWu1S3QbaqcLItU6mhqg-OpSesqxhoGe_hLHV-6g2XrXMpMN4N0GIDVg=="
 org = "FTN"
 url = "http://localhost:8086"
 bucket = "smart_home_bucket"
@@ -118,13 +118,31 @@ def save_to_db(data):
 
 
 @app.route('/api/get_devices/<pi_name>', methods=['GET'])
-def get_pi1_devices(pi_name):
+def get_pi_devices(pi_name):
     with open('../devices/settings/settings.json', 'r') as file:
         all_devices = json.load(file)
 
     pi_devices = [ device_name for device_name, device_info in all_devices.items() if device_info.get('runs_on') == pi_name ]
 
     return jsonify(pi_devices)
+
+@app.route('/api/get_topics/<pi_name>', methods=['GET'])
+def get_pi_topics(pi_name):
+    with open('../devices/settings/settings.json', 'r') as file:
+        all_devices = json.load(file)
+
+    # pi_topics = [
+    # device_info['topic']
+    # for device_info in all_devices.values()
+    # if device_info.get('runs_on') == pi_name and device_info.get('topic')]
+        pi_topics = set(
+        topic
+        for device_info in all_devices.values()
+        if device_info.get('runs_on') == pi_name and device_info.get('topic')
+        for topic in (device_info['topic'] if isinstance(device_info['topic'], list) else [device_info['topic']])
+    )
+    
+    return jsonify(list(pi_topics))
 
 
 if __name__ == '__main__':

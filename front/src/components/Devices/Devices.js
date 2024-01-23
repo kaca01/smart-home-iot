@@ -14,6 +14,7 @@ export class Devices extends Component {
         this.state = {
             selectedPi: 'PI1',
             data: [],
+            topics: [],
         };
         this.id = 1;
     }
@@ -23,6 +24,10 @@ export class Devices extends Component {
             const data = await DeviceServices.getDevices(this.state.selectedPi);
             const initialData = data.map(device => ({ Name: device, Value: [{name: '', value: ''}] }));
             this.setState({ data: initialData });
+
+            const topics = await DeviceServices.getTopics(this.state.selectedPi);
+            this.setState({ topics: topics });
+            console.log(topics)
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -30,16 +35,15 @@ export class Devices extends Component {
         // MQTT
         const mqttClient = mqtt.connect('ws://localhost:9001');
 
-        const topicsToSubscribe = ['TEMP1', 'HMD1'];
-            topicsToSubscribe.forEach(topic => {
-                mqttClient.subscribe(topic, function (err) {
-                    if (!err) {
-                        console.log(`Pretplaceni ste na topic: ${topic}`);
-                    }
-                });
+        this.state.topics.forEach(topic => {
+            mqttClient.subscribe(topic, function (err) {
+                if (!err) {
+                    console.log(`Pretplaceni ste na topic: ${topic}`);
+                }
             });
-            
-            mqttClient.on('message', this.handleMqttMessage);
+        });
+        
+        mqttClient.on('message', this.handleMqttMessage);
     }
 
     handleMqttMessage = (topic, message) => {
