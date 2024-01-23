@@ -8,7 +8,7 @@ import time
 from datetime import datetime, timedelta
 from door_sensor.sensor import button_pressed
 from door_sensor.simulation import run_simulation
-from buzzer.buzzer import run_buzzer
+from buzzer.buzzer import button_pressed, button_released
 try:
     import RPi.GPIO as GPIO
 except ModuleNotFoundError:
@@ -22,6 +22,7 @@ start_time = None
 
 def alarm_activation(event):
     start_time = 0
+    buzzer_event = threading.Event()
     while True:
         event.wait()
         print("ALARM")
@@ -30,12 +31,14 @@ def alarm_activation(event):
         while not event.is_set():
             if (datetime.now() - start_time).total_seconds() > 5:
                 print("ALARM JE POCEO")
-                # run_buzzer(True)
+                # todo set button
+                button_pressed(buzzer_event)
                 break
                 # event.set()
         event.clear()
         event.wait()
         print("ALARM JE ZAVRSIO")
+        button_released(buzzer_event)
         event.clear()
 
 alarm_event = threading.Event()
@@ -96,7 +99,7 @@ def ds_callback(is_lock, publish_event, ds_settings, verbose=False):
         difference = (end_time - start_time).total_seconds()
         start_time = None
         print("DIFFERENCE: ", difference)
-        alarm_event.set()
+        # alarm_event.set()
 
 
 def run_ds(settings):
