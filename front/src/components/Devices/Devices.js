@@ -2,6 +2,8 @@ import { Component } from "react";
 import './Devices.css';
 import { Navigation } from "../Navigation/Navigation";
 import { Divider } from '@mui/material';
+import DeviceServices from "../../services/DeviceServices";
+import mqtt from 'mqtt'
 
 
 export class Devices extends Component {
@@ -10,6 +12,7 @@ export class Devices extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            selectedPi: 'PI1',
             data: [{
                 "Name": "PIR1",
                 "Value": "No motion detected",
@@ -40,6 +43,33 @@ export class Devices extends Component {
             ],
         };
         this.id = 1;
+    }
+
+    async componentDidMount() {
+        try {
+            const data = await DeviceServices.getDevices(this.state.selectedPi);
+            console.log(data)
+            // this.setState({ data: data || [] });
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+
+        // MQTT
+        const mqttClient = mqtt.connect('ws://localhost:9001');
+
+        const topicsToSubscribe = ['TEMP1', 'HMD1'];
+            topicsToSubscribe.forEach(topic => {
+                mqttClient.subscribe(topic, function (err) {
+                    if (!err) {
+                        console.log(`Pretplaceni ste na topic: ${topic}`);
+                    }
+                });
+            });
+
+            // Osluškivanje poruka
+            mqttClient.on('message', function (topic, message) {
+                console.log(`Dobijena poruka na topic-u ${topic}: ${message.toString()}`);
+            });
     }
 
     render() {

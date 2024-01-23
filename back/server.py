@@ -1,15 +1,17 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 import paho.mqtt.client as mqtt
 import json
 
+# from ..devices.settings.settings import load_pi1_devices
 
 app = Flask(__name__)
-
+CORS(app, supports_credentials=True)
 
 # InfluxDB Configuration
-token = "MJcKRQ2el0DbrkBwNmpe9YnLxjzNtOVDBcbAK0b8Hz2oSNc6jMF6KNY4PDQlwgiQErxPIm0l2ihTUA-7YTOonQ=="
+token = "E4rShFELAqiF3QdVUCfPn2Yn8xwWg3PvjggEpM5LTwdg8v0nzLqBDzLv9EcWi3a5cnfT1S6qH5xqJM-4ho_Low=="
 org = "FTN"
 url = "http://localhost:8086"
 bucket = "smart_home_bucket"
@@ -97,6 +99,31 @@ def save_to_db(data):
 #     |> filter(fn: (r) => r._measurement == "Humidity")
 #     |> mean()"""
 #     return handle_influx_query(query)
+            
+# @app.route('/api/get_last_value', methods=['GET'])
+# def get_last_value():
+#     query = '''
+#         from(bucket: "smart_home_bucket")
+#         |> range(start: -24h)
+#         |> filter(fn: (r) => r.name == "DHT1")
+#         |> last()
+#     '''
+#     print("tu sam")
+#     result = influxdb_client.query_api().query(query)
+
+#     last_value = result[0].records[0].values['_value']
+
+#     return jsonify({'last_value': last_value})
+
+
+@app.route('/api/get_devices/<pi_name>', methods=['GET'])
+def get_pi1_devices(pi_name):
+    with open('../devices/settings/settings.json', 'r') as file:
+        all_devices = json.load(file)
+
+    pi_devices = [ device_name for device_name, device_info in all_devices.items() if device_info.get('runs_on') == pi_name ]
+
+    return jsonify(pi_devices)
 
 
 if __name__ == '__main__':
