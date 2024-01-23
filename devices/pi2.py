@@ -2,16 +2,9 @@ import threading
 from settings.settings import load_settings
 from dhts.dht import run_dht
 from pirs.pir import run_pir
-from buzzer.buzzer import run_buzzer
-from dms.dms import run_dms
 from sensors.door_sensor.door_sensor import run_ds1
-from lights.door_light import run_dl
 from sensors.ultrasonic_sensors.door_ultrasonic_sensor import run_dus1
-from pirs.door_motion_sensor import run_dpir1
-from lights.rgb.rgb_led import run_rgb
 from lcd.lcd import run_lcd
-from segment_display.segment_display import run_4d7sd
-from infrared.infrared import run_infrared
 from gyroscope.gyroscope import run_gyroscope
 import time
 
@@ -40,6 +33,7 @@ if __name__ == "__main__":
 
         # events
         stop_event_dus2 = threading.Event()
+        stop_event_dpir2 = threading.Event()
         stop_event_gdht = threading.Event()
         stop_event_lcd = threading.Event()
         stop_event_gsg = threading.Event()
@@ -47,7 +41,7 @@ if __name__ == "__main__":
         stop_event_dht3 = threading.Event()
 
         events = []
-        events += [stop_event_dus2, stop_event_gdht, stop_event_lcd, stop_event_gsg, stop_event_pir3, stop_event_dht3]
+        events += [stop_event_dus2, stop_event_dpir2, stop_event_gdht, stop_event_lcd, stop_event_gsg, stop_event_pir3, stop_event_dht3]
 
         try:
                 # PI2
@@ -55,6 +49,9 @@ if __name__ == "__main__":
                 thread.start()
 
                 thread = threading.Thread(target=run_dus1, args=(settings["DUS2"], stop_event_dus2, ))
+                thread.start()
+
+                thread = threading.Thread(target=run_pir, args=(settings["DPIR2"], stop_event_dpir2))
                 thread.start()
 
                 thread = threading.Thread(target=run_dht, args=(settings["GDHT"], stop_event_gdht))

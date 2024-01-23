@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 
 # InfluxDB Configuration
-token = "Zc15gCCKY2d79TNIl0nMm4rijdvLeMw3AP19IFroaosC6rW41zWhz_4LDU4sdV59K38aB4xwu3Zu7V8RU2vVhQ=="
+token = "nDJC22Onfp4dw0G7i1QHCAlFjlb9YLGA21irSZWKgxSIa8GyPOHYfDTQ1sOiHP8ZUojZw9Byu2gkxJUGTWwNqw=="
 org = "FTN"
 url = "http://localhost:8086"
 bucket = "smart_home_bucket"
@@ -22,7 +22,7 @@ mqtt_client.loop_start()
 
 def on_connect(client, userdata, flags, rc):
     topics = ["TEMP1", "HMD1", "TEMP2", "HMD2","MOTION1", "MOTION2", "DMS", "DUS1", "DPIR1", "DOOR_SENSOR1"
-                ,"GTEMP", "GHMD", "GSG", "MOTION3", "TEMP3", "HMD3"
+                ,"DPIR2", "GTEMP", "GHMD", "GSG", "MOTION3", "TEMP3", "HMD3"
                 ,"MOTION4", "TEMP4", "HMD4", "BIR", "RGB1", "DUS2", "DOOR_SENSOR2"]
 
     for topic in topics:

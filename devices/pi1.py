@@ -57,7 +57,7 @@ if __name__ == "__main__":
                 thread.start()
                 threads.append(thread)
 
-                thread = threading.Thread(target=run_dpir1, args=(settings["DPIR1"], stop_event_dpir1))
+                thread = threading.Thread(target=run_pir, args=(settings["DPIR1"], stop_event_dpir1))
                 thread.start()
 
                 thread = threading.Thread(target=run_dms, args=(settings["DMS"], stop_event_dms,))

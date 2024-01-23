@@ -99,6 +99,14 @@
         "topic": "DUS2"
     },
 
+    "DPIR2": {
+        "simulated": true,
+        "pin": 4,
+        "runs_on": "PI2",
+        "name": "DPIR2",
+        "topic": "DPIR2"
+    },
+
     "GDHT": {
         "simulated": true,
         "pin": 16,

@@ -3,16 +3,9 @@ from settings.settings import load_settings
 from dhts.dht import run_dht
 from pirs.pir import run_pir
 from buzzer.buzzer import run_buzzer
-from dms.dms import run_dms
-from sensors.door_sensor.door_sensor import run_ds1
-from lights.door_light import run_dl
-from sensors.ultrasonic_sensors.door_ultrasonic_sensor import run_dus1
-from pirs.door_motion_sensor import run_dpir1
 from lights.rgb.rgb_led import run_rgb
-from lcd.lcd import run_lcd
 from segment_display.segment_display import run_4d7sd
 from infrared.infrared import run_infrared
-from gyroscope.gyroscope import run_gyroscope
 import time
 
 try:
