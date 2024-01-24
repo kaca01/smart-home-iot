@@ -33,7 +33,7 @@ publisher_thread.start()
 
 def rgb_callback(result, publish_event, pir_settings, verbose=False):
     if verbose:
-        print(f"{pir_settings['name']} says: you moved!")
+        print(f"{pir_settings['name']}")
 
     print("aaaaaaaa")
     print(result)

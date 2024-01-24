@@ -1,7 +1,8 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import './Devices.css';
 import { Navigation } from "../Navigation/Navigation";
 import { Divider } from '@mui/material';
+import Dialog from "../Dialog/Dialog";
 import DeviceServices from "../../services/DeviceServices";
 import mqtt from 'mqtt'
 import PinInputDialog from "../PinDialog/Dialog";
@@ -19,9 +20,16 @@ export class Devices extends Component {
             topics: [],
             isPinDialogOpen: false,
             isColorDialogOpen: false,
+            showAlarmDialog: false,
+            alarmFlag: 0,
         };
     }
 
+    handlePinInput = async() => {
+        // TODO: not implemented yet
+        await this.setState({showAlarmDialog: false});
+    }
+    
     async componentDidMount() {
         try {
             const data = await DeviceServices.getDevices(this.state.selectedPi);
@@ -45,6 +53,11 @@ export class Devices extends Component {
                 }
             });
         });
+        mqttClient.subscribe('ALARM', function (err) {
+            if (!err) {
+                console.log("Pretplaceni ste na topic ALARM")
+            }
+        });
         
         mqttClient.on('message', this.handleMqttMessage);
     }
@@ -67,6 +80,16 @@ export class Devices extends Component {
 
     handleMqttMessage = (topic, message) => {
         // console.log(message.toString());
+        if (topic == 'ALARM') {
+            const parsedMessage = JSON.parse(message.toString());
+            if (parsedMessage["value"] == true) {
+                if (this.state.alarmFlag != 0) this.setState({showAlarmDialog: true});
+            } else {
+                if (this.state.alarmFlag != 0) this.setState({showAlarmDialog: false});
+            }
+            this.setState({alarmFlag: this.state.alarmFlag++});
+            return;
+        }
 
         const parsedMessage = JSON.parse(message.toString());
 
@@ -127,6 +150,11 @@ export class Devices extends Component {
                     // console.log(`Odjavljeni ste sa topica: ${topic}`);
                 }
             });
+        });
+        mqttClient.unsubscribe('ALARM', function(err){
+            if (!err) {
+
+            }
         });
 
         try {
@@ -195,7 +223,16 @@ export class Devices extends Component {
 
                 {/* Dialog for rgb */}
                 {this.state.isColorDialogOpen && (
-                    <ColorDialog isOpen={this.state.isColorDialogOpen} onClose={this.handleCloseColorDialog} />
+                    <ColorDialog isOpen={this.state.isColorDialogOpen} onClose={this.handleCloseColorDialog} /> )}
+                {this.state.showAlarmDialog && (
+                    <Dialog
+                        title="ALARM"
+                        message="Please input PIN to stop the alarm."
+                        onConfirm={this.handlePinInput}
+                        // onCancel={this.handleCancel}
+                        isDiscard={true}
+                        inputPlaceholder="Write PIN here..."
+                    />
                 )}
             </div>
         )

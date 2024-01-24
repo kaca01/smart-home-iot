@@ -50,6 +50,13 @@ start_time = None
 
 
 def alarm_activation(event):
+    temp_payload = {
+                    "measurement": 'ALARM',
+                    "simulated": False,
+                    "runs_on": 'PI1',
+                    "name": "alarm",
+                    "value": True
+                    }
     start_time = 0
     buzzer_event = threading.Event()
     while True:
@@ -61,6 +68,10 @@ def alarm_activation(event):
             if (datetime.now() - start_time).total_seconds() > 5:
                 print("ALARM JE POCEO")
                 button_pressed(buzzer_event)
+                temp_payload["value"] = True
+                with counter_lock:
+                    b = [('ALARM', json.dumps(temp_payload), 0, True)]
+                    publish.multiple(b, hostname=HOSTNAME, port=PORT)
                 break
                 # event.set()
             
@@ -68,6 +79,10 @@ def alarm_activation(event):
         event.wait()
         print("ALARM JE ZAVRSIO")
         button_released(buzzer_event)
+        temp_payload["value"] = False
+        with counter_lock:
+                    b = [('ALARM', json.dumps(temp_payload), 0, True)]
+                    publish.multiple(b, hostname=HOSTNAME, port=PORT)
         event.clear()
 
 

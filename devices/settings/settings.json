@@ -36,7 +36,7 @@
         "pin": 23,
         "runs_on": "PI1",
         "name": "DB",
-        "topic": ""
+        "topic": "ALARM"
     },
     
     "DMS": {
@@ -52,7 +52,7 @@
         "pin": 18,
         "runs_on": "PI1",
         "name": "DL",
-        "topic": ""
+        "topic": "DL"
     },
 
     "DS1": {
