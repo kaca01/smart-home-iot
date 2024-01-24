@@ -46,13 +46,30 @@ export class Devices extends Component {
         mqttClient.on('message', this.handleMqttMessage);
     }
 
+    setB4SD = (data) => {
+        const hasB4SD = data.some(device => device.Name === 'B4SD');
+        const currentTime = new Date().toLocaleTimeString();
+        const b4sdIndex = data.findIndex(device => device.Name === 'B4SD');
+        if (b4sdIndex !== -1) {
+            const timeIndex = data[b4sdIndex].Value.findIndex(v => v.name === 'time');
+            if (timeIndex === -1) {
+                data[b4sdIndex].Value.push({ name: 'time', value: currentTime });
+            } else {
+                data[b4sdIndex].Value[timeIndex].value = currentTime;
+            }
+        }
+
+        return data
+    }
+
     handleMqttMessage = (topic, message) => {
         // console.log(message.toString());
 
         const parsedMessage = JSON.parse(message.toString());
 
-        console.log(this.state.data)
+        // console.log(this.state.data)
         const updatedData = [...this.state.data];
+        this.setB4SD(updatedData)
 
         const deviceIndex = updatedData.findIndex(device => device.Name === parsedMessage.measurement);
     
@@ -79,10 +96,11 @@ export class Devices extends Component {
             } else {
                 if (typeof(parsedMessage.value) == "object") {
                     console.log("usloooo")
-                    console.log(parsedMessage.value)
+                    //console.log(parsedMessage.value)
                     value = Object.entries(value)
                     .map(([key, v]) => `${key}: ${v}`)
                     .join('\n');
+                    console.log(value)
                 }
                 else 
                     value = value.toString()

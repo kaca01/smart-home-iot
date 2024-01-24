@@ -9,12 +9,12 @@ def run_simulation(delay, callback, stop_event, publish_event, settings):
         gyro = [random.random() * 3.0, random.random() * 3.0, random.random() * 3.0]    # rotacija
 
         result = { 
-                "accel.x": accel[0],
-                "accel.y": accel[1],
-                "accel.z": accel[2],
-                "gyro.x": gyro[0],
-                "gyro.y": gyro[1],
-                "gyro.z": gyro[2],
+                "accel.x": round(accel[0], 3),
+                "accel.y": round(accel[1], 3),
+                "accel.z": round(accel[2], 3),
+                "gyro.x": round(gyro[0], 3),
+                "gyro.y": round(gyro[1], 3),
+                "gyro.z": round(gyro[2], 3),
             } 
         
         callback(result, publish_event, settings)
