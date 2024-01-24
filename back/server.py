@@ -245,8 +245,7 @@ def is_time_to_sound_alarm(alarm_time):
     current_time = datetime.now().time()
     return current_time >= alarm_time
 
-def alarm_thread():
-    global alarm_event
+def alarm_thread(alarm_event):
     while True:
         print("ovde sam")
         # if alarm_time != "":
@@ -259,15 +258,28 @@ def alarm_thread():
             time.sleep(5)
 
         print("Alarm time reached! Make a sound.")
+        publish_alarm_clock_should_buzz()
         alarm_event.clear()
+
+def publish_alarm_clock_should_buzz():
+    temp_payload = {
+                    "measurement": 'ALARM CLOCK',
+                    "simulated": False, 
+                    "runs_on": 'PI1',
+                    "name": "alarm",
+                    "value": True
+                }
+
+    b = [('TURN_OFF_ALARM', json.dumps(temp_payload), 0, True)]
+    publish.multiple(b, hostname=HOSTNAME, port=PORT)
 
 counter = 0
 is_active_sys = False
-correct_pin = ''  # the pin that activates the alarm
+correct_pin = '1234'  # the pin that activates the alarm
 user_pin = ''
 clock_time = ''
 alarm_event = threading.Event()
-alarm_thread = threading.Thread(target=alarm_thread, args=())
+alarm_thread = threading.Thread(target=alarm_thread, args=(alarm_event, ))
 alarm_thread.start()
 
 if __name__ == '__main__':
