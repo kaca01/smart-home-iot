@@ -6,13 +6,15 @@ import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 import json
 import time
+from datetime import datetime
+from datetime import time as dt_time
 import threading
 
 app = Flask(__name__)   
 CORS(app, supports_credentials=True)
 
 # InfluxDB Configuration
-token = "BVbEPfH_LihrdVBMkpZqdpq4hztiAKEFrN1kFfWmQYpl6j_JmoIAN_IHDu1DLmUvjAxXyrbG86bonXUF2OYYCw=="
+token = "sEIubQUPtekodtQtjmDwsbndBhvsSLyiLuddiRyOfXlocrhlEyUMAfWsJUM-rX-3HGUwSOQKbTko_HKAKdWMZg=="
 org = "FTN"
 url = "http://localhost:8086"
 bucket = "smart_home_bucket"
@@ -63,18 +65,6 @@ def save_to_db(data):
             )
             write_api.write(bucket=bucket, org=org, record=point)
 
-
-# Route to store dummy data
-# @app.route('/store_data', methods=['POST'])
-# def store_data():
-#     try:
-#         data = request.get_json()
-#         store_data(data)
-#         return jsonify({"status": "success"})
-#     except Exception as e:
-#         return jsonify({"status": "error", "message": str(e)})
-
-
 def handle_influx_query(query):
     try:
         query_api = influxdb_client.query_api()
@@ -122,30 +112,6 @@ def decrease_counter():
 @app.route('/counter', methods=['GET'])
 def get_counter():
     return jsonify({"status": "success", "data": counter})
-
-# @app.route('/aggregate_query', methods=['GET'])
-# def retrieve_aggregate_data():
-#     query = f"""from(bucket: "{bucket}")
-#     |> range(start: -10m)
-#     |> filter(fn: (r) => r._measurement == "Humidity")
-#     |> mean()"""
-#     return handle_influx_query(query)
-            
-# @app.route('/api/get_last_value', methods=['GET'])
-# def get_last_value():
-#     query = '''
-#         from(bucket: "smart_home_bucket")
-#         |> range(start: -24h)
-#         |> filter(fn: (r) => r.name == "DHT1")
-#         |> last()
-#     '''
-#     print("tu sam")
-#     result = influxdb_client.query_api().query(query)
-
-#     last_value = result[0].records[0].values['_value']
-
-#     return jsonify({'last_value': last_value})
-
 
 @app.route('/api/get_devices/<pi_name>', methods=['GET'])
 def get_pi_devices(pi_name):
@@ -237,10 +203,56 @@ def set_sys_activity():
 def turn_off_alarm():
     pass
 
+@app.route('/api/send_time', methods=['POST'])
+def set_time():
+    global clock_time, alarm_event
+    try:
+        data = request.get_json()
+        print(data['time'])
+
+        clock_time = set_alarm(data['time'])
+        print("Vreme je setovano")
+        alarm_event.set()
+        return jsonify({'success': True, 'message': 'get clock time from front'})
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+def set_alarm(user_time):
+    clock_time_hour_minutes = user_time.split(":") 
+    print("DOSAOOOOOO ", clock_time_hour_minutes)
+    ret = dt_time(int(clock_time_hour_minutes[0]), int(clock_time_hour_minutes[1]))
+    print("RETTT: ", ret)
+    return ret
+
+def is_time_to_sound_alarm(alarm_time):
+    current_time = datetime.now().time()
+    return current_time >= alarm_time
+
+def alarm_thread():
+    global alarm_event
+    while True:
+        print("ovde sam")
+        # if alarm_time != "":
+        alarm_event.wait()
+        global clock_time
+        alarm_time = clock_time
+        print("stiglo smo ovdeee")
+        while not is_time_to_sound_alarm(alarm_time):
+            print("Waiting for the alarm time...")
+            time.sleep(5)
+
+        print("Alarm time reached! Make a sound.")
+        alarm_event.clear()
+
+counter = 0
+is_active_sys = False
+correct_pin = ''  # the pin that activates the alarm
+user_pin = ''
+clock_time = ''
+alarm_event = threading.Event()
+alarm_thread = threading.Thread(target=alarm_thread, args=())
+alarm_thread.start()
 
 if __name__ == '__main__':
-    counter = 0
-    is_active_sys = False
-    correct_pin = ''  # the pin that activates the alarm
-    user_pin = ''
     app.run(debug=True)
