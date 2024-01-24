@@ -4,12 +4,13 @@ from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 import paho.mqtt.client as mqtt
 import json
+import threading
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
 # InfluxDB Configuration
-token = "15VDsPKcKZ4gJM6rK4G35roPqsO5lQRYGw-SzByjQL3ndyAjtidNuY6qL70ktP2NFHQ2anujv6EUtnwxTqRRrQ=="
+token = "BVbEPfH_LihrdVBMkpZqdpq4hztiAKEFrN1kFfWmQYpl6j_JmoIAN_IHDu1DLmUvjAxXyrbG86bonXUF2OYYCw=="
 org = "FTN"
 url = "http://localhost:8086"
 bucket = "smart_home_bucket"
@@ -24,7 +25,7 @@ counter = 0
 def on_connect(client, userdata, flags, rc):
     topics = ["TEMP1", "HMD1", "TEMP2", "HMD2","MOTION1", "MOTION2", "DMS", "DUS1", "DPIR1", "DS1"
                 ,"DPIR2", "GTEMP", "GHMD", "GSG", "MOTION3", "TEMP3", "HMD3", "DUS2", "DS2"
-                ,"MOTION4", "TEMP4", "HMD4", "BIR", "RGB"]
+                ,"MOTION4", "TEMP4", "HMD4", "BIR", "RGB", "DL"]
 
     for topic in topics:
         client.subscribe(topic)
@@ -32,9 +33,12 @@ def on_connect(client, userdata, flags, rc):
 
 mqtt_client.on_connect = on_connect
 mqtt_client.on_message = lambda client, userdata, msg: save_to_db(json.loads(msg.payload.decode('utf-8')))
+lock_counter = threading.Lock()
 
 
 def save_to_db(data):
+    print("---------")
+    print("SAVED TO INFLUXXXX")
     print(data)
     write_api = influxdb_client.write_api(write_options=SYNCHRONOUS)
     try:
@@ -91,18 +95,27 @@ def retrieve_simple_data(dus, start):
     |> filter(fn: (r) => r._measurement == "{dus}")"""
     return handle_influx_query(query)
 
+@app.route("/gyro/<accel>/<start>", methods=['GET'])
+def get_gyro_data(accel, start):
+    query = f"""from(bucket: "{bucket}")
+    |> range(start: -{start}s)
+    |> filter(fn: (r) => r._measurement == "GSG" and r._field == "{accel}")"""
+    return handle_influx_query(query)
+
 @app.route('/increase-counter', methods=['PUT'])
 def increase_counter():
-    global counter
-    counter += 1
-    return jsonify({"status": "success", "data": counter})
+    with lock_counter:
+        global counter
+        counter += 1
+        return jsonify({"status": "success", "data": counter})
 
 @app.route('/decrease-counter', methods=['PUT'])
 def decrease_counter():
-    global counter
-    if counter > 0:
-        counter -= 1
-    return jsonify({"status": "success", "data": counter})
+    with lock_counter:
+        global counter
+        if counter > 0:
+            counter -= 1
+        return jsonify({"status": "success", "data": counter})
 
 @app.route('/counter', methods=['GET'])
 def get_counter():

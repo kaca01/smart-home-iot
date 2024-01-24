@@ -1,7 +1,8 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import './Devices.css';
 import { Navigation } from "../Navigation/Navigation";
 import { Divider } from '@mui/material';
+import Dialog from "../Dialog/Dialog";
 import DeviceServices from "../../services/DeviceServices";
 import mqtt from 'mqtt'
 
@@ -15,10 +16,17 @@ export class Devices extends Component {
             selectedPi: 'PI1',
             data: [],
             topics: [],
+            showAlarmDialog: false,
+            alarmFlag: 0,
         };
         this.id = 1;
     }
 
+    handlePinInput = async() => {
+        // TODO: not implemented yet
+        await this.setState({showAlarmDialog: false});
+    }
+    
     async componentDidMount() {
         try {
             const data = await DeviceServices.getDevices(this.state.selectedPi);
@@ -42,6 +50,11 @@ export class Devices extends Component {
                 }
             });
         });
+        mqttClient.subscribe('ALARM', function (err) {
+            if (!err) {
+                console.log("Pretplaceni ste na topic ALARM")
+            }
+        });
         
         mqttClient.on('message', this.handleMqttMessage);
     }
@@ -64,6 +77,16 @@ export class Devices extends Component {
 
     handleMqttMessage = (topic, message) => {
         // console.log(message.toString());
+        if (topic == 'ALARM') {
+            const parsedMessage = JSON.parse(message.toString());
+            if (parsedMessage["value"] == true) {
+                if (this.state.alarmFlag != 0) this.setState({showAlarmDialog: true});
+            } else {
+                if (this.state.alarmFlag != 0) this.setState({showAlarmDialog: false});
+            }
+            this.setState({alarmFlag: this.state.alarmFlag++});
+            return;
+        }
 
         const parsedMessage = JSON.parse(message.toString());
 
@@ -125,6 +148,11 @@ export class Devices extends Component {
                 }
             });
         });
+        mqttClient.unsubscribe('ALARM', function(err){
+            if (!err) {
+
+            }
+        });
 
         try {
             const data = await DeviceServices.getDevices(newPi);
@@ -159,6 +187,16 @@ export class Devices extends Component {
                     <Divider style={{ width: "87%", marginLeft: 'auto', marginRight: 'auto', marginBottom: '20px' }} />
                     <DevicesList devices={this.state.data}/>
                 </div>
+                {this.state.showAlarmDialog && (
+                    <Dialog
+                        title="ALARM"
+                        message="Please input PIN to stop the alarm."
+                        onConfirm={this.handlePinInput}
+                        // onCancel={this.handleCancel}
+                        isDiscard={true}
+                        inputPlaceholder="Write PIN here..."
+                    />
+                )}
             </div>
         )
     }

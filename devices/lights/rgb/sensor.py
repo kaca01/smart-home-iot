@@ -46,7 +46,7 @@ def lightBlue(r, g, b):
     GPIO.output(b, GPIO.HIGH)
 
 
-def run_rgb(settings, color, callback, publish_event):
+def run_rgb_sensor(settings, color, callback, publish_event):
     GPIO.setmode(GPIO.BCM)
 
     RED_PIN = settings["pin"][0]
