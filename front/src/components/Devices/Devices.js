@@ -1,7 +1,8 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import './Devices.css';
 import { Navigation } from "../Navigation/Navigation";
 import { Divider } from '@mui/material';
+import Dialog from "../Dialog/Dialog";
 
 
 export class Devices extends Component {
@@ -38,8 +39,14 @@ export class Devices extends Component {
                 "Value": "Someone entering",
             },
             ],
+            showAlarmDialog: true,
         };
         this.id = 1;
+    }
+
+    handlePinInput = async() => {
+        // TODO: not implemented yet
+        await this.setState({showAlarmDialog: false});
     }
 
     render() {
@@ -52,6 +59,16 @@ export class Devices extends Component {
                     <Divider style={{ width: "87%", marginLeft: 'auto', marginRight: 'auto', marginBottom: '20px' }} />
                     <DevicesList devices={this.state.data}/>
                 </div>
+                {this.state.showAlarmDialog && (
+                    <Dialog
+                        title="ALARM"
+                        message="Please input PIN to stop the alarm."
+                        onConfirm={this.handlePinInput}
+                        // onCancel={this.handleCancel}
+                        isDiscard={true}
+                        inputPlaceholder="Write PIN here..."
+                    />
+                )}
             </div>
         )
     }
