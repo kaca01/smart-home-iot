@@ -1,7 +1,7 @@
 from gyroscope.simulator import run_simulation
 from settings.broker_settings import HOSTNAME, PORT
-from buzzer.buzzer import button_pressed
 import paho.mqtt.publish as publish
+from alarm.alarm import turn_on_alarm
 import json
 import threading
 import requests
@@ -35,7 +35,7 @@ def get_displacement():
             displacement = round(math.sqrt((x2 - x1)**2 + (y2 - y1)**2 + (z2 - z1)**2), 3)
             if displacement > 0.21:
                 # TODO: this is alarm and it won't stop until 4. task is implemented
-                button_pressed(buzzer_event)
+                turn_on_alarm()
                 temp_payload = {
                     "measurement": 'ALARM',
                     "simulated": False,

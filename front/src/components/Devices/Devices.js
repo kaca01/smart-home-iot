@@ -26,7 +26,7 @@ export class Devices extends Component {
     }
 
     handlePinInput = async() => {
-        // TODO: not implemented yet
+        await DeviceServices.turnOffAlarm();
         await this.setState({showAlarmDialog: false});
     }
     
