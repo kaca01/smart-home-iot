@@ -11,7 +11,7 @@ app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
 # InfluxDB Configuration
-token = "rFb3wAuV9_cjnvcZMzC6g6RndYJlnaonE0eiw6v0VHXeLkApZeTxemzNm_yN_FA_tZ1D1DF9el2KF6jQvU2lPg=="
+token = "BVbEPfH_LihrdVBMkpZqdpq4hztiAKEFrN1kFfWmQYpl6j_JmoIAN_IHDu1DLmUvjAxXyrbG86bonXUF2OYYCw=="
 org = "FTN"
 url = "http://localhost:8086"
 bucket = "smart_home_bucket"
@@ -168,6 +168,10 @@ def set_sys_activity():
     global is_active_sys
     is_active_sys = False
     return jsonify({"status": "success", "data": is_active_sys})
+
+@app.route('/turn-off-alarm', methods=['PUT'])
+def turn_off_alarm():
+    pass
 
 
 if __name__ == '__main__':
