@@ -36,7 +36,7 @@
         "pin": 23,
         "runs_on": "PI1",
         "name": "DB",
-        "topic": "DB"
+        "topic": ""
     },
     
     "DMS": {
@@ -52,7 +52,7 @@
         "pin": 18,
         "runs_on": "PI1",
         "name": "DL",
-        "topic": "DL"
+        "topic": ""
     },
 
     "DS1": {
@@ -60,7 +60,7 @@
         "pin": 27,
         "runs_on": "PI1",
         "name": "DS1",
-        "topic": "DOOR_SENSOR1"
+        "topic": "DS1"
     },
 
     "DUS1": {
@@ -78,13 +78,18 @@
         "name": "DPIR1",
         "topic": "DPIR1"
     },
+
+
+
+
+
     
     "DS2": {
         "simulated": true,
         "pin": 17,
         "runs_on": "PI2",
         "name": "DS2",
-        "topic": "DOOR_SENSOR2"
+        "topic": "DS2"
     },
 
     "DUS2": {
@@ -116,7 +121,7 @@
         "pin": [25, 8, 7, 1],
         "runs_on": "PI2",
         "name": "GLCD",
-        "topic": "GLCD"
+        "topic": ""
     },
 
     "GSG": {
@@ -167,7 +172,7 @@
         "pin": 23,
         "runs_on": "PI3",
         "name": "BB",
-        "topic": "BB"
+        "topic": ""
     },
 
     "B4SD": {
@@ -175,7 +180,7 @@
         "pin": [11,4,23,8,7,10,18,25, 22,27,17,24],
         "runs_on": "PI3",
         "name": "B4SD",
-        "topic": "B4SD"
+        "topic": ""
     },
 
     "BIR": {
@@ -190,7 +195,7 @@
         "simulated": true,
         "pin": [12, 13, 19],
         "runs_on": "PI3",
-        "name": "RGB1",
-        "topic": "RGB1"
+        "name": "RGB",
+        "topic": "RGB"
     }
 }

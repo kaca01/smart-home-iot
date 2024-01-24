@@ -36,10 +36,10 @@ def rgb_callback(result, publish_event, pir_settings, verbose=False):
         print(f"{pir_settings['name']} says: you moved!")
 
     temp_payload = {
-        "measurement": pir_settings['topic'],
+        "measurement": pir_settings['name'],
         "simulated": pir_settings['simulated'],
         "runs_on": pir_settings["runs_on"],
-        "name": pir_settings["name"],
+        "name": "action",
         "value": result
     }
 

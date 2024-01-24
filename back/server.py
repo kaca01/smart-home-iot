@@ -1,13 +1,15 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 import paho.mqtt.client as mqtt
 import json
 
 app = Flask(__name__)
+CORS(app, supports_credentials=True)
 
 # InfluxDB Configuration
-token = "BVbEPfH_LihrdVBMkpZqdpq4hztiAKEFrN1kFfWmQYpl6j_JmoIAN_IHDu1DLmUvjAxXyrbG86bonXUF2OYYCw=="
+token = "15VDsPKcKZ4gJM6rK4G35roPqsO5lQRYGw-SzByjQL3ndyAjtidNuY6qL70ktP2NFHQ2anujv6EUtnwxTqRRrQ=="
 org = "FTN"
 url = "http://localhost:8086"
 bucket = "smart_home_bucket"
@@ -20,9 +22,9 @@ mqtt_client.loop_start()
 counter = 0
 
 def on_connect(client, userdata, flags, rc):
-    topics = ["TEMP1", "HMD1", "TEMP2", "HMD2","MOTION1", "MOTION2", "DMS", "DUS1", "DPIR1", "DOOR_SENSOR1"
-                ,"DPIR2", "GTEMP", "GHMD", "GSG", "MOTION3", "TEMP3", "HMD3"
-                ,"MOTION4", "TEMP4", "HMD4", "BIR", "RGB1", "DUS2", "DOOR_SENSOR2"]
+    topics = ["TEMP1", "HMD1", "TEMP2", "HMD2","MOTION1", "MOTION2", "DMS", "DUS1", "DPIR1", "DS1"
+                ,"DPIR2", "GTEMP", "GHMD", "GSG", "MOTION3", "TEMP3", "HMD3", "DUS2", "DS2"
+                ,"MOTION4", "TEMP4", "HMD4", "BIR", "RGB"]
 
     for topic in topics:
         client.subscribe(topic)
@@ -33,6 +35,7 @@ mqtt_client.on_message = lambda client, userdata, msg: save_to_db(json.loads(msg
 
 
 def save_to_db(data):
+    print(data)
     write_api = influxdb_client.write_api(write_options=SYNCHRONOUS)
     try:
         point = (
@@ -112,6 +115,49 @@ def get_counter():
 #     |> filter(fn: (r) => r._measurement == "Humidity")
 #     |> mean()"""
 #     return handle_influx_query(query)
+            
+# @app.route('/api/get_last_value', methods=['GET'])
+# def get_last_value():
+#     query = '''
+#         from(bucket: "smart_home_bucket")
+#         |> range(start: -24h)
+#         |> filter(fn: (r) => r.name == "DHT1")
+#         |> last()
+#     '''
+#     print("tu sam")
+#     result = influxdb_client.query_api().query(query)
+
+#     last_value = result[0].records[0].values['_value']
+
+#     return jsonify({'last_value': last_value})
+
+
+@app.route('/api/get_devices/<pi_name>', methods=['GET'])
+def get_pi_devices(pi_name):
+    with open('../devices/settings/settings.json', 'r') as file:
+        all_devices = json.load(file)
+
+    pi_devices = [ device_name for device_name, device_info in all_devices.items() if device_info.get('runs_on') == pi_name ]
+
+    return jsonify(pi_devices)
+
+@app.route('/api/get_topics/<pi_name>', methods=['GET'])
+def get_pi_topics(pi_name):
+    with open('../devices/settings/settings.json', 'r') as file:
+        all_devices = json.load(file)
+
+    # pi_topics = [
+    # device_info['topic']
+    # for device_info in all_devices.values()
+    # if device_info.get('runs_on') == pi_name and device_info.get('topic')]
+        pi_topics = set(
+        topic
+        for device_info in all_devices.values()
+        if device_info.get('runs_on') == pi_name and device_info.get('topic')
+        for topic in (device_info['topic'] if isinstance(device_info['topic'], list) else [device_info['topic']])
+    )
+    
+    return jsonify(list(pi_topics))
 
 
 if __name__ == '__main__':

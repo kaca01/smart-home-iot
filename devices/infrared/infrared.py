@@ -31,10 +31,10 @@ def bir_callback(result, publish_event, bir_settings, verbose=False):
         print("nesto se desilo sa rgb")
 
     rgb_payload = {
-        "measurement": bir_settings['topic'],
+        "measurement": bir_settings['name'],
         "simulated": bir_settings['simulated'],
         "runs_on": bir_settings["runs_on"],
-        "name": bir_settings["name"],
+        "name": "pressed button",
         "value": result
     }
 

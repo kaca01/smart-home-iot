@@ -9,9 +9,9 @@ def check_pin(expected_pin):
     picked_values = random.choices(values, k=4)
     pin = ''.join(picked_values)
     if pin == expected_pin:
-        return "open"
+        return "correct"
     else:
-        return "closed"
+        return "incorrect"
 
 
 def run_simulation(pin, delay, callback, stop_event, publish_event, settings):
