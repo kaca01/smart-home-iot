@@ -2,6 +2,7 @@ import { Component } from "react";
 import './Devices.css';
 import { Navigation } from "../Navigation/Navigation";
 import { Divider } from '@mui/material';
+import PinInputDialog from "../PinDialog/Dialog";
 
 
 export class Devices extends Component {
@@ -10,6 +11,7 @@ export class Devices extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isPinDialogOpen: false,
             data: [{
                 "Name": "PIR1",
                 "Value": "No motion detected",
@@ -42,6 +44,14 @@ export class Devices extends Component {
         this.id = 1;
     }
 
+    handleOpenPinDialog = () => {
+        this.setState({ isPinDialogOpen: true });
+    };
+
+    handleClosePinDialog = () => {
+        this.setState({ isPinDialogOpen: false });
+    };
+
     render() {
         return (
             <div>
@@ -49,9 +59,17 @@ export class Devices extends Component {
                 <div id="panel">
                     {/* <Iframe url={this.grafanaGraphUrl} width="100%" height="600px"/> */}
                     <span className='estate-title'>PI {this.id}</span>
+                    <span>
+                        <button className="button button1" onClick={this.handleOpenPinDialog}>INPUT PIN</button>
+                    </span>
                     <Divider style={{ width: "87%", marginLeft: 'auto', marginRight: 'auto', marginBottom: '20px' }} />
                     <DevicesList devices={this.state.data}/>
                 </div>
+
+                 {/* Dialog for input pin */}
+                {this.state.isPinDialogOpen && (
+                    <PinInputDialog open={this.state.isPinDialogOpen} onClose={this.handleClosePinDialog} />
+                )}
             </div>
         )
     }
