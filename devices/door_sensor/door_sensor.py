@@ -80,7 +80,7 @@ def alarm_activation(event):
         event.clear()
         event.wait()
         print("ALARM JE ZAVRSIO")
-        turn_off_alarm
+        turn_off_alarm()
         # button_released(buzzer_event)
         # temp_payload["value"] = False
         # with counter_lock:
