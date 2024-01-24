@@ -36,17 +36,6 @@ def get_displacement():
             if displacement > 0.21:
                 # TODO: this is alarm and it won't stop until 4. task is implemented
                 turn_on_alarm()
-                temp_payload = {
-                    "measurement": 'ALARM',
-                    "simulated": False,
-                    "runs_on": 'PI2',
-                    "name": "alarm",
-                    "value": True
-                }
-
-                with counter_lock:
-                    b = [('ALARM', json.dumps(temp_payload), 0, True)]
-                    publish.multiple(b, hostname=HOSTNAME, port=PORT)
 
 
 def publisher_task(event, gsg_batch):

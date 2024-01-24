@@ -104,18 +104,7 @@ def pir_callback(result, publish_event, pir_settings, settings, rgb_thread, verb
         if (get_count() == 0):
             # button_pressed(buzzer_event)
             turn_on_alarm()
-            
-            temp_payload = {
-                "measurement": 'ALARM',
-                "simulated": False, 
-                "runs_on": 'PI1',
-                "name": "alarm",
-                "value": True
-            }
 
-            with counter_lock:
-                b = [('ALARM', json.dumps(temp_payload), 0, True)]
-                publish.multiple(b, hostname=HOSTNAME, port=PORT)
 
 rgb_event = threading.Event()       
 

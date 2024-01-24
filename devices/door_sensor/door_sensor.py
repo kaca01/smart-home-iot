@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 from door_sensor.sensor import button_pressed
 from door_sensor.simulation import run_simulation
 from buzzer.buzzer import button_pressed, button_released
+from alarm.alarm import turn_on_alarm, turn_off_alarm
 import requests
 
 
@@ -67,57 +68,30 @@ def alarm_activation(event):
         while not event.is_set():
             if (datetime.now() - start_time).total_seconds() > 5:
                 print("ALARM JE POCEO")
-                button_pressed(buzzer_event)
-                temp_payload["value"] = True
-                with counter_lock:
-                    b = [('ALARM', json.dumps(temp_payload), 0, True)]
-                    publish.multiple(b, hostname=HOSTNAME, port=PORT)
+                turn_on_alarm()
+                # button_pressed(buzzer_event)
+                # temp_payload["value"] = True
+                # with counter_lock:
+                #     b = [('ALARM', json.dumps(temp_payload), 0, True)]
+                #     publish.multiple(b, hostname=HOSTNAME, port=PORT)
                 break
                 # event.set()
             
         event.clear()
         event.wait()
         print("ALARM JE ZAVRSIO")
-        button_released(buzzer_event)
-        temp_payload["value"] = False
-        with counter_lock:
-                    b = [('ALARM', json.dumps(temp_payload), 0, True)]
-                    publish.multiple(b, hostname=HOSTNAME, port=PORT)
+        turn_off_alarm
+        # button_released(buzzer_event)
+        # temp_payload["value"] = False
+        # with counter_lock:
+        #             b = [('ALARM', json.dumps(temp_payload), 0, True)]
+        #             publish.multiple(b, hostname=HOSTNAME, port=PORT)
         event.clear()
-
-
-# def alarm_based_on_pin(event):
-    # buzzer_event = threading.Event()
-    # while True:
-    #     event.wait()
-    #     print("PIN ALARM")
-    #     event.clear()
-    #     while not event.is_set():
-    #         print("tralalalala")
-    #         if is_active_sys():
-    #             print("OVDE SMO")
-    #             correct_pin = get_pin(f"http://127.0.0.1:5000/correct-pin")
-    #             user_pin = get_pin(f"http://127.0.0.1:5000/user-pin")
-    #             print("ispravan pin     ", correct_pin)
-    #             print("user pin     ", user_pin)
-    #             if correct_pin != user_pin:
-    #                 print("ALARM ZA PINOVEE POCEO")
-    #                 button_pressed(buzzer_event)
-    #             else:
-    #                 print("TURN OFF ALARM")
-    #                 turn_off_sys()
-    #                 button_released(buzzer_event)
-    #                 event.clear()
-    #         time.sleep(5)
 
 
 alarm_event = threading.Event()
 alarm_thread = threading.Thread(target=alarm_activation, args=(alarm_event, ))
 alarm_thread.daemon = True
-
-# alarm_pin_event = threading.Event()
-# alarm_pin_thread = threading.Thread(target=alarm_based_on_pin, args=(alarm_pin_event, ))
-# alarm_pin_thread.daemon = True
 
 
 def publisher_task(event, ds_batch):
@@ -143,6 +117,9 @@ def ds_callback(is_lock, publish_event, ds_settings, verbose=False):
     global publish_data_counter, publish_data_limit, start_time, alarm_event
     is_open = not is_lock
     alarm_event.set()
+
+    if is_active_sys():
+        turn_on_alarm()
     
     if verbose:
         t = time.localtime()
