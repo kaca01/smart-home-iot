@@ -37,10 +37,10 @@ def dms_callback(temperature, publish_event, dms_settings, verbose=False):
         print("Correct pin")
 
     temp_payload = {
-        "measurement": "DMS",
+        "measurement": dms_settings['name'],
         "simulated": dms_settings['simulated'],
         "runs_on": dms_settings["runs_on"],
-        "name": dms_settings["name"],
+        "name": "pin",
         "value": temperature
     }
 

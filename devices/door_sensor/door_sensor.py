@@ -70,6 +70,7 @@ def ds_callback(is_lock, publish_event, ds_settings, verbose=False):
     global publish_data_counter, publish_data_limit, start_time, alarm_event
     is_open = not is_lock
     alarm_event.set()
+    
     if verbose:
         t = time.localtime()
         print("="*20)
@@ -78,11 +79,11 @@ def ds_callback(is_lock, publish_event, ds_settings, verbose=False):
         print(f"isOpen: {is_open}")
 
     payload = {
-        "measurement": ds_settings['topic'],
+        "measurement": ds_settings['name'],
         "simulated": ds_settings['simulated'],
         "runs_on": ds_settings["runs_on"],
-        "name": ds_settings["name"],
-        "value": is_open
+        "name": "pressed",
+        "value": is_lock
     }
 
     with counter_lock:
@@ -107,6 +108,7 @@ def run_ds(settings):
     alarm_thread.start()
     try :
         if settings["simulated"]:
+            print("uslooooooooo")
             run_simulation(ds_callback, publish_event, settings)
         else:
             try:

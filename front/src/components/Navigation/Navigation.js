@@ -9,6 +9,10 @@ export class Navigation extends Component {
         super(props);
     }
 
+    handlePiClick = (pi) => {
+        this.props.updateSelectedPi(pi);
+    }
+
     render() {
         return (
             <header>
@@ -16,13 +20,13 @@ export class Navigation extends Component {
                     <ul>
                         <span className="logo">Smart Home</span>
                         <NavItem>
-                            <NavLink tag={Link} className="text-light" to="/devices">PI1</NavLink>
+                            <NavLink onClick={() => this.handlePiClick("PI1")} tag={Link} className="text-light" to="/devices">PI1</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink tag={Link} className="text-light" to="/">PI2</NavLink>
+                            <NavLink onClick={() => this.handlePiClick("PI2")} tag={Link} className="text-light" to="/">PI2</NavLink>
                         </NavItem>
                         <NavItem className="logout">
-                            <NavLink tag={Link} className="text-light" to="/">PI3</NavLink>
+                            <NavLink onClick={() => this.handlePiClick("PI3")} tag={Link} className="text-light" to="/">PI3</NavLink>
                         </NavItem>
                     </ul>
                 </Navbar>
