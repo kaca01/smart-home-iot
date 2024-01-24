@@ -22,7 +22,9 @@ influxdb_client = InfluxDBClient(url=url, token=token, org=org)
 
 # MQTT Configuration
 mqtt_client = mqtt.Client()
-mqtt_client.connect("localhost", 1883, 60)
+HOSTNAME = "localhost"
+PORT = 1883
+mqtt_client.connect(HOSTNAME, PORT, 60)
 mqtt_client.loop_start()
 counter = 0
 
@@ -199,9 +201,23 @@ def set_sys_activity():
     is_active_sys = False
     return jsonify({"status": "success", "data": is_active_sys})
 
-@app.route('/turn-off-alarm', methods=['PUT'])
-def turn_off_alarm():
-    pass
+@app.route('/turn-off-alarm/<pin>', methods=['PUT'])
+def turn_off_alarm(pin):
+    global correct_pin, is_active_sys
+    if pin == correct_pin:
+        temp_payload = {
+                    "measurement": 'ALARM',
+                    "simulated": False, 
+                    "runs_on": 'PI1',
+                    "name": "alarm",
+                    "value": True
+                }
+
+        b = [('TURN_OFF_ALARM', json.dumps(temp_payload), 0, True)]
+        publish.multiple(b, hostname=HOSTNAME, port=PORT)
+        is_active_sys = False
+        return jsonify({"status": "success", "data": 0})
+    return jsonify({"status": "success", "data": 1})
 
 @app.route('/api/send_time', methods=['POST'])
 def set_time():
