@@ -45,9 +45,6 @@ class DeviceService {
             const response = await fetch('http://127.0.0.1:5000/turn-off-alarm/' + pin, {
                 method: 'PUT',
             });
-
-            console.log("RESPONSE: ", response);
-
             const data = await response.json();
             // console.log(data)
             if (data != null)

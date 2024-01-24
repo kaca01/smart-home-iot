@@ -33,7 +33,7 @@ def get_displacement():
             z1 = z_accel_data[0]["_value"]
             z2 = z_accel_data[-1]["_value"]
             displacement = round(math.sqrt((x2 - x1)**2 + (y2 - y1)**2 + (z2 - z1)**2), 3)
-            if displacement > 0.21:
+            if displacement > 0.25:
                 # TODO: this is alarm and it won't stop until 4. task is implemented
                 turn_on_alarm()
 
@@ -54,7 +54,7 @@ publisher_thread.daemon = True
 publisher_thread.start()
 buzzer_event = threading.Event()
 
-def gsg_callback(result, publish_event, gsg_settings, verbose=True):
+def gsg_callback(result, publish_event, gsg_settings, verbose=False):
     if verbose:
         print("GSG")
 
