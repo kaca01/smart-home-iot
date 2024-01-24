@@ -44,15 +44,15 @@ if __name__ == "__main__":
 
         try:
                 # PI3
-                thread = threading.Thread(target=run_pir, args=(settings["PIR4"], stop_event_pir4))
+                thread = threading.Thread(target=run_pir, args=(settings["PIR4"], stop_event_pir4, settings))
                 thread.start()
 
                 thread = threading.Thread(target=run_dht, args=(settings["DHT4"], stop_event_dht4))
                 thread.start()
 
-                thread = threading.Thread(target=run_buzzer, args=(settings["BB"], stop_event_bb,))
-                thread.start()
-                threads.append(thread)
+                # thread = threading.Thread(target=run_buzzer, args=(settings["BB"], stop_event_bb,))
+                # thread.start()
+                # threads.append(thread)
 
                 thread = threading.Thread(target=run_4d7sd, args=(settings["B4SD"], stop_event_b4sd,))
                 thread.start()

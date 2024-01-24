@@ -23,3 +23,13 @@ def run_simulation(delay, callback_pressed, callback_released, stop_event, stop_
         if stop_event.is_set():
             stop_event_audio.set()
             break
+            
+# def run_simulation(is_start, callback_pressed, callback_released, stop_event, stop_event_audio):
+#     if is_start:
+#         while not stop_event.is_set():
+#             callback_pressed(stop_event_audio)
+#         callback_released(stop_event_audio)
+#         stop_event_audio.set()
+#     else:
+#         callback_pressed(stop_event_audio)
+#         stop_event_audio.set()

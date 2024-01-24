@@ -51,7 +51,7 @@ if __name__ == "__main__":
                 thread = threading.Thread(target=run_dus, args=(settings["DUS2"], stop_event_dus2, ))
                 thread.start()
 
-                thread = threading.Thread(target=run_pir, args=(settings["DPIR2"], stop_event_dpir2))
+                thread = threading.Thread(target=run_pir, args=(settings["DPIR2"], stop_event_dpir2, settings))
                 thread.start()
 
                 thread = threading.Thread(target=run_dht, args=(settings["GDHT"], stop_event_gdht))
@@ -63,7 +63,7 @@ if __name__ == "__main__":
                 thread = threading.Thread(target=run_gyroscope, args=(settings["GSG"], stop_event_gsg))
                 thread.start()
 
-                thread = threading.Thread(target=run_pir, args=(settings["PIR3"], stop_event_pir3))
+                thread = threading.Thread(target=run_pir, args=(settings["PIR3"], stop_event_pir3, settings))
                 thread.start()
 
                 thread = threading.Thread(target=run_dht, args=(settings["DHT3"], stop_event_dht3))

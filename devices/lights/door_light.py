@@ -1,5 +1,8 @@
 from lights.simulator import run_simulation
-import RPi.GPIO as GPIO
+try:
+    import RPi.GPIO as GPIO
+except ModuleNotFoundError:
+    pass
 import time
 
 # kada dpir1 detektuje pokret, lampica treba da svetli 10 sekundi
@@ -9,11 +12,11 @@ def switch_light(pin):
     GPIO.output(pin, GPIO.LOW)
 
 
-def run_dl(settings, inp):
+def run_dl(settings, stop_event):
     pin = settings['pin']
 
     if settings["simulated"]:
-        run_simulation(inp)
+        run_simulation(stop_event)
     else:
         import RPi.GPIO as GPIO
         GPIO.setmode(GPIO.BCM)
