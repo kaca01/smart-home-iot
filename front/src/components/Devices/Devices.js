@@ -4,6 +4,8 @@ import { Navigation } from "../Navigation/Navigation";
 import { Divider } from '@mui/material';
 import DeviceServices from "../../services/DeviceServices";
 import mqtt from 'mqtt'
+import PinInputDialog from "../PinDialog/Dialog";
+import ColorDialog from "../RGBDialog/RGBDialog";
 
 
 export class Devices extends Component {
@@ -15,8 +17,9 @@ export class Devices extends Component {
             selectedPi: 'PI1',
             data: [],
             topics: [],
+            isPinDialogOpen: false,
+            isColorDialogOpen: false,
         };
-        this.id = 1;
     }
 
     async componentDidMount() {
@@ -149,6 +152,25 @@ export class Devices extends Component {
         }
     }
 
+
+    // pin dialog
+    handleOpenPinDialog = () => {
+        this.setState({ isPinDialogOpen: true });
+    };
+
+    handleClosePinDialog = () => {
+        this.setState({ isPinDialogOpen: false });
+    };
+
+    // color dialog
+    handleOpenColorDialog = () => {
+        this.setState({ isColorDialogOpen: true });
+    };
+
+    handleCloseColorDialog = () => {
+        this.setState({ isColorDialogOpen: false });
+    };
+
     render() {
         return (
             <div>
@@ -156,9 +178,25 @@ export class Devices extends Component {
                 <div id="panel">
                     {/* <Iframe url={this.grafanaGraphUrl} width="100%" height="600px"/> */}
                     <span className='estate-title'>{this.state.selectedPi}</span>
+                    <span>
+                        <button className="button button1" onClick={this.handleOpenPinDialog}>INPUT PIN</button>
+                        {this.state.selectedPi === 'PI3' && (
+                            <button className="button button2" onClick={this.handleOpenColorDialog}>CONTROL RGB</button>
+                        )}
+                    </span>
                     <Divider style={{ width: "87%", marginLeft: 'auto', marginRight: 'auto', marginBottom: '20px' }} />
                     <DevicesList devices={this.state.data}/>
                 </div>
+
+                 {/* Dialog for input pin */}
+                {this.state.isPinDialogOpen && (
+                    <PinInputDialog open={this.state.isPinDialogOpen} onClose={this.handleClosePinDialog} />
+                )}
+
+                {/* Dialog for rgb */}
+                {this.state.isColorDialogOpen && (
+                    <ColorDialog isOpen={this.state.isColorDialogOpen} onClose={this.handleCloseColorDialog} />
+                )}
             </div>
         )
     }

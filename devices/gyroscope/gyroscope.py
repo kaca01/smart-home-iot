@@ -37,8 +37,6 @@ def gsg_callback(result, publish_event, gsg_settings, verbose=False):
         "value": result
     }
 
-    print(result)
-
     with counter_lock:
         gsg_batch.append((gsg_settings['topic'], json.dumps(gsg_payload), 0, True))
 

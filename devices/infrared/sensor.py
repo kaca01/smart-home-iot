@@ -4,18 +4,19 @@ from datetime import datetime
 import time
 
 # Static program vars
-pin = 17
+pin = 0
 Buttons = [0x300ff22dd, 0x300ffc23d, 0x300ff629d, 0x300ffa857, 0x300ff9867, 0x300ffb04f, 0x300ff6897, 0x300ff02fd, 0x300ff30cf, 0x300ff18e7, 0x300ff7a85, 0x300ff10ef, 0x300ff38c7, 0x300ff5aa5, 0x300ff42bd, 0x300ff4ab5, 0x300ff52ad]  # HEX code list
 ButtonsNames = ["LEFT",   "RIGHT",      "UP",       "DOWN",       "2",          "3",          "1",        "OK",        "4",         "5",         "6",         "7",         "8",          "9",        "*",         "0",        "#"]  # String list in same order as HEX list
 
 # Sets up GPIO
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(pin, GPIO.IN)
+def set_GPIO():
+	global pin
+	GPIO.setmode(GPIO.BCM)
+	GPIO.setup(pin, GPIO.IN)
 
 # Gets binary value
-
-
 def getBinary():
+	global pin
 	# Internal vars
 	num1s = 0  # Number of consecutive 1s read
 	binary = 1  # The binary value
@@ -73,14 +74,16 @@ def convertHex(binaryValue):
 
 
 def run_sensor(delay, callback, stop_event, publish_event, settings):
+	global pin, Buttons, ButtonsNames
 	pin = settings['pin']
+	set_GPIO()
+
 	while True:
-		# todo MENJAJ SVEEEE, ali na sledecoj grani kad bude sijalica !!!!!!!!!!!!
-		inData = convertHex(getBinary()) #Runs subs to get incoming hex value
-		for button in range(len(Buttons)):#Runs through every value in list
-			if hex(Buttons[button]) == inData: #Checks this against incoming
-				print(ButtonsNames[button]) #Prints corresponding english name for button
-		callback(False, publish_event, settings)
+		inData = convertHex(getBinary()) 		# Runs subs to get incoming hex value
+		for button in range(len(Buttons)):		# Runs through every value in list
+			if hex(Buttons[button]) == inData:  # Checks this against incoming
+				print(ButtonsNames[button])     # Prints corresponding english name for button
+				callback(ButtonsNames[button], publish_event, settings)
 		if stop_event.is_set():
 				break
 		time.sleep(delay)

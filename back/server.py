@@ -3,7 +3,9 @@ from flask_cors import CORS
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 import paho.mqtt.client as mqtt
+import paho.mqtt.publish as publish
 import json
+import time
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -159,7 +161,73 @@ def get_pi_topics(pi_name):
     
     return jsonify(list(pi_topics))
 
+@app.route('/api/bir_button', methods=['POST'])
+def bir_button():
+    try:
+        data = request.get_json() 
+        button_color = data.get('button')  
+
+        rgb_payload = {
+            "measurement": "BIR",
+            "simulated":  "true",
+            "runs_on": "PI3",
+            "name": "pressed button",
+            "value": button_color
+        }
+
+        publish.single("BIR", json.dumps(rgb_payload), hostname="localhost")
+        return jsonify({'success': True, 'message': 'Pressed button'})
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+    
+
+@app.route('/api/send_pin', methods=['POST'])
+def get_pin():
+    global is_active_sys, correct_pin, user_pin
+    try:
+        if not is_active_sys:
+            data = request.get_json() 
+            print(data)
+            correct_pin = data['pin']
+            time.sleep(10)
+            is_active_sys = True
+        else:
+            user_pin = data['pin']
+
+        return jsonify({'success': True, 'message': 'Get pin from front'})
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+
+@app.route('/system', methods=['GET'])
+def get_system_state():
+    return jsonify({"status": "success", "data": is_active_sys})
+
+@app.route('/correct-pin', methods=['GET'])
+def get_correct_pin():
+    return jsonify({"status": "success", "data": correct_pin})
+
+@app.route('/user-pin', methods=['GET'])
+def get_user_pin():
+    print(user_pin)
+    return jsonify({"status": "success", "data": user_pin})
+
+@app.route('/set-sys-activity', methods=['PUT'])
+def set_sys_activity():
+    global is_active_sys
+    is_active_sys = False
+    return jsonify({"status": "success", "data": is_active_sys})
+
+@app.route('/turn-off-alarm', methods=['PUT'])
+def turn_off_alarm():
+    pass
+
 
 if __name__ == '__main__':
     counter = 0
+    is_active_sys = False
+    correct_pin = ''  # the pin that activates the alarm
+    user_pin = ''
     app.run(debug=True)

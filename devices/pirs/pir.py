@@ -5,6 +5,7 @@ import json
 import threading
 from lights.door_light import run_dl
 from buzzer.buzzer import button_pressed, button_released
+from alarm.alarm import turn_on_alarm
 import requests
 
 def is_enter(dus):
@@ -73,7 +74,6 @@ def pir_callback(result, publish_event, pir_settings, settings, rgb_thread, verb
     global buzzer_event
     if verbose:
         print(f"{pir_settings['name']} says: you moved!")
-
     temp_payload = {
         "measurement": pir_settings["name"],
         "simulated": pir_settings['simulated'],
@@ -102,7 +102,8 @@ def pir_callback(result, publish_event, pir_settings, settings, rgb_thread, verb
             return rgb_thread
     elif (pir_settings["name"] in ["PIR1", "PIR2", "PIR3", "PIR4"]) and result:
         if (get_count() == 0):
-            button_pressed(buzzer_event)
+            # button_pressed(buzzer_event)
+            turn_on_alarm()
             
 
 def run_pir(pir_settings, stop_event, settings):
