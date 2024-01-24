@@ -33,7 +33,7 @@ def gsg_callback(result, publish_event, gsg_settings, verbose=False):
         "measurement": gsg_settings['name'],
         "simulated": gsg_settings['simulated'],
         "runs_on": gsg_settings["runs_on"],
-        "name": "nesto",
+        "name": "",
         "value": result
     }
 

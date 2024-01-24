@@ -59,13 +59,35 @@ export class Devices extends Component {
         try {
             // Ako uređaj već postoji, pronađite vrednost unutar njega prema imenu
             const valueIndex = updatedData[deviceIndex].Value.findIndex(v => v.name === parsedMessage.name);
-    
+            let value = parsedMessage.value;
+
             if (valueIndex === -1) {
                 // Ako vrednost za dato ime ne postoji, dodajte je
-                updatedData[deviceIndex].Value.push({ name: parsedMessage.name, value: parsedMessage.value.toString() });
+                console.log(parsedMessage.value)
+                // console.log(typeof(parsedMessage.value))
+                
+                if (typeof(parsedMessage.value) == "object") {
+                    console.log("usloooo")
+                    console.log(parsedMessage.value)
+                    value = Object.entries(value)
+                    .map(([key, v]) => `${key}: ${v}`)
+                    .join('\n');
+                }
+                else 
+                    value = value.toString()
+                updatedData[deviceIndex].Value.push({ name: parsedMessage.name, value: value });
             } else {
+                if (typeof(parsedMessage.value) == "object") {
+                    console.log("usloooo")
+                    console.log(parsedMessage.value)
+                    value = Object.entries(value)
+                    .map(([key, v]) => `${key}: ${v}`)
+                    .join('\n');
+                }
+                else 
+                    value = value.toString()
                 // Ako vrednost već postoji, ažurirajte je
-                updatedData[deviceIndex].Value[valueIndex].value = parsedMessage.value.toString();
+                updatedData[deviceIndex].Value[valueIndex].value = value;
             }
 
             this.setState({ data: updatedData });

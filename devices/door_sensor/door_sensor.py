@@ -38,6 +38,7 @@ publisher_thread.start()
 
 
 def ds_callback(is_lock, publish_event, ds_settings, verbose=False):
+    print(ds_settings)
     global publish_data_counter, publish_data_limit
 
     if verbose:
@@ -62,6 +63,7 @@ def ds_callback(is_lock, publish_event, ds_settings, verbose=False):
 def run_ds(settings):
     try :
         if settings["simulated"]:
+            print("uslooooooooo")
             run_simulation(ds_callback, publish_event, settings)
         else:
             try:
