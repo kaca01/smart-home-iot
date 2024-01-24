@@ -52,7 +52,7 @@
         "pin": 18,
         "runs_on": "PI1",
         "name": "DL",
-        "topic": ""
+        "topic": "DL"
     },
 
     "DS1": {

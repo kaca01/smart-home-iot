@@ -96,19 +96,20 @@ def pir_callback(result, publish_event, pir_settings, settings, rgb_thread, verb
             rgb_thread.start()
         except RuntimeError:
             rgb_thread.join()
-            rgb_event = threading.Event()
+            global rgb_event
             rgb_thread = threading.Thread(target=run_dl, args=(settings["DL"], rgb_event))
             rgb_thread.start()
             return rgb_thread
     elif (pir_settings["name"] in ["PIR1", "PIR2", "PIR3", "PIR4"]) and result:
         if (get_count() == 0):
             button_pressed(buzzer_event)
-            
+
+rgb_event = threading.Event()       
 
 def run_pir(pir_settings, stop_event, settings):
     print("Starting pir")
+    global rgb_event
 
-    rgb_event = threading.Event()
     rgb_thread = threading.Thread(target=run_dl, args = (settings["DL"], rgb_event))
     try:
         if pir_settings['simulated']:

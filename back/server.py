@@ -9,7 +9,7 @@ app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
 # InfluxDB Configuration
-token = "15VDsPKcKZ4gJM6rK4G35roPqsO5lQRYGw-SzByjQL3ndyAjtidNuY6qL70ktP2NFHQ2anujv6EUtnwxTqRRrQ=="
+token = "BVbEPfH_LihrdVBMkpZqdpq4hztiAKEFrN1kFfWmQYpl6j_JmoIAN_IHDu1DLmUvjAxXyrbG86bonXUF2OYYCw=="
 org = "FTN"
 url = "http://localhost:8086"
 bucket = "smart_home_bucket"
@@ -24,7 +24,7 @@ counter = 0
 def on_connect(client, userdata, flags, rc):
     topics = ["TEMP1", "HMD1", "TEMP2", "HMD2","MOTION1", "MOTION2", "DMS", "DUS1", "DPIR1", "DS1"
                 ,"DPIR2", "GTEMP", "GHMD", "GSG", "MOTION3", "TEMP3", "HMD3", "DUS2", "DS2"
-                ,"MOTION4", "TEMP4", "HMD4", "BIR", "RGB"]
+                ,"MOTION4", "TEMP4", "HMD4", "BIR", "RGB", "DL"]
 
     for topic in topics:
         client.subscribe(topic)
@@ -35,6 +35,8 @@ mqtt_client.on_message = lambda client, userdata, msg: save_to_db(json.loads(msg
 
 
 def save_to_db(data):
+    print("---------")
+    print("SAVED TO INFLUXXXX")
     print(data)
     write_api = influxdb_client.write_api(write_options=SYNCHRONOUS)
     try:
