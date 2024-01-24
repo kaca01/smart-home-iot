@@ -7,7 +7,7 @@ import json
 app = Flask(__name__)
 
 # InfluxDB Configuration
-token = "BVbEPfH_LihrdVBMkpZqdpq4hztiAKEFrN1kFfWmQYpl6j_JmoIAN_IHDu1DLmUvjAxXyrbG86bonXUF2OYYCw=="
+token = "MJhirEccjAtqthjT9o_KeE93dnJ0IuBvuXztSRX1kuqpeyogBTB8EmLtrneriBWMro2nNE_fIOCM63mXPUYLVg=="
 org = "FTN"
 url = "http://localhost:8086"
 bucket = "smart_home_bucket"

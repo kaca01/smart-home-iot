@@ -7,6 +7,8 @@ from ultrasonic_sensors.door_ultrasonic_sensor import run_dus
 from lcd.lcd import run_lcd
 from gyroscope.gyroscope import run_gyroscope
 import time
+import json
+import paho.mqtt.client as mqtt
 
 try:
         import RPi.GPIO as GPIO
@@ -26,6 +28,33 @@ def print_exit():
                 """)
         print("Bye!")
 
+
+def on_message(client, userdata, msg):
+    settings = load_settings()
+    try:
+        payload = json.loads(msg.payload.decode('utf-8'))
+        value = payload.get("value")
+        if value is not None:
+                if msg.topic == "GTEMP":
+                        run_lcd({"temperature": value}, settings["LCD"])
+                elif msg.topic == "GHMD":
+                        run_lcd({"humidity": value}, settings["LCD"])
+
+    except json.JSONDecodeError as e:
+        print(f"Greška prilikom dekodiranja JSON-a: {e}")
+    except Exception as e:
+        print(f"Nepredviđena greška: {e}")
+    
+
+def congif_mqtt():
+        mqtt_client = mqtt.Client()
+        mqtt_client.on_message = on_message
+        mqtt_client.connect("localhost", 1883, 60)
+        mqtt_client.subscribe("GTEMP")
+        mqtt_client.subscribe("GHMD")
+        mqtt_client.loop_start()
+
+
 if __name__ == "__main__":
         print('START PI2')
         settings = load_settings()
@@ -43,6 +72,8 @@ if __name__ == "__main__":
         events = []
         events += [stop_event_dus2, stop_event_dpir2, stop_event_gdht, stop_event_lcd, stop_event_gsg, stop_event_pir3, stop_event_dht3]
 
+        congif_mqtt()
+
         try:
                 # PI2
                 thread = threading.Thread(target=run_ds, args=(settings["DS2"],))
@@ -57,8 +88,8 @@ if __name__ == "__main__":
                 thread = threading.Thread(target=run_dht, args=(settings["GDHT"], stop_event_gdht))
                 thread.start()
 
-                thread = threading.Thread(target=run_lcd, args=(settings["LCD"], stop_event_lcd))
-                thread.start()
+                # thread = threading.Thread(target=run_lcd, args=(settings["LCD"], stop_event_lcd))
+                # thread.start()
 
                 thread = threading.Thread(target=run_gyroscope, args=(settings["GSG"], stop_event_gsg))
                 thread.start()

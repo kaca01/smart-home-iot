@@ -1,5 +1,5 @@
-from lcd.PCF8574 import PCF8574_GPIO
-from lcd.Adafruit_LCD1602 import Adafruit_CharLCD
+from lcd.lcd_util.PCF8574 import PCF8574_GPIO
+from lcd.lcd_util.Adafruit_LCD1602 import Adafruit_CharLCD
 
 from time import sleep, strftime
 from datetime import datetime
