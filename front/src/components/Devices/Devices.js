@@ -16,7 +16,8 @@ export class Devices extends Component {
             selectedPi: 'PI1',
             data: [],
             topics: [],
-            showAlarmDialog: true,
+            showAlarmDialog: false,
+            alarmFlag: 0,
         };
         this.id = 1;
     }
@@ -49,6 +50,11 @@ export class Devices extends Component {
                 }
             });
         });
+        mqttClient.subscribe('ALARM', function (err) {
+            if (!err) {
+                console.log("Pretplaceni ste na topic ALARM")
+            }
+        });
         
         mqttClient.on('message', this.handleMqttMessage);
     }
@@ -71,6 +77,16 @@ export class Devices extends Component {
 
     handleMqttMessage = (topic, message) => {
         // console.log(message.toString());
+        if (topic == 'ALARM') {
+            const parsedMessage = JSON.parse(message.toString());
+            if (parsedMessage["value"] == true) {
+                if (this.state.alarmFlag != 0) this.setState({showAlarmDialog: true});
+            } else {
+                if (this.state.alarmFlag != 0) this.setState({showAlarmDialog: false});
+            }
+            this.setState({alarmFlag: this.state.alarmFlag++});
+            return;
+        }
 
         const parsedMessage = JSON.parse(message.toString());
 
@@ -131,6 +147,11 @@ export class Devices extends Component {
                     // console.log(`Odjavljeni ste sa topica: ${topic}`);
                 }
             });
+        });
+        mqttClient.unsubscribe('ALARM', function(err){
+            if (!err) {
+
+            }
         });
 
         try {

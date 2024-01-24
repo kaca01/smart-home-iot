@@ -5,7 +5,7 @@ from settings.broker_settings import HOSTNAME, PORT
 import paho.mqtt.publish as publish
 import json
 from lights.rgb.simulator import run_simulation
-from lights.rgb.sensor import run_rgb
+from lights.rgb.sensor import run_rgb_sensor
 try:
     import RPi.GPIO as GPIO
     GPIO.setmode(GPIO.BCM)
@@ -55,7 +55,7 @@ def run_rgb(settings, stop_event):
             run_simulation(rgb_callback, stop_event, publish_event, settings, color)
         else:
             color = str(input("Choose a color (type 0-6)"))
-            run_rgb(settings, color, rgb_callback, publish_event)
+            run_rgb_sensor(settings, color, rgb_callback, publish_event)
     except KeyboardInterrupt or EOFError:
         print("RGB stopped by user")
     except Exception as e:

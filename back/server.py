@@ -4,6 +4,7 @@ from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 import paho.mqtt.client as mqtt
 import json
+import threading
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -32,6 +33,7 @@ def on_connect(client, userdata, flags, rc):
 
 mqtt_client.on_connect = on_connect
 mqtt_client.on_message = lambda client, userdata, msg: save_to_db(json.loads(msg.payload.decode('utf-8')))
+lock_counter = threading.Lock()
 
 
 def save_to_db(data):
@@ -102,16 +104,18 @@ def get_gyro_data(accel, start):
 
 @app.route('/increase-counter', methods=['PUT'])
 def increase_counter():
-    global counter
-    counter += 1
-    return jsonify({"status": "success", "data": counter})
+    with lock_counter:
+        global counter
+        counter += 1
+        return jsonify({"status": "success", "data": counter})
 
 @app.route('/decrease-counter', methods=['PUT'])
 def decrease_counter():
-    global counter
-    if counter > 0:
-        counter -= 1
-    return jsonify({"status": "success", "data": counter})
+    with lock_counter:
+        global counter
+        if counter > 0:
+            counter -= 1
+        return jsonify({"status": "success", "data": counter})
 
 @app.route('/counter', methods=['GET'])
 def get_counter():
