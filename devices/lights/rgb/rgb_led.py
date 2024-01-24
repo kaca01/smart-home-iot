@@ -35,6 +35,9 @@ def rgb_callback(result, publish_event, pir_settings, verbose=False):
     if verbose:
         print(f"{pir_settings['name']} says: you moved!")
 
+    print("aaaaaaaa")
+    print(result)
+
     temp_payload = {
         "measurement": pir_settings['topic'],
         "simulated": pir_settings['simulated'],
@@ -51,7 +54,8 @@ def rgb_callback(result, publish_event, pir_settings, verbose=False):
 def run_rgb(button, settings):
     try:
         if settings["simulated"]:
-            run_simulation(rgb_callback, publish_event, settings, button)
+            print(button["button"])
+            run_simulation(rgb_callback, publish_event, settings, button["button"])
         else:
             run_sensor(rgb_callback, publish_event, settings, button)
     except KeyboardInterrupt or EOFError:

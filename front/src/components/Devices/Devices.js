@@ -3,6 +3,7 @@ import './Devices.css';
 import { Navigation } from "../Navigation/Navigation";
 import { Divider } from '@mui/material';
 import PinInputDialog from "../PinDialog/Dialog";
+import ColorDialog from "../RGBDialog/RGBDialog";
 
 
 export class Devices extends Component {
@@ -12,6 +13,8 @@ export class Devices extends Component {
         super(props);
         this.state = {
             isPinDialogOpen: false,
+            isColorDialogOpen: false,
+            selectedPi: 'PI1',
             data: [{
                 "Name": "PIR1",
                 "Value": "No motion detected",
@@ -44,6 +47,11 @@ export class Devices extends Component {
         this.id = 1;
     }
 
+    updateSelectedPi = async (newPi) => {
+        this.setState({ selectedPi: newPi });
+    }
+
+    // pin dialog
     handleOpenPinDialog = () => {
         this.setState({ isPinDialogOpen: true });
     };
@@ -52,15 +60,27 @@ export class Devices extends Component {
         this.setState({ isPinDialogOpen: false });
     };
 
+    // color dialog
+    handleOpenColorDialog = () => {
+        this.setState({ isColorDialogOpen: true });
+    };
+
+    handleCloseColorDialog = () => {
+        this.setState({ isColorDialogOpen: false });
+    };
+
     render() {
         return (
             <div>
-                <Navigation></Navigation>
+                <Navigation updateSelectedPi={this.updateSelectedPi}></Navigation>
                 <div id="panel">
                     {/* <Iframe url={this.grafanaGraphUrl} width="100%" height="600px"/> */}
-                    <span className='estate-title'>PI {this.id}</span>
+                    <span className='estate-title'>{this.state.selectedPi}</span>
                     <span>
                         <button className="button button1" onClick={this.handleOpenPinDialog}>INPUT PIN</button>
+                        {this.state.selectedPi === 'PI3' && (
+                            <button className="button button2" onClick={this.handleOpenColorDialog}>CONTROL RGB</button>
+                        )}
                     </span>
                     <Divider style={{ width: "87%", marginLeft: 'auto', marginRight: 'auto', marginBottom: '20px' }} />
                     <DevicesList devices={this.state.data}/>
@@ -69,6 +89,11 @@ export class Devices extends Component {
                  {/* Dialog for input pin */}
                 {this.state.isPinDialogOpen && (
                     <PinInputDialog open={this.state.isPinDialogOpen} onClose={this.handleClosePinDialog} />
+                )}
+
+                {/* Dialog for rgb */}
+                {this.state.isColorDialogOpen && (
+                    <ColorDialog isOpen={this.state.isColorDialogOpen} onClose={this.handleCloseColorDialog} />
                 )}
             </div>
         )

@@ -26,15 +26,14 @@ publisher_thread.start()
 
 
 def bir_callback(result, publish_event, bir_settings, verbose=False):
-    # todo izmeni ovo da se u mqtt salje koja akcija se desila na rgb sijalicom
     if verbose:
         print("nesto se desilo sa rgb")
 
     rgb_payload = {
-        "measurement": bir_settings['topic'],
+        "measurement": bir_settings['name'],
         "simulated": bir_settings['simulated'],
         "runs_on": bir_settings["runs_on"],
-        "name": bir_settings["name"],
+        "name": "pressed button",
         "value": result
     }
 
@@ -46,9 +45,8 @@ def bir_callback(result, publish_event, bir_settings, verbose=False):
 
 def run_infrared(settings, stop_event):
     try:
-        if settings['simulated']:
-            run_simulation(2, bir_callback, stop_event, publish_event, settings)
-        else:
+        # simulated is done on server side and front 
+        if not settings['simulated']:
             from infrared.sensor import run_sensor
             run_sensor(2, bir_callback, stop_event, publish_event, settings)
     except KeyboardInterrupt:

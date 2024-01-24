@@ -1,10 +1,13 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 import paho.mqtt.client as mqtt
+import paho.mqtt.publish as publish
 import json
 
 app = Flask(__name__)
+CORS(app, supports_credentials=True)
 
 # InfluxDB Configuration
 token = "8T_GjrmkteNFTkWak2TjJLP1KQlC5GjXYS81dVAyANBUl_KRlzZ48qDRtUE4gJV-z4XPTmcITN7ZsPnp0mFuHw=="
@@ -105,13 +108,30 @@ def decrease_counter():
 def get_counter():
     return jsonify({"status": "success", "data": counter})
 
-# @app.route('/aggregate_query', methods=['GET'])
-# def retrieve_aggregate_data():
-#     query = f"""from(bucket: "{bucket}")
-#     |> range(start: -10m)
-#     |> filter(fn: (r) => r._measurement == "Humidity")
-#     |> mean()"""
-#     return handle_influx_query(query)
+
+@app.route('/api/bir_button', methods=['POST'])
+def bir_button():
+    try:
+        data = request.get_json() 
+        button_color = data.get('button')  
+        print("pressed button", button_color)
+
+        # todo upisi tu vrednost u influxdb
+        rgb_payload = {
+            "measurement": "BIR",
+            "simulated":  "true",
+            "runs_on": "PI3",
+            "name": "pressed button",
+            "value": button_color
+        }
+
+        publish.single("BIR", json.dumps(rgb_payload), hostname="localhost")
+
+        return jsonify({'success': True, 'message': 'Boja dugmeta uspešno primljena.'})
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
 
 
 if __name__ == '__main__':

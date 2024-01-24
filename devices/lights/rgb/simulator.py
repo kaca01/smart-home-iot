@@ -39,7 +39,7 @@ def switch_rgb_simulation(callback, publish_event, settings, switch):
 
 def run_simulation(callback, publish_event, settings, inp):
     try:
-        switch_rgb_simulation(callback, publish_event, settings, inp.lower().strip())
+        switch_rgb_simulation(callback, publish_event, settings, inp)
 
     except KeyboardInterrupt or EOFError:
         print('Simulation stopped by user')
