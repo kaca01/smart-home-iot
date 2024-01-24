@@ -55,7 +55,7 @@ def dht_callback(humidity, temperature, publish_event, dht_settings, code="DHTLI
         "measurement": dht_settings["name"],
         "simulated": dht_settings['simulated'],
         "runs_on": dht_settings["runs_on"],
-        "name": "himidity",
+        "name": "humidity",
         "value": humidity
     }
 
