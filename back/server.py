@@ -235,19 +235,22 @@ def set_sys_activity():
     is_active_sys = False
     return jsonify({"status": "success", "data": is_active_sys})
 
-@app.route('/turn-off-alarm', methods=['PUT'])
-def turn_off_alarm():
-    temp_payload = {
-                "measurement": 'ALARM',
-                "simulated": False, 
-                "runs_on": 'PI1',
-                "name": "alarm",
-                "value": True
-            }
+@app.route('/turn-off-alarm/<pin>', methods=['PUT'])
+def turn_off_alarm(pin):
+    global correct_pin
+    if pin == correct_pin:
+        temp_payload = {
+                    "measurement": 'ALARM',
+                    "simulated": False, 
+                    "runs_on": 'PI1',
+                    "name": "alarm",
+                    "value": True
+                }
 
-    b = [('TURN_OFF_ALARM', json.dumps(temp_payload), 0, True)]
-    publish.multiple(b, hostname=HOSTNAME, port=PORT)
-    return jsonify({"status": "success", "data": 0})
+        b = [('TURN_OFF_ALARM', json.dumps(temp_payload), 0, True)]
+        publish.multiple(b, hostname=HOSTNAME, port=PORT)
+        return jsonify({"status": "success", "data": 0})
+    return jsonify({"status": "success", "data": 1})
 
 
 if __name__ == '__main__':

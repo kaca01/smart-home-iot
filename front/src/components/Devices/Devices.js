@@ -25,8 +25,8 @@ export class Devices extends Component {
         };
     }
 
-    handlePinInput = async() => {
-        await DeviceServices.turnOffAlarm();
+    handlePinInput = async(pin) => {
+        await DeviceServices.turnOffAlarm(pin);
         await this.setState({showAlarmDialog: false});
     }
     
@@ -231,6 +231,7 @@ export class Devices extends Component {
                         onConfirm={this.handlePinInput}
                         // onCancel={this.handleCancel}
                         isDiscard={true}
+                        setReason={this.setPin}
                         inputPlaceholder="Write PIN here..."
                     />
                 )}
