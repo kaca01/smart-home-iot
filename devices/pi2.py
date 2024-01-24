@@ -41,9 +41,9 @@ def on_message(client, userdata, msg):
                         run_lcd({"humidity": value}, settings["LCD"])
 
     except json.JSONDecodeError as e:
-        print(f"Greška prilikom dekodiranja JSON-a: {e}")
+        print(f"JSON error: {e}")
     except Exception as e:
-        print(f"Nepredviđena greška: {e}")
+        print(f"Exception: {e}")
     
 
 def congif_mqtt():

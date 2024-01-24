@@ -5,10 +5,11 @@ temp = ''
 hmd = ''
 
 def run_lcd(data, settings):
+    global temp, hmd
     if "temperature" in data:
-        temp = data['temperature'] + "C"
+        temp = str(data['temperature']) + "°C"
     if "humidity" in data:
-        hmd = data['humidity'] + "%"
+        hmd = str(data['humidity']) + "%"
 
     if settings["simulated"]:
         print("Temperature: " +  temp + "    Humidity: " + hmd)
