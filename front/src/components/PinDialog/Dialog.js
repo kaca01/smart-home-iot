@@ -15,10 +15,36 @@ const PinInputDialog = ({ open, onClose }) => {
     setNumbers(newNumbers);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     // Ovde možete dodati logiku za čuvanje unetih brojeva
     // Na primer, pozovite neku funkciju koja će obraditi ove brojeve
-    console.log('Uneti brojevi:', numbers);
+    console.log('Uneti brojevi:', numbers.join(''));
+
+    const pin = numbers.join('');
+
+    try {
+        const apiUrl = 'http://localhost:5000/api/send_pin';
+    
+        const data = { pin: pin };
+
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        };
+    
+        const response = await fetch(apiUrl, options);
+
+        if (response.ok) {
+          console.log('Podaci uspešno poslati na backend.');
+        } else {
+          console.error('Došlo je do greške prilikom slanja podataka na backend.');
+        }
+      } catch (error) {
+        console.error('Došlo je do greške:', error);
+      }
 
     onClose();
   };
