@@ -224,10 +224,8 @@ def set_time():
     global clock_time, alarm_event
     try:
         data = request.get_json()
-        print(data['time'])
 
         clock_time = set_alarm(data['time'])
-        print("Vreme je setovano")
         alarm_event.set()
         return jsonify({'success': True, 'message': 'get clock time from front'})
 
@@ -236,23 +234,19 @@ def set_time():
 
 def set_alarm(user_time):
     clock_time_hour_minutes = user_time.split(":") 
-    print("DOSAOOOOOO ", clock_time_hour_minutes)
     ret = dt_time(int(clock_time_hour_minutes[0]), int(clock_time_hour_minutes[1]))
-    print("RETTT: ", ret)
     return ret
 
 def is_time_to_sound_alarm(alarm_time):
     current_time = datetime.now().time()
     return current_time >= alarm_time
 
-def alarm_thread(alarm_event):
+def alarm_thread_run(alarm_event):
     while True:
-        print("ovde sam")
         # if alarm_time != "":
         alarm_event.wait()
         global clock_time
         alarm_time = clock_time
-        print("stiglo smo ovdeee")
         while not is_time_to_sound_alarm(alarm_time):
             print("Waiting for the alarm time...")
             time.sleep(5)
@@ -279,7 +273,7 @@ correct_pin = '1234'  # the pin that activates the alarm
 user_pin = ''
 clock_time = ''
 alarm_event = threading.Event()
-alarm_thread = threading.Thread(target=alarm_thread, args=(alarm_event, ))
+alarm_thread = threading.Thread(target=alarm_thread_run, args=(alarm_event, ), daemon=True)
 alarm_thread.start()
 
 if __name__ == '__main__':
