@@ -46,7 +46,7 @@ def lightBlue(r, g, b):
     GPIO.output(b, GPIO.HIGH)
 
 
-def run_rgb(settings, color, callback, publish_event):
+def run_rgb(callback, publish_event, settings, color):
     GPIO.setmode(GPIO.BCM)
 
     RED_PIN = settings["pin"][0]
@@ -57,28 +57,34 @@ def run_rgb(settings, color, callback, publish_event):
     GPIO.setup(GREEN_PIN, GPIO.OUT)
     GPIO.setup(BLUE_PIN, GPIO.OUT)
 
-    # TODO: check if here should be string or int for color
     if color == "0":
+        turnOff(RED_PIN, GREEN_PIN, BLUE_PIN) 
+        callback("Turn off", publish_event, settings)
+
+    elif color == "1":
         white(RED_PIN, GREEN_PIN, BLUE_PIN) 
         callback("White", publish_event, settings)
-    elif color == "1":
+
+    elif color == "2":
         red(RED_PIN, GREEN_PIN, BLUE_PIN)
         callback("Red", publish_event, settings)
-    elif color == "2":
+
+    elif color == "3":
         green(RED_PIN, GREEN_PIN, BLUE_PIN)
         callback("Green", publish_event, settings)
-    elif color == "3":
+
+    elif color == "4":
         blue(RED_PIN, GREEN_PIN, BLUE_PIN)
         callback("Blue", publish_event, settings)
-    elif color == "4":
+
+    elif color == "5":
         yellow(RED_PIN, GREEN_PIN, BLUE_PIN)
         callback("Yellow", publish_event, settings)
-    elif color == "5":
+
+    elif color == "6":
         purple(RED_PIN, GREEN_PIN, BLUE_PIN)
         callback("Purple", publish_event, settings)
-    elif color == "6":
+
+    elif color == "7":
         lightBlue(RED_PIN, GREEN_PIN, BLUE_PIN)
         callback("Light blue", publish_event, settings)
-
-    sleep(3)
-    turnOff(RED_PIN, GREEN_PIN, BLUE_PIN)

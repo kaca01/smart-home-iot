@@ -57,6 +57,7 @@ def congif_mqtt():
 
 if __name__ == "__main__":
         print('START PI2')
+        congif_mqtt()
         settings = load_settings()
         threads = []
 
@@ -71,8 +72,6 @@ if __name__ == "__main__":
 
         events = []
         events += [stop_event_dus2, stop_event_dpir2, stop_event_gdht, stop_event_lcd, stop_event_gsg, stop_event_pir3, stop_event_dht3]
-
-        congif_mqtt()
 
         try:
                 # PI2

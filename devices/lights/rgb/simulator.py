@@ -1,37 +1,45 @@
 from time import sleep
 
-def switch_rgb_simulation(callback, stop, publish_event, settings, switch):
+def switch_rgb_simulation(callback, publish_event, settings, switch):
     if switch == '0':
+        print("Turn OFF")
+        callback("Turn off", publish_event, settings)
+
+    elif switch == '1':
         print("White light ON")
         callback("White", publish_event, settings)
-    elif switch == '1':
+
+    elif switch == '2':
         print("Red light ON")
         callback("Red", publish_event, settings)
-    elif switch == '2':
+
+    elif switch == '3':
         print("Green light ON")
         callback("Green", publish_event, settings)
-    elif switch == '3':
+
+    elif switch == '4':
         print("Blue light ON")
         callback("Blue", publish_event, settings)
-    elif switch == '4':
+
+    elif switch == '5':
         print("Yellow light ON")
         callback("Yellow", publish_event, settings)
-    elif switch == '5':
+
+    elif switch == '6':
         print("Purple light ON")
         callback("Purple", publish_event, settings)
-    elif switch == '6':
+
+    elif switch == '7':
         print("Light blue light ON")
         callback("Light blue", publish_event, settings)
     else:
         print("Wrong input in RGB simulation!")
     
-    sleep(3)
-    print("Light OFF")
 
 
-def run_simulation(callback, stop_event, publish_event, settings, inp):
+def run_simulation(callback, publish_event, settings, inp):
     try:
-        switch_rgb_simulation(callback, stop_event, publish_event, settings, inp.lower().strip())
+        switch_rgb_simulation(callback, publish_event, settings, inp.lower().strip())
 
     except KeyboardInterrupt or EOFError:
         print('Simulation stopped by user')
