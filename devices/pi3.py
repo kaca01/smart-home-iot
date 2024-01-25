@@ -9,6 +9,8 @@ from infrared.infrared import run_infrared
 import time
 import json
 import paho.mqtt.client as mqtt
+from settings.broker_settings import HOSTNAME
+
 
 try:
         import RPi.GPIO as GPIO
@@ -45,7 +47,7 @@ def on_message(client, userdata, msg):
 def congif_mqtt():
         mqtt_client = mqtt.Client()
         mqtt_client.on_message = on_message
-        mqtt_client.connect("localhost", 1883, 60)
+        mqtt_client.connect(HOSTNAME, 1883, 60)
         mqtt_client.subscribe("BIR")
         mqtt_client.loop_start()
 

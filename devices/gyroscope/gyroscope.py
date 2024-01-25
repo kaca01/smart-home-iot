@@ -1,7 +1,7 @@
 from gyroscope.simulator import run_simulation
 from settings.broker_settings import HOSTNAME, PORT
-from buzzer.buzzer import button_pressed
 import paho.mqtt.publish as publish
+from alarm.alarm import turn_on_alarm
 import json
 import threading
 import requests
@@ -13,15 +13,15 @@ counter_lock = threading.Lock()
 
 def get_displacement():
     global buzzer_event
-    url = "http://127.0.0.1:5000/gyro/accel.x/10"
+    url = f"http://{HOSTNAME}:5000/gyro/accel.x/10"
     print("URL ", url)
     response = requests.get(url)
     x_accel_data = response.json()["data"]
 
-    url = "http://127.0.0.1:5000/gyro/accel.y/10"
+    url = f"http://{HOSTNAME}:5000/gyro/accel.y/10"
     y_accel_data = requests.get(url).json()["data"]
 
-    url = "http://127.0.0.1:5000/gyro/accel.z/10"
+    url = f"http://{HOSTNAME}:5000/gyro/accel.z/10"
     z_accel_data = requests.get(url).json()["data"]
 
     if response.status_code == 200:
@@ -33,20 +33,9 @@ def get_displacement():
             z1 = z_accel_data[0]["_value"]
             z2 = z_accel_data[-1]["_value"]
             displacement = round(math.sqrt((x2 - x1)**2 + (y2 - y1)**2 + (z2 - z1)**2), 3)
-            if displacement > 0.21:
+            if displacement > 0.25:
                 # TODO: this is alarm and it won't stop until 4. task is implemented
-                button_pressed(buzzer_event)
-                temp_payload = {
-                    "measurement": 'ALARM',
-                    "simulated": False,
-                    "runs_on": 'PI2',
-                    "name": "alarm",
-                    "value": True
-                }
-
-                with counter_lock:
-                    b = [('ALARM', json.dumps(temp_payload), 0, True)]
-                    publish.multiple(b, hostname=HOSTNAME, port=PORT)
+                turn_on_alarm()
 
 
 def publisher_task(event, gsg_batch):
@@ -65,7 +54,7 @@ publisher_thread.daemon = True
 publisher_thread.start()
 buzzer_event = threading.Event()
 
-def gsg_callback(result, publish_event, gsg_settings, verbose=True):
+def gsg_callback(result, publish_event, gsg_settings, verbose=False):
     if verbose:
         print("GSG")
 

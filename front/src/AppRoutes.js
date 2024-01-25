@@ -14,7 +14,7 @@ const AppRoutes = [
     },
 
     {
-        path: '/grafana',
+        path: '/grafana/:device',
         element: <Grafana></Grafana>
     }
 ];

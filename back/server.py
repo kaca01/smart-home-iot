@@ -12,7 +12,7 @@ app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
 # InfluxDB Configuration
-token = "BVbEPfH_LihrdVBMkpZqdpq4hztiAKEFrN1kFfWmQYpl6j_JmoIAN_IHDu1DLmUvjAxXyrbG86bonXUF2OYYCw=="
+token = "7vlrxY6fB5pJPLto8UKXn9RSWMPhnImyPuHD5-pEBDI5Enx_mLF1qDzL4D3bOvuisxarVj20Vrp574M4C6Aq2A=="
 org = "FTN"
 url = "http://localhost:8086"
 bucket = "smart_home_bucket"
@@ -20,14 +20,16 @@ influxdb_client = InfluxDBClient(url=url, token=token, org=org)
 
 # MQTT Configuration
 mqtt_client = mqtt.Client()
-mqtt_client.connect("localhost", 1883, 60)
+HOSTNAME = "localhost"
+PORT = 1883
+mqtt_client.connect(HOSTNAME, PORT, 60)
 mqtt_client.loop_start()
 counter = 0
 
 def on_connect(client, userdata, flags, rc):
     topics = ["TEMP1", "HMD1", "TEMP2", "HMD2","MOTION1", "MOTION2", "DMS", "DUS1", "DPIR1", "DS1"
                 ,"DPIR2", "GTEMP", "GHMD", "GSG", "MOTION3", "TEMP3", "HMD3", "DUS2", "DS2"
-                ,"MOTION4", "TEMP4", "HMD4", "BIR", "RGB", "DL"]
+                ,"MOTION4", "TEMP4", "HMD4", "BIR", "RGB", "DL", "ALARM"]
 
     for topic in topics:
         client.subscribe(topic)
@@ -43,36 +45,28 @@ def save_to_db(data):
     print("SAVED TO INFLUXXXX")
     print(data)
     write_api = influxdb_client.write_api(write_options=SYNCHRONOUS)
-    try:
-        point = (
-            Point(data["measurement"])
-            .tag("simulated", data["simulated"])
-            .tag("runs_on", data["runs_on"])
-            .tag("name", data["name"])
-            .field("measurement", data["value"])
-        )
-        write_api.write(bucket=bucket, org=org, record=point)
-    except:
-        for key, value in data["value"].items():
+    if (data["measurement"] == "BIR") and (data["value"] in [False, True]):
+        return
+    else:
+        try:
             point = (
                 Point(data["measurement"])
                 .tag("simulated", data["simulated"])
                 .tag("runs_on", data["runs_on"])
                 .tag("name", data["name"])
-                .field(key, value)
+                .field("measurement", data["value"])
             )
             write_api.write(bucket=bucket, org=org, record=point)
-
-
-# Route to store dummy data
-# @app.route('/store_data', methods=['POST'])
-# def store_data():
-#     try:
-#         data = request.get_json()
-#         store_data(data)
-#         return jsonify({"status": "success"})
-#     except Exception as e:
-#         return jsonify({"status": "error", "message": str(e)})
+        except:
+            for key, value in data["value"].items():
+                point = (
+                    Point(data["measurement"])
+                    .tag("simulated", data["simulated"])
+                    .tag("runs_on", data["runs_on"])
+                    .tag("name", data["name"])
+                    .field(key, value)
+                )
+                write_api.write(bucket=bucket, org=org, record=point)
 
 
 def handle_influx_query(query):
@@ -123,30 +117,6 @@ def decrease_counter():
 def get_counter():
     return jsonify({"status": "success", "data": counter})
 
-# @app.route('/aggregate_query', methods=['GET'])
-# def retrieve_aggregate_data():
-#     query = f"""from(bucket: "{bucket}")
-#     |> range(start: -10m)
-#     |> filter(fn: (r) => r._measurement == "Humidity")
-#     |> mean()"""
-#     return handle_influx_query(query)
-            
-# @app.route('/api/get_last_value', methods=['GET'])
-# def get_last_value():
-#     query = '''
-#         from(bucket: "smart_home_bucket")
-#         |> range(start: -24h)
-#         |> filter(fn: (r) => r.name == "DHT1")
-#         |> last()
-#     '''
-#     print("tu sam")
-#     result = influxdb_client.query_api().query(query)
-
-#     last_value = result[0].records[0].values['_value']
-
-#     return jsonify({'last_value': last_value})
-
-
 @app.route('/api/get_devices/<pi_name>', methods=['GET'])
 def get_pi_devices(pi_name):
     with open('../devices/settings/settings.json', 'r') as file:
@@ -178,17 +148,19 @@ def get_pi_topics(pi_name):
 def bir_button():
     try:
         data = request.get_json() 
-        button_color = data.get('button')  
+        button_color = data.get('button') 
+        print("++++++++++++++++++++++++++++++++++++++++") 
+        print(button_color)
 
         rgb_payload = {
-            "measurement": "BIR",
+            "measurement": "BIR1",
             "simulated":  "true",
             "runs_on": "PI3",
             "name": "pressed button",
             "value": button_color
         }
 
-        publish.single("BIR", json.dumps(rgb_payload), hostname="localhost")
+        publish.single("BIR", json.dumps(rgb_payload), hostname=HOSTNAME)
         return jsonify({'success': True, 'message': 'Pressed button'})
 
     except Exception as e:
@@ -233,14 +205,28 @@ def set_sys_activity():
     is_active_sys = False
     return jsonify({"status": "success", "data": is_active_sys})
 
-@app.route('/turn-off-alarm', methods=['PUT'])
-def turn_off_alarm():
-    pass
+@app.route('/turn-off-alarm/<pin>', methods=['PUT'])
+def turn_off_alarm(pin):
+    global correct_pin, is_active_sys
+    if pin == correct_pin:
+        temp_payload = {
+                    "measurement": 'ALARM',
+                    "simulated": False, 
+                    "runs_on": 'PI1',
+                    "name": "alarm",
+                    "value": True
+                }
+
+        b = [('TURN_OFF_ALARM', json.dumps(temp_payload), 0, True)]
+        publish.multiple(b, hostname=HOSTNAME, port=PORT)
+        is_active_sys = False
+        return jsonify({"status": "success", "data": 0})
+    return jsonify({"status": "success", "data": 1})
 
 
 if __name__ == '__main__':
     counter = 0
     is_active_sys = False
-    correct_pin = ''  # the pin that activates the alarm
+    correct_pin = '1234'  # the pin that activates the alarm
     user_pin = ''
     app.run(debug=True)

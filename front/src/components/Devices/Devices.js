@@ -25,9 +25,9 @@ export class Devices extends Component {
         };
     }
 
-    handlePinInput = async() => {
-        // TODO: not implemented yet
-        await this.setState({showAlarmDialog: false});
+    handlePinInput = async(pin) => {
+        await DeviceServices.turnOffAlarm(pin);
+        // await this.setState({showAlarmDialog: false});
     }
     
     async componentDidMount() {
@@ -199,6 +199,12 @@ export class Devices extends Component {
         this.setState({ isColorDialogOpen: false });
     };
 
+    open_card = (deviceName) => {
+        console.log("otvarammmm karticu");
+        console.log(deviceName);
+        window.location.href = 'grafana/' + deviceName.toLowerCase();
+    };
+
     render() {
         return (
             <div>
@@ -213,7 +219,7 @@ export class Devices extends Component {
                         )}
                     </span>
                     <Divider style={{ width: "87%", marginLeft: 'auto', marginRight: 'auto', marginBottom: '20px' }} />
-                    <DevicesList devices={this.state.data}/>
+                    <DevicesList devices={this.state.data} openCard={this.open_card}/>
                 </div>
 
                  {/* Dialog for input pin */}
@@ -231,6 +237,7 @@ export class Devices extends Component {
                         onConfirm={this.handlePinInput}
                         // onCancel={this.handleCancel}
                         isDiscard={true}
+                        setReason={this.setPin}
                         inputPlaceholder="Write PIN here..."
                     />
                 )}
@@ -239,7 +246,7 @@ export class Devices extends Component {
     }
 }
 
-const DevicesList = ({ devices }) => {
+const DevicesList = ({ devices, openCard }) => {
     const chunkSize = 5; // Number of items per row
 
     const chunkArray = (arr, size) => {
@@ -255,7 +262,7 @@ const DevicesList = ({ devices }) => {
             {rows.map((row, rowIndex) => (
                 <div key={rowIndex} className='device-row'>
                     {row.map((device, index) => (
-                        <div key={index} className='device-card'>
+                        <div key={index} className='device-card' onClick={() => openCard(device.Name)}>
                             <div className='device-info'>
                                 <p className='device-title'>{device.Name}</p>
                                 {device.Value.map((value, valueIndex) => (

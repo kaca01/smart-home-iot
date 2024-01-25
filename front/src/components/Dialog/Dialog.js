@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import './Dialog.css';
 
-const Dialog = ({ title, message, onConfirm, onCancel, isDiscard, inputPlaceholder}) => {
+const Dialog = ({ title, message, onConfirm, onCancel, isDiscard, inputPlaceholder, pin}) => {
     const [reason, setReason] = useState('');
 
     const handleConfirm = () => {
