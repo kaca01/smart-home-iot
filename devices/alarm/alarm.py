@@ -7,6 +7,7 @@ import threading
 import json
 from settings.settings import load_settings
 
+settings = load_settings()
 
 def on_connect(client, userdata, flags, rc):
     topics = ["TURN_OFF_ALARM"]
@@ -73,4 +74,3 @@ mqtt_client.on_connect = on_connect
 mqtt_client.on_message = lambda client, userdata, msg: message_arrived(json.loads(msg.payload.decode('utf-8')))
 stop_event = threading.Event()
 lock_alarm = threading.Lock()
-settings = load_settings()
