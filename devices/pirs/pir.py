@@ -39,7 +39,7 @@ def change_counter(check_is_enter):
 
 
 def get_count():
-    url = f"http://{HOSTNAME}5000/counter"
+    url = f"http://{HOSTNAME}:5000/counter"
     response = requests.get(url)
 
     if response.status_code == 200:
