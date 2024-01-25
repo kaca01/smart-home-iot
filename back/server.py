@@ -173,6 +173,36 @@ def get_pin():
         else:
             user_pin = data['pin']
 
+        dms_payload = {
+                "measurement": 'DMS',
+                "simulated": True, 
+                "runs_on": 'PI1',
+                "name": "pin",
+                "value": data['pin']
+            }
+
+        b = [('DMS', json.dumps(dms_payload), 0, True)]
+        publish.multiple(b, hostname=HOSTNAME, port=PORT)
+
+        return jsonify({'success': True, 'message': 'Get pin from front'})
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+    
+
+@app.route('/api/dms/send-pin', methods=['POST'])
+def get_pin_from_device():
+    global is_active_sys, correct_pin, user_pin
+    try:
+        if not is_active_sys:
+            data = request.get_json() 
+            print(data)
+            correct_pin = data['pin']
+            time.sleep(10)
+            is_active_sys = True
+        else:
+            user_pin = data['pin']
+
         return jsonify({'success': True, 'message': 'Get pin from front'})
 
     except Exception as e:
