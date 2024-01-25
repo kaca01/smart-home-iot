@@ -1,5 +1,6 @@
 import threading
 from settings.settings import load_settings
+from settings.broker_settings import HOSTNAME, PORT
 from dhts.dht import run_dht
 from pirs.pir import run_pir
 from door_sensor.door_sensor import run_ds

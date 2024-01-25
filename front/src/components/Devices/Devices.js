@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import './Devices.css';
 import { Navigation } from "../Navigation/Navigation";
 import { Divider } from '@mui/material';
-import Dialog from "../Dialog/Dialog";
+import Dialog from "../Alarm/Dialog";
 import DeviceServices from "../../services/DeviceServices";
 import mqtt from 'mqtt'
 import PinInputDialog from "../PinDialog/Dialog";
 import ColorDialog from "../RGBDialog/RGBDialog";
+import TimeInputDialog from "../TimeClock/TimeDialog";
 
 
 export class Devices extends Component {
@@ -21,6 +22,7 @@ export class Devices extends Component {
             isPinDialogOpen: false,
             isColorDialogOpen: false,
             showAlarmDialog: false,
+            isTimeInputDialogOpen: false,
             alarmFlag: 0,
         };
     }
@@ -63,7 +65,6 @@ export class Devices extends Component {
     }
 
     setB4SD = (data) => {
-        const hasB4SD = data.some(device => device.Name === 'B4SD');
         const currentTime = new Date().toLocaleTimeString();
         const b4sdIndex = data.findIndex(device => device.Name === 'B4SD');
         if (b4sdIndex !== -1) {
@@ -74,7 +75,6 @@ export class Devices extends Component {
                 data[b4sdIndex].Value[timeIndex].value = currentTime;
             }
         }
-
         return data
     }
 
@@ -180,7 +180,6 @@ export class Devices extends Component {
         }
     }
 
-
     // pin dialog
     handleOpenPinDialog = () => {
         this.setState({ isPinDialogOpen: true });
@@ -204,6 +203,16 @@ export class Devices extends Component {
         console.log(deviceName);
         window.location.href = 'grafana/' + deviceName.toLowerCase();
     };
+    
+    // time dialog
+    handleOpenTimeInputDialog = () => {
+        this.setState({ isTimeInputDialogOpen: true });
+    };
+    
+    handleCloseTimeInputDialog = () => {
+        this.setState({ isTimeInputDialogOpen: false });
+    };
+    
 
     render() {
         return (
@@ -240,6 +249,21 @@ export class Devices extends Component {
                         setReason={this.setPin}
                         inputPlaceholder="Write PIN here..."
                     />
+                )}
+
+                {this.state.selectedPi === 'PI3' && (
+                <div>
+                    <img
+                        src="/images/alarm-clock.png"
+                        alt="alarm-clock"
+                        onClick={this.handleOpenTimeInputDialog}
+                        style={{ position: 'fixed', bottom: '15px', right: '15px', cursor: 'pointer', maxWidth: '100px', maxHeight: '100px' }}
+                    />
+                    {this.state.isTimeInputDialogOpen && (
+                    <TimeInputDialog
+                        isOpen={this.state.isTimeInputDialogOpen}
+                        onClose={this.handleCloseTimeInputDialog}/> )}
+                </div>
                 )}
             </div>
         )

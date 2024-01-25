@@ -16,8 +16,6 @@ const PinInputDialog = ({ open, onClose }) => {
   };
 
   const handleSave = async () => {
-    // Ovde možete dodati logiku za čuvanje unetih brojeva
-    // Na primer, pozovite neku funkciju koja će obraditi ove brojeve
     console.log('Uneti brojevi:', numbers.join(''));
 
     const pin = numbers.join('');

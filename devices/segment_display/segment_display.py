@@ -1,12 +1,10 @@
 from segment_display.simulator import run_simulation
 
 
-def run_4d7sd(settings, stop_event):
+def run_4d7sd(value, settings):
     try:
-        if settings['simulated']:
-            run_simulation(2, stop_event)
-        else:
+        if not settings['simulated']:
             from segment_display.actuator import run_actuator
-            run_actuator(settings['pin'])
+            run_actuator(value, settings['pin'])
     except KeyboardInterrupt:
         print("4D7SD thread stopped by user")

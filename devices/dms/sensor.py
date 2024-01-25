@@ -65,29 +65,45 @@ def read_line(line, characters, columns):
     return character
 
 
-def input_pin(rows, columns):
-    pin = ""
+# def input_pin(rows, columns):
+#     pin = ""
 
-    for i in range(4):
-        character = read_line(rows[0], ["1","2","3","A"], columns)
-        character = read_line(rows[1], ["4","5","6","B"], columns)
-        character = read_line(rows[2], ["7","8","9","C"], columns)
-        character = read_line(rows[3], ["*","0","#","D"], columns)
-        pin += character
-        time.sleep(0.2)  # wainting for another input
+#     for i in range(4):
+#         character = read_line(rows[0], ["1","2","3","A"], columns)
+#         character = read_line(rows[1], ["4","5","6","B"], columns)
+#         character = read_line(rows[2], ["7","8","9","C"], columns)
+#         character = read_line(rows[3], ["*","0","#","D"], columns)
+#         pin += character
+#         time.sleep(0.2)  # wainting for another input
 
-    return pin
+    # return pin
 
 
-def run_sensor(gpio_pins, expected_pin, delay, callback, stop_event, publish_event, settings):
+def extract_non_none_value(values):
+    for value in values:
+        if value is not None:
+            return value
+    return None
+
+
+def run_sensor(gpio_pins, delay, callback, stop_event, publish_event, settings):
     rows, columns = init_dms(gpio_pins)
+    pin = ''
     while True:
-        pin = input_pin(rows, columns)
-        if pin == expected_pin:
-            callback("open", publish_event, settings)
-            # print("Correct PIN!")
-        else:
-            callback("closed", publish_event, settings)
+        values = (
+            read_line(rows[0], ["1","2","3","A"], columns),
+            read_line(rows[1], ["4","5","6","B"], columns),
+            read_line(rows[2], ["7","8","9","C"], columns),
+            read_line(rows[3], ["*","0","#","D"], columns)
+        )
+        
+        character = extract_non_none_value(values)
+        if character is not None:
+            pin += character
+            if len(pin) == 4:
+                callback(pin, publish_event, settings)
+
+                pin = ""
 
         if stop_event.is_set():
             break
