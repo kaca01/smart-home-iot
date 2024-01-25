@@ -31,10 +31,10 @@ def is_enter(dus):
 def change_counter(check_is_enter):
     print("Is enter ", check_is_enter)
     if check_is_enter is True:
-        url = "http://{HOSTNAME}:5000/increase-counter"
+        url = f"http://{HOSTNAME}:5000/increase-counter"
         requests.put(url)
     elif check_is_enter is False:
-        url = "http://{HOSTNAME}:5000/decrease-counter"
+        url = f"http://{HOSTNAME}:5000/decrease-counter"
         requests.put(url)
 
 
