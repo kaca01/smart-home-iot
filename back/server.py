@@ -12,7 +12,7 @@ app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
 # InfluxDB Configuration
-token = "BVbEPfH_LihrdVBMkpZqdpq4hztiAKEFrN1kFfWmQYpl6j_JmoIAN_IHDu1DLmUvjAxXyrbG86bonXUF2OYYCw=="
+token = "7vlrxY6fB5pJPLto8UKXn9RSWMPhnImyPuHD5-pEBDI5Enx_mLF1qDzL4D3bOvuisxarVj20Vrp574M4C6Aq2A=="
 org = "FTN"
 url = "http://localhost:8086"
 bucket = "smart_home_bucket"
