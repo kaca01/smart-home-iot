@@ -9,7 +9,7 @@ from alarm.alarm import turn_on_alarm
 import requests
 
 def is_enter(dus):
-    url = f"http://127.0.0.1:5000/{dus}/5"
+    url = f"http://{HOSTNAME}:5000/{dus}/5"
     print("URL ", url)
     response = requests.get(url)
 
@@ -31,15 +31,15 @@ def is_enter(dus):
 def change_counter(check_is_enter):
     print("Is enter ", check_is_enter)
     if check_is_enter is True:
-        url = "http://127.0.0.1:5000/increase-counter"
+        url = "http://{HOSTNAME}:5000/increase-counter"
         requests.put(url)
     elif check_is_enter is False:
-        url = "http://127.0.0.1:5000/decrease-counter"
+        url = "http://{HOSTNAME}:5000/decrease-counter"
         requests.put(url)
 
 
 def get_count():
-    url = f"http://127.0.0.1:5000/counter"
+    url = f"http://{HOSTNAME}5000/counter"
     response = requests.get(url)
 
     if response.status_code == 200:

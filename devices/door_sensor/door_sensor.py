@@ -20,7 +20,7 @@ except ModuleNotFoundError:
 
 
 def is_active_sys():
-    url = f"http://127.0.0.1:5000/system"
+    url = f"http://{HOSTNAME}:5000/system"
     response = requests.get(url)
 
     if response.status_code == 200:
@@ -40,7 +40,7 @@ def get_pin(url):
         return None
     
 def turn_off_sys():
-    url = "http://127.0.0.1:5000/set-sys-activity"
+    url = f"http://{HOSTNAME}:5000/set-sys-activity"
     requests.put(url)
 
 ds_batch = []

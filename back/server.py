@@ -43,9 +43,6 @@ lock_counter = threading.Lock()
 
 
 def save_to_db(data):
-    print("---------")
-    print("SAVED TO INFLUXXXX")
-    print(data)
     write_api = influxdb_client.write_api(write_options=SYNCHRONOUS)
     try:
         point = (
@@ -156,7 +153,7 @@ def bir_button():
             "value": button_color
         }
 
-        publish.single("BIR", json.dumps(rgb_payload), hostname="localhost")
+        publish.single("BIR", json.dumps(rgb_payload), hostname=HOSTNAME)
         return jsonify({'success': True, 'message': 'Pressed button'})
 
     except Exception as e:
@@ -277,4 +274,4 @@ alarm_thread = threading.Thread(target=alarm_thread_run, args=(alarm_event, ), d
 alarm_thread.start()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host=HOSTNAME)

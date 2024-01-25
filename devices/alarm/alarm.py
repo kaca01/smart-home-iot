@@ -67,7 +67,7 @@ def message_arrived(msg):
 
 is_alarm_on = False
 mqtt_client = mqtt.Client()
-mqtt_client.connect("localhost", 1883, 60)
+mqtt_client.connect(HOSTNAME, 1883, 60)
 mqtt_client.loop_start()
 mqtt_client.on_connect = on_connect
 mqtt_client.on_message = lambda client, userdata, msg: message_arrived(json.loads(msg.payload.decode('utf-8')))

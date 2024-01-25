@@ -13,15 +13,15 @@ counter_lock = threading.Lock()
 
 def get_displacement():
     global buzzer_event
-    url = "http://127.0.0.1:5000/gyro/accel.x/10"
+    url = "http://{HOSTNAME}:5000/gyro/accel.x/10"
     print("URL ", url)
     response = requests.get(url)
     x_accel_data = response.json()["data"]
 
-    url = "http://127.0.0.1:5000/gyro/accel.y/10"
+    url = "http://{HOSTNAME}:5000/gyro/accel.y/10"
     y_accel_data = requests.get(url).json()["data"]
 
-    url = "http://127.0.0.1:5000/gyro/accel.z/10"
+    url = "http://{HOSTNAME}:5000/gyro/accel.z/10"
     z_accel_data = requests.get(url).json()["data"]
 
     if response.status_code == 200:

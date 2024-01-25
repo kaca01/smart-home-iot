@@ -1,5 +1,6 @@
 import threading
 from settings.settings import load_settings
+from settings.broker_settings import HOSTNAME, PORT
 from dhts.dht import run_dht
 from pirs.pir import run_pir
 from buzzer.buzzer import run_buzzer
@@ -45,7 +46,7 @@ def on_message(client, userdata, msg):
 def congif_mqtt():
         mqtt_client = mqtt.Client()
         mqtt_client.on_message = on_message
-        mqtt_client.connect("localhost", 1883, 60)
+        mqtt_client.connect(HOSTNAME, 1883, 60)
         mqtt_client.subscribe("BIR")
         mqtt_client.loop_start()
 
