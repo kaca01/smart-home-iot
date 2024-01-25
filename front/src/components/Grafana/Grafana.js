@@ -26,7 +26,8 @@ export class Grafana extends Component {
     "http://localhost:3000/d-solo/f1079d2a-d46f-4c7b-807b-24042bda0500/odbrana-3?orgId=1&from=1706128743684&to=1706132343684&theme=light&panelId=18",
     "http://localhost:3000/d-solo/f1079d2a-d46f-4c7b-807b-24042bda0500/odbrana-3?orgId=1&from=1706133493424&to=1706137093424&theme=light&panelId=19",
     "http://localhost:3000/d-solo/f1079d2a-d46f-4c7b-807b-24042bda0500/odbrana-3?orgId=1&from=1706133718491&to=1706137318491&theme=light&panelId=20",
-    "http://localhost:3000/d-solo/f1079d2a-d46f-4c7b-807b-24042bda0500/odbrana-3?orgId=1&from=1706137710665&to=1706138010665&theme=light&panelId=21"];    constructor(props) {
+    "http://localhost:3000/d-solo/f1079d2a-d46f-4c7b-807b-24042bda0500/odbrana-3?orgId=1&from=1706137710665&to=1706138010665&theme=light&panelId=21"];
+    constructor(props) {
         super(props);
         this.state = {
             device: '',

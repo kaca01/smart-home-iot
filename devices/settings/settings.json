@@ -187,7 +187,7 @@
         "simulated": true,
         "pin": 16,
         "runs_on": "PI3",
-        "name": "BIR",
+        "name": "BIR1",
         "topic": "BIR"
     },
 

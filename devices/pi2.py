@@ -9,6 +9,7 @@ from gyroscope.gyroscope import run_gyroscope
 import time
 import json
 import paho.mqtt.client as mqtt
+from settings.broker_settings import HOSTNAME
 
 try:
         import RPi.GPIO as GPIO
@@ -49,7 +50,7 @@ def on_message(client, userdata, msg):
 def congif_mqtt():
         mqtt_client = mqtt.Client()
         mqtt_client.on_message = on_message
-        mqtt_client.connect("localhost", 1883, 60)
+        mqtt_client.connect(HOSTNAME, 1883, 60)
         mqtt_client.subscribe("GTEMP")
         mqtt_client.subscribe("GHMD")
         mqtt_client.loop_start()
@@ -69,13 +70,15 @@ if __name__ == "__main__":
         stop_event_gsg = threading.Event()
         stop_event_pir3 = threading.Event()
         stop_event_dht3 = threading.Event()
+        stop_event_ds2 = threading.Event()
 
         events = []
-        events += [stop_event_dus2, stop_event_dpir2, stop_event_gdht, stop_event_lcd, stop_event_gsg, stop_event_pir3, stop_event_dht3]
+        events += [stop_event_dus2, stop_event_dpir2, stop_event_gdht, stop_event_lcd, stop_event_gsg, stop_event_pir3, stop_event_dht3, 
+                   stop_event_ds2]
 
         try:
                 # PI2
-                thread = threading.Thread(target=run_ds, args=(settings["DS2"],))
+                thread = threading.Thread(target=run_ds, args=(settings["DS2"], stop_event_ds2, ))
                 thread.start()
 
                 thread = threading.Thread(target=run_dus, args=(settings["DUS2"], stop_event_dus2, ))

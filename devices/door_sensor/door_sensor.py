@@ -20,7 +20,7 @@ except ModuleNotFoundError:
 
 
 def is_active_sys():
-    url = f"http://127.0.0.1:5000/system"
+    url = f"http://{HOSTNAME}:5000/system"
     response = requests.get(url)
 
     if response.status_code == 200:
@@ -40,7 +40,7 @@ def get_pin(url):
         return None
     
 def turn_off_sys():
-    url = "http://127.0.0.1:5000/set-sys-activity"
+    url = f"http://{HOSTNAME}:5000/set-sys-activity"
     requests.put(url)
 
 ds_batch = []
@@ -59,7 +59,7 @@ def alarm_activation(event):
                     "value": True
                     }
     start_time = 0
-    buzzer_event = threading.Event()
+    # buzzer_event = threading.Event()
     while True:
         event.wait()
         print("ALARM")
@@ -153,14 +153,14 @@ def ds_callback(is_lock, publish_event, ds_settings, verbose=False):
         # alarm_event.set()
 
 
-def run_ds(settings):
+def run_ds(settings, stop_event):
     global alarm_thread
     alarm_thread.start()
     # alarm_pin_thread.start()
     try :
         if settings["simulated"]:
             print("uslooooooooo")
-            run_simulation(ds_callback, publish_event, settings)
+            run_simulation(ds_callback, publish_event, settings, stop_event)
         else:
             try:
                 print("Press x to unlock the door\nPress y to lock the door\n")

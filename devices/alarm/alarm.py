@@ -56,7 +56,7 @@ def turn_off_alarm():
     
 is_alarm_on = False
 mqtt_client = mqtt.Client()
-mqtt_client.connect("localhost", 1883, 60)
+mqtt_client.connect(HOSTNAME, PORT, 60)
 mqtt_client.loop_start()
 mqtt_client.on_connect = on_connect
 mqtt_client.on_message = lambda client, userdata, msg: turn_off_alarm()
