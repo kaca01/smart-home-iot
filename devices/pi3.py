@@ -33,9 +33,13 @@ def on_message(client, userdata, msg):
         settings = load_settings()
         try:
                 payload = json.loads(msg.payload.decode('utf-8'))
+                print("vrednost", payload.get("value"))
                 value = payload.get("value")
                 if value is not None:
-                        run_rgb({"button": value}, settings["RGB"])
+                        if msg.topic == "BIR":
+                                run_rgb({"button": value}, settings["RGB"])
+                        if msg.topic == "TURN_OFF_ALARM":
+                                run_4d7sd(value, settings["B4SD"])
 
         except json.JSONDecodeError as e:
                 print(f"JSON error: {e}")
@@ -48,6 +52,7 @@ def congif_mqtt():
         mqtt_client.on_message = on_message
         mqtt_client.connect(HOSTNAME, 1883, 60)
         mqtt_client.subscribe("BIR")
+        mqtt_client.subscribe("TURN_OFF_ALARM")
         mqtt_client.loop_start()
 
 
@@ -80,9 +85,9 @@ if __name__ == "__main__":
                 # thread.start()
                 # threads.append(thread)
 
-                thread = threading.Thread(target=run_4d7sd, args=(settings["B4SD"], stop_event_b4sd,))
-                thread.start()
-                threads.append(thread)
+                # thread = threading.Thread(target=run_4d7sd, args=(settings["B4SD"], stop_event_b4sd,))
+                # thread.start()
+                # threads.append(thread)
 
                 thread = threading.Thread(target=run_infrared, args=(settings["BIR"], stop_event_bir,))
                 thread.start()

@@ -35,7 +35,7 @@ def init_pins(pins):
 
     return segments, num, digits
 
-def run_actuator(pins):
+def run_actuator(value, pins):
     try:
         segments, num, digits = init_pins(pins)
         
@@ -50,7 +50,10 @@ def run_actuator(pins):
                     else:
                         GPIO.output(25, 0)
                 GPIO.output(digits[digit], 0)
-                time.sleep(0.001)
+                if value:
+                    time.sleep(0.5)
+                else:
+                    time.sleep(0.001)
                 GPIO.output(digits[digit], 1)
     finally:
         GPIO.cleanup()
